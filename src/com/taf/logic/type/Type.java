@@ -3,23 +3,16 @@ package com.taf.logic.type;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.taf.logic.type.parameter.InstanceNumberParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.manager.ConstantManager;
 
 public abstract class Type {
 
-	private InstanceNumberParameter instanceNumber;
-
+	// List for custom types!
 	private List<TypeParameter> parameterList;
 
 	public Type() {
-		this.instanceNumber = new InstanceNumberParameter(1);
 		this.parameterList = new ArrayList<TypeParameter>();
-	}
-
-	public void editInstanceNumber(int number) {
-		instanceNumber.setInstanceNumber(number);
 	}
 
 	protected void addTypeParameter(TypeParameter typeParameter) {
@@ -38,9 +31,8 @@ public abstract class Type {
 
 	@Override
 	public String toString() {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
-		String typeStr = instanceNumber.toString();
-		typeStr += separator + typeToString();
+		final String separator = ConstantManager.PARAMETER_SEPARATOR;
+		String typeStr = typeToString();
 
 		for (TypeParameter typeParameter : parameterList) {
 			typeStr += separator + typeParameter.toString();

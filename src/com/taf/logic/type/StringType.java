@@ -3,6 +3,7 @@ package com.taf.logic.type;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
+import com.taf.manager.ConstantManager;
 
 public class StringType extends Type {
 
@@ -43,9 +44,10 @@ public class StringType extends Type {
 
 	@Override
 	public String typeToString() {
+		final String separator = ConstantManager.PARAMETER_SEPARATOR;
 		String typeStr = typeName.toString();
-		typeStr += " " + values.toString();
-		typeStr += " " + values.createWeightParameter().toString();
+		typeStr += separator + values.toString();
+		typeStr += separator + values.createWeightParameter().toString();
 		return typeStr;
 	}
 

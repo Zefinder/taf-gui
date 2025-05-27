@@ -6,6 +6,7 @@ import com.taf.logic.type.parameter.MaxParameter;
 import com.taf.logic.type.parameter.MinParameter;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
+import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
 public class IntegerType extends Type {
@@ -59,14 +60,15 @@ public class IntegerType extends Type {
 
 	@Override
 	public String typeToString() {
+		final String separator = ConstantManager.PARAMETER_SEPARATOR;
 		String typeStr = typeName.toString();
 
 		if (min != null) {
-			typeStr += " " + min.toString();
+			typeStr += separator + min.toString();
 		}
 
 		if (max != null) {
-			typeStr += " " + max.toString();
+			typeStr += separator + max.toString();
 		}
 
 		return typeStr;

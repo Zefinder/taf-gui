@@ -1,7 +1,5 @@
 package com.taf;
 
-import java.util.Random;
-
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.constraint.parameter.ExpressionConstraintParameter;
 import com.taf.logic.constraint.parameter.QuantifiersConstraintParameter;
@@ -40,7 +38,9 @@ public class Main {
 		st.addValue("leek", 7);
 		Field vegetable = new Parameter("vegetable", st);
 		
-		Node rowNode = new Node("row", new AnonymousType());
+		AnonymousType at = new AnonymousType();
+		at.addMinMaxInstanceParameter(1, 40);
+		Node rowNode = new Node("row", at);
 		RealType rt = new RealType();
 		rt.addMinParameter(10);
 		rt.addMaxParameter(100);
