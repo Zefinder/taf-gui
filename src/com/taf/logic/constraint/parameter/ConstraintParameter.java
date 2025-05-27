@@ -26,10 +26,10 @@ public abstract class ConstraintParameter {
 		ConstraintParameter otherParameter = (ConstraintParameter) obj;
 		return this.name.equals(otherParameter.name) && this.valueToString().equals(otherParameter.valueToString());
 	}
-	
+
 	@Override
 	public int hashCode() {
-		return (name + valueToString()).hashCode();
+		return (this.getClass().toString() + ConstantManager.HASH_SEPARATOR + name + valueToString()).hashCode();
 	}
 
 }

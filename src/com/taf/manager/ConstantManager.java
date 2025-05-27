@@ -10,10 +10,12 @@ public class ConstantManager {
 			DecimalFormatSymbols.getInstance(Locale.US));
 
 	public static final String PARAMETER_STRING_FORMAT = "%s=\"%s\"";
+	public static final String FIELD_STRING_FORMAT = "name=\"%s\" %s";
 	
 	public static final String TAB = "\t";
 	public static final String LINE_JUMP = "\n";
 
+	public static final String HASH_SEPARATOR = ":";
 	public static final String ELEMENT_SEPARATOR = ";";
 	public static final String PARAMETER_SEPARATOR = " ";
 	

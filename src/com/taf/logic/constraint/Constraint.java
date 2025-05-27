@@ -9,22 +9,22 @@ import com.taf.manager.ConstantManager;
 public class Constraint {
 
 	private static final String CONSTRAINT_STRING_FORMAT = """
-			<constraint %s%s/>""";
-	
+			<constraint %s/>""";
+
 	private String name;
-	
+
 	private List<ConstraintParameter> parameterList;
-	
+
 	public Constraint(String name) {
 		this.name = name;
 		parameterList = new ArrayList<ConstraintParameter>();
 	}
-	
+
 	public Constraint addConstraintParameter(ConstraintParameter parameter) {
 		parameterList.add(parameter);
 		return this;
 	}
-	
+
 	@Override
 	public String toString() {
 		final String separator = ConstantManager.PARAMETER_SEPARATOR;
@@ -32,8 +32,8 @@ public class Constraint {
 		for (ConstraintParameter parameter : parameterList) {
 			paramStr += separator + parameter.toString();
 		}
-		
-		return CONSTRAINT_STRING_FORMAT.formatted(name, paramStr);
+
+		return CONSTRAINT_STRING_FORMAT.formatted(ConstantManager.FIELD_STRING_FORMAT.formatted(name, paramStr).stripTrailing());
 	}
 
 }

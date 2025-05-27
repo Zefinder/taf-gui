@@ -5,8 +5,6 @@ import com.taf.manager.ConstantManager;
 
 public abstract class Field {
 
-	private static final String FIELD_STRING_FORMAT = "name=\"%s\" %s";
-
 	private String name;
 	private final Type type;
 
@@ -52,7 +50,7 @@ public abstract class Field {
 
 	@Override
 	public String toString() {
-		return FIELD_STRING_FORMAT.formatted(name, type.toString());
+		return ConstantManager.FIELD_STRING_FORMAT.formatted(name, type.toString());
 	}
 
 }
