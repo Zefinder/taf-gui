@@ -1,8 +1,11 @@
 package com.taf.logic.type.parameter;
 
+import com.taf.manager.ConstantManager;
+
 public abstract class TypeParameter {
 
-	private static final String TYPE_PARAMETER_FORMAT = "%s=\"%s\"";
+	private static final String HASH_SEPARATOR = ":";
+	
 	protected final String name;
 
 	public TypeParameter(String name) {
@@ -13,7 +16,7 @@ public abstract class TypeParameter {
 
 	@Override
 	public String toString() {
-		return TYPE_PARAMETER_FORMAT.formatted(name, valueToString());
+		return ConstantManager.PARAMETER_STRING_FORMAT.formatted(name, valueToString());
 	}
 
 	@Override
@@ -28,7 +31,7 @@ public abstract class TypeParameter {
 	
 	@Override
 	public int hashCode() {
-		return (name + valueToString()).hashCode();
+		return (this.getClass().toString() + HASH_SEPARATOR + name + valueToString()).hashCode();
 	}
 
 }

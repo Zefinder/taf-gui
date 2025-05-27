@@ -9,6 +9,11 @@ public class ConstantManager {
 	public static final DecimalFormat REAL_FORMATTER = new DecimalFormat("0.0##",
 			DecimalFormatSymbols.getInstance(Locale.US));
 
+	public static final String PARAMETER_STRING_FORMAT = "%s=\"%s\"";
+	
+	public static final String ELEMENT_SEPARATOR = ";";
+	public static final String PARAMETER_SEPARATOR = " ";
+	
 	private ConstantManager() {
 	}
 

@@ -2,6 +2,8 @@ package com.taf.logic.type.parameter;
 
 import java.util.HashMap;
 
+import com.taf.manager.ConstantManager;
+
 public class ValuesParameter extends TypeParameter {
 
 	private static final String PARAMETER_NAME = "values";
@@ -69,13 +71,14 @@ public class ValuesParameter extends TypeParameter {
 
 	@Override
 	public String valueToString() {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String valueStr = "";
 
 		for (String value : valueMap.keySet()) {
-			valueStr += value + ";";
+			valueStr += value + separator;
 		}
-		// Remove last semicolon
-		valueStr = valueStr.substring(0, valueStr.length() - 1);
+		// Remove last separator
+		valueStr = valueStr.substring(0, valueStr.length() - separator.length());
 
 		return valueStr;
 	}

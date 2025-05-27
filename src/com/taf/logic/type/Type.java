@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.taf.logic.type.parameter.InstanceNumberParameter;
 import com.taf.logic.type.parameter.TypeParameter;
+import com.taf.manager.ConstantManager;
 
 public abstract class Type {
 
@@ -37,11 +38,12 @@ public abstract class Type {
 
 	@Override
 	public String toString() {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String typeStr = instanceNumber.toString();
-		typeStr += " " + typeToString();
+		typeStr += separator + typeToString();
 
 		for (TypeParameter typeParameter : parameterList) {
-			typeStr += " " + typeParameter.toString();
+			typeStr += separator + typeParameter.toString();
 		}
 
 		return typeStr;
