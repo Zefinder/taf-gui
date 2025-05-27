@@ -3,6 +3,8 @@ package com.taf.logic.constraint.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.taf.manager.ConstantManager;
+
 public class ExpressionConstraintParameter extends ConstraintParameter {
 
 	private static final String CONSTRAINT_PARAMETER_NAME = "expressions";
@@ -20,12 +22,14 @@ public class ExpressionConstraintParameter extends ConstraintParameter {
 
 	@Override
 	public String valueToString() {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String expressionStr = "";
+		
 		for (int i = 0; i < expressionList.size(); i++) {
 			expressionStr += expressionList.get(i);
 			
 			if (i != expressionList.size() - 1) {
-				expressionStr += ";";
+				expressionStr += separator;
 			}
 		}
 		

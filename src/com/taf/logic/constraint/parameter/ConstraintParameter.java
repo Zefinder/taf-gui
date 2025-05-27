@@ -1,8 +1,9 @@
 package com.taf.logic.constraint.parameter;
 
+import com.taf.manager.ConstantManager;
+
 public abstract class ConstraintParameter {
 
-	private static final String TYPE_PARAMETER_FORMAT = "%s=\"%s\"";
 	protected final String name;
 
 	public ConstraintParameter(String name) {
@@ -13,7 +14,7 @@ public abstract class ConstraintParameter {
 
 	@Override
 	public String toString() {
-		return TYPE_PARAMETER_FORMAT.formatted(name, valueToString());
+		return ConstantManager.PARAMETER_STRING_FORMAT.formatted(name, valueToString());
 	}
 
 	@Override

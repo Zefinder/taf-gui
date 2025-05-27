@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.taf.logic.constraint.parameter.ConstraintParameter;
+import com.taf.manager.ConstantManager;
 
 public class Constraint {
 
@@ -26,9 +27,10 @@ public class Constraint {
 	
 	@Override
 	public String toString() {
+		final String separator = ConstantManager.PARAMETER_SEPARATOR;
 		String paramStr = "";
 		for (ConstraintParameter parameter : parameterList) {
-			paramStr += " " + parameter.toString();
+			paramStr += separator + parameter.toString();
 		}
 		
 		return CONSTRAINT_STRING_FORMAT.formatted(name, paramStr);
