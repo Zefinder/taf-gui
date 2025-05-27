@@ -11,6 +11,9 @@ public class ConstantManager {
 
 	public static final String PARAMETER_STRING_FORMAT = "%s=\"%s\"";
 	
+	public static final String TAB = "\t";
+	public static final String LINE_JUMP = "\n";
+
 	public static final String ELEMENT_SEPARATOR = ";";
 	public static final String PARAMETER_SEPARATOR = " ";
 	

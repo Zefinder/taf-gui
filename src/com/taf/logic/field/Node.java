@@ -5,10 +5,16 @@ import java.util.List;
 
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.Type;
+import com.taf.manager.ConstantManager;
 
 public class Node extends Field {
 
 	private static final String NODE_STRING_FORMAT = """
+			<node %s>
+			%s
+			%s</node>""";
+
+	private static final String NODE_CONSTRAINT_STRING_FORMAT = """
 			<node %s>
 			%s
 			%s
@@ -33,14 +39,15 @@ public class Node extends Field {
 	}
 
 	protected String insideFieldsToString() {
-		String indent = getIndentation() + "\t";
+		final String lineJump = ConstantManager.LINE_JUMP;
+		String indent = getIndentation() + ConstantManager.TAB;
 
 		String strFields = "";
 		for (int i = 0; i < fieldList.size(); i++) {
 			strFields += indent + fieldList.get(i).toString();
 
 			if (i != fieldList.size() - 1) {
-				strFields += "\n";
+				strFields += lineJump;
 			}
 		}
 
@@ -48,14 +55,15 @@ public class Node extends Field {
 	}
 
 	private String constraintsToString() {
-		String indent = getIndentation() + "\t";
+		final String lineJump = ConstantManager.LINE_JUMP;
+		String indent = getIndentation() + ConstantManager.TAB;
 
 		String strConstraints = "";
 		for (int i = 0; i < constraintList.size(); i++) {
 			strConstraints += indent + constraintList.get(i).toString();
 
-			if (i != fieldList.size() - 1) {
-				strConstraints += "\n";
+			if (i != constraintList.size() - 1) {
+				strConstraints += lineJump;
 			}
 		}
 
@@ -65,8 +73,15 @@ public class Node extends Field {
 
 	@Override
 	public String toString() {
-		return NODE_STRING_FORMAT.formatted(super.toString(), insideFieldsToString(), constraintsToString(),
-				getIndentation());
+		String nodeStr;
+		if (!constraintList.isEmpty()) {
+			nodeStr = NODE_CONSTRAINT_STRING_FORMAT.formatted(super.toString(), insideFieldsToString(),
+					constraintsToString(), getIndentation());
+		} else {
+			nodeStr = NODE_STRING_FORMAT.formatted(super.toString(), insideFieldsToString(), getIndentation());
+		}
+		
+		return nodeStr;
 	}
 
 }

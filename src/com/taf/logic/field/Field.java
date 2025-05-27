@@ -1,6 +1,7 @@
 package com.taf.logic.field;
 
 import com.taf.logic.type.Type;
+import com.taf.manager.ConstantManager;
 
 public abstract class Field {
 
@@ -40,9 +41,10 @@ public abstract class Field {
 	}
 
 	protected String getIndentation() {
+		final String tab = ConstantManager.TAB;
 		String indent = "";
 		for (int i = 0; i < indentationLevel; i++) {
-			indent += "\t";
+			indent += tab;
 		}
 
 		return indent;
