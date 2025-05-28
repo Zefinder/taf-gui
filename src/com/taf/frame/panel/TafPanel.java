@@ -11,7 +11,7 @@ public class TafPanel extends JPanel {
 
 	public TafPanel() {
 		this.setLayout(new BorderLayout());
-		FieldsPanel fieldsPanel = new FieldsPanel();
+		FieldTreePanel fieldsPanel = new FieldTreePanel();
 		PropertyPanel propertyPanel = new PropertyPanel();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fieldsPanel, propertyPanel);
 		

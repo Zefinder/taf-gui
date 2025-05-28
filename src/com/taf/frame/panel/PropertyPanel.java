@@ -1,6 +1,7 @@
 package com.taf.frame.panel;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -48,7 +49,9 @@ public class PropertyPanel extends JPanel implements EventListener {
 			typePropertyPanel = TypePanelFactory.createTypePropertyPanel(field.getType());
 
 			this.add(fieldPropertyPanel);
+			this.add(Box.createVerticalGlue());
 			this.add(separator);
+			this.add(Box.createVerticalGlue());
 			if (typePropertyPanel != null)
 				this.add(typePropertyPanel);
 		}

@@ -30,7 +30,7 @@ import com.taf.logic.type.AnonymousType;
 import com.taf.logic.type.Type;
 import com.taf.manager.EventManager;
 
-public class FieldsPanel extends JPanel implements EventListener {
+public class FieldTreePanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = -8299875121910645683L;
 	private static final String DEFAULT_ROOT_NAME = "test_cases";
@@ -42,7 +42,7 @@ public class FieldsPanel extends JPanel implements EventListener {
 
 	private DefaultMutableTreeNode rootNode;
 
-	public FieldsPanel() {
+	public FieldTreePanel() {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		EventManager.getInstance().registerEventListener(this);

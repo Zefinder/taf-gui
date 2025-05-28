@@ -42,14 +42,11 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 			maxValue = 10;
 		}
 
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
+		GridBagConstraints c = getDefaultConstraint();
+		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(0, 0, 5, 5);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 0;
+		c.weightx = 0;
+		c.weighty = 0;
 		minBox = new JCheckBox("Min");
 		minBox.setSelected(hasMin);
 		minBox.addActionListener(e -> activateMin());
@@ -58,7 +55,7 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		c.insets = new Insets(0, 5, 5, 0);
 		c.gridx = 1;
 		minField = new JFormattedTextField(minValue);
-		minField.setColumns(5);
+		minField.setColumns(20);
 		minField.setEnabled(hasMin);
 		minField.addPropertyChangeListener("value", this);
 		addComponent(minField, c);
@@ -74,7 +71,7 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		c.insets = new Insets(5, 5, 0, 0);
 		c.gridx = 1;
 		maxField = new JFormattedTextField(maxValue);
-		maxField.setColumns(5);
+		maxField.setColumns(20);
 		maxField.setEnabled(hasMax);
 		maxField.addPropertyChangeListener("value", this);
 		addComponent(maxField, c);

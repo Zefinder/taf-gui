@@ -12,7 +12,7 @@ public class TafFrame extends JFrame {
 
 	public TafFrame() {
 		this.setTitle("TAF GUI");
-		this.setSize(650, 550);
+		this.setSize(650, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setResizable(true);
