@@ -1,6 +1,5 @@
 package com.taf.frame.panel;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -20,6 +19,7 @@ import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 import com.taf.event.FieldNameChangedEvent;
 import com.taf.event.FieldSelectedEvent;
+import com.taf.event.FieldTypeChangedEvent;
 import com.taf.frame.dialog.NodeCreationDialog;
 import com.taf.frame.dialog.ParameterCreationDialog;
 import com.taf.logic.field.Field;
@@ -87,7 +87,9 @@ public class FieldsPanel extends JPanel implements EventListener {
 			Event event = new FieldSelectedEvent(nodeInfo.getField());
 			EventManager.getInstance().fireEvent(event);
 			
-			System.out.println(nodeInfo.getField());
+			if (nodeInfo.isRoot) {				
+				System.out.println(nodeInfo.getField());
+			}
 		});
 		JScrollPane treeView = new JScrollPane(tree);
 		this.add(treeView, c);
@@ -175,6 +177,15 @@ public class FieldsPanel extends JPanel implements EventListener {
 		treeModel.nodeChanged(node);
 	}
 
+	@EventMethod
+	public void onTypeNameChanged(FieldTypeChangedEvent event) {
+		// Editable node is the selected one
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		NodeObject nodeObject = (NodeObject) node.getUserObject();
+		nodeObject.refresh();
+		treeModel.nodeChanged(node);
+	}
+	
 	private static class NodeObject {
 
 		private Field field;

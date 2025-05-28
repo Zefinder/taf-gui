@@ -9,6 +9,7 @@ import javax.swing.SwingConstants;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 import com.taf.event.FieldSelectedEvent;
+import com.taf.event.FieldTypeChangedEvent;
 import com.taf.frame.panel.field.FieldPanelFactory;
 import com.taf.frame.panel.field.FieldPropertyPanel;
 import com.taf.frame.panel.type.TypePanelFactory;
@@ -59,6 +60,11 @@ public class PropertyPanel extends JPanel implements EventListener {
 	@EventMethod
 	public void onFieldSelected(FieldSelectedEvent event) {
 		this.field = event.getField();
+		updatePanel();
+	}
+	
+	@EventMethod
+	public void onFieldTypeChanged(FieldTypeChangedEvent event) {
 		updatePanel();
 	}
 

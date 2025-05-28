@@ -6,7 +6,7 @@ import com.taf.manager.ConstantManager;
 public abstract class Field {
 
 	private String name;
-	private final Type type;
+	private Type type;
 
 	protected int indentationLevel;
 
@@ -28,6 +28,10 @@ public abstract class Field {
 		return type;
 	}
 
+	public void setType(Type type) {
+		this.type = type;
+	}
+	
 	/**
 	 * Sets the indentation level of the field, this is just for nice output. This
 	 * is package level since it will be modified by either the root or a node.
