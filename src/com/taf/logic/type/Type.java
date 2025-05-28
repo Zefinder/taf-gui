@@ -28,6 +28,10 @@ public abstract class Type {
 	public abstract boolean isAllowedTypeParameter(TypeParameter typeParameter);
 
 	public abstract String typeToString();
+	
+	public String getName() {
+		return "";
+	}
 
 	@Override
 	public String toString() {

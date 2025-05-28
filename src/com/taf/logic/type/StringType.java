@@ -43,6 +43,11 @@ public class StringType extends Type {
 	}
 
 	@Override
+	public String getName() {
+		return TYPE_NAME;
+	}
+	
+	@Override
 	public String typeToString() {
 		final String separator = ConstantManager.PARAMETER_SEPARATOR;
 		String typeStr = typeName.toString();

@@ -57,6 +57,11 @@ public class IntegerType extends Type {
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());
 	}
+	
+	@Override
+	public String getName() {
+		return TYPE_NAME;
+	}
 
 	@Override
 	public String typeToString() {
