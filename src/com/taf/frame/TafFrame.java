@@ -1,9 +1,10 @@
 package com.taf.frame;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import java.awt.BorderLayout;
 
-import com.taf.frame.panel.FieldsPanel;
+import javax.swing.JFrame;
+
+import com.taf.frame.panel.TafPanel;
 
 public class TafFrame extends JFrame {
 
@@ -11,18 +12,15 @@ public class TafFrame extends JFrame {
 
 	public TafFrame() {
 		this.setTitle("TAF GUI");
-		this.setSize(600, 800);
+		this.setSize(650, 550);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setResizable(true);
 		
-		this.add(createJTreePanel());
+		this.setLayout(new BorderLayout());
+		this.add(new TafPanel());
 		
 		this.setVisible(false);
-	}
-	
-	private JPanel createJTreePanel() {
-		return new FieldsPanel();
 	}
 	
 	public void initFrame() {

@@ -1,0 +1,18 @@
+package com.taf.frame.panel.type;
+
+import com.taf.logic.type.IntegerType;
+import com.taf.logic.type.Type;
+
+public class TypePanelFactory {
+
+	private TypePanelFactory() {
+	}
+	
+	public static TypePropertyPanel createTypePropertyPanel(Type type) {
+		if (type instanceof IntegerType) {
+			return new IntegerPropertyPanel((IntegerType) type);
+		}
+		return null;
+	}
+
+}

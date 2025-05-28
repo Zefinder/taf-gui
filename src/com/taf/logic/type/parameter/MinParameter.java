@@ -22,6 +22,10 @@ public class MinParameter extends TypeParameter {
 	public void setValue(Number value) {
 		this.value = value;
 	}
+	
+	public Number getValue() {
+		return value;
+	}
 
 	@Override
 	public String valueToString() {

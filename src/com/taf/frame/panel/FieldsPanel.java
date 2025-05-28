@@ -1,9 +1,11 @@
 package com.taf.frame.panel;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -13,6 +15,11 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.taf.event.Event;
+import com.taf.event.EventListener;
+import com.taf.event.EventMethod;
+import com.taf.event.FieldNameChangedEvent;
+import com.taf.event.FieldSelectedEvent;
 import com.taf.frame.dialog.NodeCreationDialog;
 import com.taf.frame.dialog.ParameterCreationDialog;
 import com.taf.logic.field.Field;
@@ -21,8 +28,9 @@ import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Root;
 import com.taf.logic.type.AnonymousType;
 import com.taf.logic.type.Type;
+import com.taf.manager.EventManager;
 
-public class FieldsPanel extends JPanel {
+public class FieldsPanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = -8299875121910645683L;
 	private static final String DEFAULT_ROOT_NAME = "test_cases";
@@ -36,6 +44,9 @@ public class FieldsPanel extends JPanel {
 
 	public FieldsPanel() {
 		this.setLayout(new GridBagLayout());
+		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		EventManager.getInstance().registerEventListener(this);
+		
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(0, 0, 0, 5);
@@ -44,6 +55,8 @@ public class FieldsPanel extends JPanel {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
+		c.weightx = 1;
+		c.weighty = 0;
 		addParameterButton = new JButton("+ Add parameter");
 		addParameterButton.addActionListener(e -> addParameter());
 		this.add(addParameterButton, c);
@@ -58,6 +71,7 @@ public class FieldsPanel extends JPanel {
 		c.gridwidth = 2;
 		c.gridx = 0;
 		c.gridy = 1;
+		c.weighty = 1;
 		Field field = new Root(DEFAULT_ROOT_NAME);
 		rootNode = new DefaultMutableTreeNode(new NodeObject(field));
 		tree = new JTree(rootNode);
@@ -70,10 +84,11 @@ public class FieldsPanel extends JPanel {
 			}
 
 			NodeObject nodeInfo = (NodeObject) node.getUserObject();
-			// TODO Send event to set property panel
+			Event event = new FieldSelectedEvent(nodeInfo.getField());
+			EventManager.getInstance().fireEvent(event);
+			
 			System.out.println(nodeInfo.getField());
 		});
-
 		JScrollPane treeView = new JScrollPane(tree);
 		this.add(treeView, c);
 	}
@@ -150,6 +165,15 @@ public class FieldsPanel extends JPanel {
 		// If the node is the root and had no children, expand
 		tree.expandRow(getNodeRow(node));
 	}
+	
+	@EventMethod
+	public void onFieldNameChanged(FieldNameChangedEvent event) {
+		// Editable node is the selected one
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		NodeObject nodeObject = (NodeObject) node.getUserObject();
+		nodeObject.refresh();
+		treeModel.nodeChanged(node);
+	}
 
 	private static class NodeObject {
 
@@ -160,6 +184,10 @@ public class FieldsPanel extends JPanel {
 
 		public NodeObject(Field field) {
 			this.field = field;
+			refresh();
+		}
+
+		public void refresh() {
 			this.fieldName = field.getName();
 			Type type = field.getType();
 			
@@ -175,7 +203,7 @@ public class FieldsPanel extends JPanel {
 				typeName = type.getName();
 			}
 		}
-
+		
 		public Field getField() {
 			return field;
 		}

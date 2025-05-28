@@ -77,8 +77,11 @@ public class ValuesParameter extends TypeParameter {
 		for (String value : valueMap.keySet()) {
 			valueStr += value + separator;
 		}
-		// Remove last separator
-		valueStr = valueStr.substring(0, valueStr.length() - separator.length());
+		
+		// Remove last separator if there is an element
+		if (!valueStr.isBlank()) {			
+			valueStr = valueStr.substring(0, valueStr.length() - separator.length());
+		}
 
 		return valueStr;
 	}

@@ -23,6 +23,10 @@ public class MaxParameter extends TypeParameter {
 		this.value = value;
 	}
 
+	public Number getValue() {
+		return value;
+	}
+	
 	@Override
 	public String valueToString() {
 		return isReal ? realFormatter.format(value.doubleValue()) : String.valueOf(value.longValue());
