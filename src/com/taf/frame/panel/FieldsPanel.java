@@ -13,6 +13,7 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.taf.frame.dialog.NodeCreationDialog;
 import com.taf.frame.dialog.ParameterCreationDialog;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
@@ -50,6 +51,7 @@ public class FieldsPanel extends JPanel {
 		c.insets = new Insets(0, 5, 0, 0);
 		c.gridx = 1;
 		addNodeButton = new JButton("+ Add node");
+		addNodeButton.addActionListener(e -> addNode());
 		this.add(addNodeButton, c);
 
 		c.insets = new Insets(5, 0, 0, 0);
@@ -123,9 +125,30 @@ public class FieldsPanel extends JPanel {
 		
 		// If the node is the root and had no children, expand
 		tree.expandRow(getNodeRow(node));
-
-		// Refresh tree
-//		tree.repaint();
+	}
+	
+	private void addNode() {
+		DefaultMutableTreeNode node = getNearestNodeField();
+		NodeObject nodeInfo = (NodeObject) node.getUserObject();
+		Node parent = (Node) nodeInfo.getField();
+		
+		// Call the dialog to create a parameter 
+		NodeCreationDialog dialog = new NodeCreationDialog();
+		dialog.initDialog();
+		Field field = dialog.getField();
+		if (field == null) {
+			return;
+		}
+		
+		// Add to the field
+		parent.addField(field);
+		
+		// Add to the tree node
+		DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(new NodeObject(field), true);
+		treeModel.insertNodeInto(parameterNode, node, node.getChildCount());
+		
+		// If the node is the root and had no children, expand
+		tree.expandRow(getNodeRow(node));
 	}
 
 	private static class NodeObject {
