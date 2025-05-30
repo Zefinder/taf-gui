@@ -1,7 +1,5 @@
 package com.taf;
 
-import com.taf.event.Event;
-import com.taf.event.FieldSelectedEvent;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.constraint.parameter.ConstraintParameter;
 import com.taf.logic.constraint.parameter.ExpressionConstraintParameter;

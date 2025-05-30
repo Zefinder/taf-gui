@@ -9,6 +9,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 
 import com.taf.logic.type.IntegerType;
+import com.taf.manager.ConstantManager;
 
 public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyChangeListener {
 
@@ -42,7 +43,8 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 			maxValue = 10;
 		}
 
-		GridBagConstraints c = getDefaultConstraint();
+		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(0, 0, 5, 5);
 		c.weightx = 0;
@@ -53,6 +55,7 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		addComponent(minBox, c);
 		
 		c.insets = new Insets(0, 5, 5, 0);
+		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		minField = new JFormattedTextField(minValue);
 		minField.setColumns(20);
@@ -61,6 +64,8 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		addComponent(minField, c);
 
 		c.insets = new Insets(5, 0, 0, 5);
+		c.weighty = 1;
+		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
 		maxBox = new JCheckBox("Max");
@@ -69,6 +74,8 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		addComponent(maxBox, c);
 
 		c.insets = new Insets(5, 5, 0, 0);
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		maxField = new JFormattedTextField(maxValue);
 		maxField.setColumns(20);

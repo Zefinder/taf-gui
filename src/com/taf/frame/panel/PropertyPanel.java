@@ -1,8 +1,10 @@
 package com.taf.frame.panel;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
 import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -16,6 +18,7 @@ import com.taf.frame.panel.field.FieldPropertyPanel;
 import com.taf.frame.panel.type.TypePanelFactory;
 import com.taf.frame.panel.type.TypePropertyPanel;
 import com.taf.logic.field.Field;
+import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
 public class PropertyPanel extends JPanel implements EventListener {
@@ -27,7 +30,7 @@ public class PropertyPanel extends JPanel implements EventListener {
 	private TypePropertyPanel typePropertyPanel;
 
 	public PropertyPanel() {
-		this.setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+		this.setLayout(new GridBagLayout());
 		EventManager.getInstance().registerEventListener(this);
 
 		field = null;
@@ -41,19 +44,31 @@ public class PropertyPanel extends JPanel implements EventListener {
 		// Remove everything from panel
 		this.removeAll();
 
-		this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		this.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));		
 
-		if (field != null) {
-			JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+		if (field != null) {			
+			GridBagConstraints c = ConstantManager.getDefaultConstraint();
+			c.anchor = GridBagConstraints.NORTH;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.insets = new Insets(10, 0, 10, 0);
+			c.weighty = 0;
 			fieldPropertyPanel = FieldPanelFactory.createFieldPropertyPanel(field);
+			this.add(fieldPropertyPanel, c);
+			
 			typePropertyPanel = TypePanelFactory.createTypePropertyPanel(field.getType());
-
-			this.add(fieldPropertyPanel);
-			this.add(Box.createVerticalGlue());
-			this.add(separator);
-			this.add(Box.createVerticalGlue());
-			if (typePropertyPanel != null)
-				this.add(typePropertyPanel);
+			boolean noTypeProperty = typePropertyPanel == null;
+			c.insets = new Insets(5, 0, 5, 0);
+			c.gridy = 1;
+			c.weighty = noTypeProperty ? 1 : 0;
+			JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+			this.add(separator, c);
+			
+			if (!noTypeProperty) {
+				c.insets = new Insets(10, 0, 10, 0);
+				c.weighty = 1;
+				c.gridy = 2;
+				this.add(typePropertyPanel, c);				
+			}
 		}
 
 		// removeAll method invalidates
