@@ -1,5 +1,7 @@
 package com.taf.frame.panel.type;
 
+import com.taf.logic.type.AnonymousType;
+import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
@@ -11,6 +13,14 @@ public class TypePanelFactory {
 	}
 
 	public static TypePropertyPanel createTypePropertyPanel(Type type) {
+		if (type instanceof AnonymousType) {
+			return new AnonymousPropertyPanel((AnonymousType) type);
+		}
+
+		if (type instanceof BooleanType) {
+			return new BooleanPropertyPanel((BooleanType) type);
+		}
+
 		if (type instanceof IntegerType) {
 			return new IntegerPropertyPanel((IntegerType) type);
 		}

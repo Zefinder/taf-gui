@@ -18,6 +18,7 @@ import com.taf.frame.panel.field.FieldPropertyPanel;
 import com.taf.frame.panel.type.TypePanelFactory;
 import com.taf.frame.panel.type.TypePropertyPanel;
 import com.taf.logic.field.Field;
+import com.taf.logic.field.Root;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
@@ -55,7 +56,13 @@ public class PropertyPanel extends JPanel implements EventListener {
 			fieldPropertyPanel = FieldPanelFactory.createFieldPropertyPanel(field);
 			this.add(fieldPropertyPanel, c);
 			
-			typePropertyPanel = TypePanelFactory.createTypePropertyPanel(field.getType());
+			// If field is the root, no property
+			if (field instanceof Root) {
+				typePropertyPanel = null;
+			} else {				
+				typePropertyPanel = TypePanelFactory.createTypePropertyPanel(field.getType());
+			}
+			
 			boolean noTypeProperty = typePropertyPanel == null;
 			c.insets = new Insets(5, 0, 5, 0);
 			c.gridy = 1;

@@ -14,6 +14,10 @@ public class InstanceNumberParameter extends TypeParameter {
 	public void setInstanceNumber(int instanceNumber) {
 		this.instanceNumber = instanceNumber;
 	}
+	
+	public int getInstanceNumber() {
+		return instanceNumber;
+	}
 
 	@Override
 	public String valueToString() {
