@@ -87,7 +87,6 @@ public class IntegerEditor extends DefaultCellEditor {
 //		JFormattedTextField ftf = (JFormattedTextField) super.getTableCellEditorComponent(table, value, isSelected, row,
 //				column);
 		integerField.setValue(value);
-		System.out.println(integerField);
 		return integerField;
 	}
 

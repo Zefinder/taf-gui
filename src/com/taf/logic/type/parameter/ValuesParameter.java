@@ -1,6 +1,8 @@
 package com.taf.logic.type.parameter;
 
 import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.taf.manager.ConstantManager;
 
@@ -15,24 +17,48 @@ public class ValuesParameter extends TypeParameter {
 		valueMap = new HashMap<String, Integer>();
 	}
 
-	public void addValue(String value, int weight) {
-		valueMap.put(value, weight);
-	}
+	/**
+	 * Adds the value to the parameter iff the value is not already present. Returns
+	 * true if the value was added.
+	 * 
+	 * @param value
+	 * @param weight
+	 * 
+	 * @return true if the value was added (if value was not already present)
+	 */
+	public boolean addValue(String value, int weight) {
+		if (!valueMap.containsKey(value)) {
+			valueMap.put(value, weight);
+			return true;
+		}
 
-	public void addValue(String value) {
-		addValue(value, 1);
+		return false;
 	}
 
 	/**
-	 * Edits the value name. This returns false if the old value does not exist.
+	 * Adds the value with a weight of 1 to the parameter iff the value is not
+	 * already present. Returns true if the value was added.
+	 * 
+	 * @param value
+	 * 
+	 * @return true if the value was added (if value was not already present)
+	 */
+	public boolean addValue(String value) {
+		return addValue(value, 1);
+	}
+
+	/**
+	 * Edits the value name. This returns false if the old value does not exist or
+	 * if the new value already exists
 	 * 
 	 * @param oldValue the value to replace
 	 * @param newValue the new value
-	 * @return false if the old value does not exist, true otherwise
+	 * @return false if the old value does not exist or if the new value already
+	 *         exists, true otherwise
 	 */
 	public boolean editValueName(String oldValue, String newValue) {
-		Integer weight = valueMap.get(oldValue);
-		if (weight != null) {
+		if (!valueMap.containsKey(newValue) && valueMap.containsKey(oldValue)) {
+			Integer weight = valueMap.get(oldValue);
 			valueMap.remove(oldValue);
 			valueMap.put(newValue, weight);
 			return true;
@@ -69,6 +95,10 @@ public class ValuesParameter extends TypeParameter {
 		return new WeightParameter(valueMap.values().stream().mapToInt(Integer::intValue).toArray());
 	}
 
+	public Set<Entry<String, Integer>> getValues() {
+		return valueMap.entrySet();
+	}
+
 	@Override
 	public String valueToString() {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
@@ -77,9 +107,9 @@ public class ValuesParameter extends TypeParameter {
 		for (String value : valueMap.keySet()) {
 			valueStr += value + separator;
 		}
-		
+
 		// Remove last separator if there is an element
-		if (!valueStr.isBlank()) {			
+		if (!valueStr.isBlank()) {
 			valueStr = valueStr.substring(0, valueStr.length() - separator.length());
 		}
 
