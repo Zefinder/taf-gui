@@ -1,5 +1,8 @@
 package com.taf.logic.type;
 
+import java.util.Map.Entry;
+import java.util.Set;
+
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
@@ -17,12 +20,12 @@ public class StringType extends Type {
 		values = new ValuesParameter();
 	}
 
-	public void addValue(String value, int weight) {
-		values.addValue(value, weight);
+	public boolean addValue(String value, int weight) {
+		return values.addValue(value, weight);
 	}
 
-	public void addValue(String value) {
-		values.addValue(value);
+	public boolean addValue(String value) {
+		return values.addValue(value);
 	}
 
 	public boolean editValueName(String oldValue, String newValue) {
@@ -37,9 +40,18 @@ public class StringType extends Type {
 		return values.removeValue(value);
 	}
 
+	public Set<Entry<String, Integer>> getValues() {
+		return values.getValues();
+	}
+
 	@Override
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return false;
+	}
+
+	@Override
+	public String getName() {
+		return TYPE_NAME;
 	}
 
 	@Override

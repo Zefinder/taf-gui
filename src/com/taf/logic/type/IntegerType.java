@@ -38,6 +38,22 @@ public class IntegerType extends Type {
 			min.setValue(minValue);
 		}
 	}
+	
+	public long getMinParameter() {
+		if (min == null) {
+			return 0;
+		}
+		
+		return min.getValue().longValue();
+	}
+	
+	public void removeMinParameter() {
+		min = null;
+	}
+	
+	public boolean hasMinParameter() {
+		return min != null;
+	}
 
 	public void addMaxParameter(long maxValue) {
 		if (max == null) {
@@ -52,10 +68,31 @@ public class IntegerType extends Type {
 			max.setValue(maxValue);
 		}
 	}
+	
+	public long getMaxParameter() {
+		if (max == null) {
+			return 0;
+		}
+		
+		return max.getValue().longValue();
+	}
+	
+	public void removeMaxParameter() {
+		max = null;
+	}
+	
+	public boolean hasMaxParameter() {
+		return max != null;
+	}
 
 	@Override
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());
+	}
+	
+	@Override
+	public String getName() {
+		return TYPE_NAME;
 	}
 
 	@Override

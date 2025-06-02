@@ -17,6 +17,11 @@ public class BooleanType extends Type {
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return false;
 	}
+	
+	@Override
+	public String getName() {
+		return TYPE_NAME;
+	}
 
 	@Override
 	public String typeToString() {

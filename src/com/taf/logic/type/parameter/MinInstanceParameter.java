@@ -4,17 +4,21 @@ public class MinInstanceParameter extends TypeParameter {
 
 	private static final String PARAMETER_NAME = "min";
 	
-	private Number value;
+	private Integer value;
 
-	public MinInstanceParameter(Number value) {
+	public MinInstanceParameter(Integer value) {
 		super(PARAMETER_NAME);
 		this.value = value;
 	}
 
-	public void setValue(Number value) {
+	public void setValue(Integer value) {
 		this.value = value;
 	}
 
+	public int getValue() {
+		return value;
+	}
+	
 	@Override
 	public String valueToString() {
 		return String.valueOf(value.longValue());

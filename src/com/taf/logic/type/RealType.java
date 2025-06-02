@@ -38,6 +38,22 @@ public class RealType extends Type {
 			min.setValue(minValue);
 		}
 	}
+	
+	public double getMinParameter() {
+		if (min == null) {
+			return 0;
+		}
+		
+		return min.getValue().doubleValue();
+	}
+	
+	public void removeMinParameter() {
+		min = null;
+	}
+
+	public boolean hasMinParameter() {
+		return min != null;
+	}
 
 	public void addMaxParameter(double maxValue) {
 		if (max == null) {
@@ -52,10 +68,31 @@ public class RealType extends Type {
 			max.setValue(maxValue);
 		}
 	}
+	
+	public double getMaxParameter() {
+		if (max == null) {
+			return 0;
+		}
+		
+		return max.getValue().doubleValue();
+	}
+	
+	public void removeMaxParameter() {
+		max = null;
+	}
+	
+	public boolean hasMaxParameter() {
+		return max != null;
+	}
 
 	@Override
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());
+	}
+	
+	@Override
+	public String getName() {
+		return TYPE_NAME;
 	}
 
 	@Override

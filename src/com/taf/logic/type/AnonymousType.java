@@ -22,7 +22,7 @@ public class AnonymousType extends Type {
 		instanceNumber = new InstanceNumberParameter(1);
 	}
 
-	public void addMinMaxInstanceParameter(long minValue, long maxValue) {
+	public void addMinMaxInstanceParameter(int minValue, int maxValue) {
 		// Both are linked, if one is null, both are null
 		if (min == null) {
 			min = new MinInstanceParameter(minValue);
@@ -33,20 +33,44 @@ public class AnonymousType extends Type {
 		}
 	}
 
-	public void editMinInstanceParameter(long minValue) {
+	public void editMinInstanceParameter(int minValue) {
 		if (min != null) {
 			min.setValue(minValue);
 		}
 	}
+	
+	public int getMinInstanceParameter() {
+		if (min == null) {
+			return 0;
+		}
+		
+		return min.getValue();
+	}
 
-	public void editMaxInstanceParameter(long maxValue) {
+	public void editMaxInstanceParameter(int maxValue) {
 		if (max != null) {
 			max.setValue(maxValue);
 		}
 	}
 	
+	public int getMaxInstanceParameter() {
+		if (max == null) {
+			return 0;
+		}
+		
+		return max.getValue();
+	}
+	
+	public boolean hasMinMaxInstance() {
+		return min != null;
+	}
+	
 	public void editInstanceNumberParameter(int number) {
 		instanceNumber.setInstanceNumber(number);
+	}
+	
+	public int getInstanceNumberParameter() {
+		return instanceNumber.getInstanceNumber();
 	}
 	
 	public void removeMinMaxInstanceParameter() {
