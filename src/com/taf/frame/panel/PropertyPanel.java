@@ -64,7 +64,8 @@ public class PropertyPanel extends JPanel implements EventListener {
 			this.add(separator, c);
 			
 			if (!noTypeProperty) {
-				c.insets = new Insets(10, 0, 10, 0);
+				c.fill = GridBagConstraints.BOTH;
+				c.insets = new Insets(10, 0, 0, 0);
 				c.weighty = 1;
 				c.gridy = 2;
 				this.add(typePropertyPanel, c);				
