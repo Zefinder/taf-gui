@@ -59,7 +59,7 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 	
 	private void updateFieldType(Field field) {
 		String typeName = (String) typeNames.getSelectedItem();
-		Type type = TypeManager.getInstance().instanciateType(typeName);
+		Type type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
 		// TODO Add JOptionPane message to confirm you want to change type
 		
 		field.setType(type);

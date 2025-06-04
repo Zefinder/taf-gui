@@ -1,16 +1,24 @@
 package com.taf.logic.type;
 
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
+import com.taf.logic.type.parameter.WeightParameter;
 import com.taf.manager.ConstantManager;
+import com.taf.util.HashSetBuilder;
 
 public class StringType extends Type {
 
-	private static final String TYPE_NAME = "string";
+	public static final String TYPE_NAME = "string";
+	
+	private static final HashSet<Class<? extends TypeParameter>> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
+			.add(ValuesParameter.class)
+			.add(WeightParameter.class)
+			.build();
 
 	private TypeParameter typeName;
 	private ValuesParameter values;
@@ -42,6 +50,16 @@ public class StringType extends Type {
 
 	public Set<Entry<String, Integer>> getValues() {
 		return values.getValues();
+	}
+	
+	@Override
+	public Set<Class<? extends TypeParameter>> getMandatoryParametersName() {
+		return MANDATORY_TYPE_PARAMETERS;
+	}
+	
+	@Override
+	public Set<Class<? extends TypeParameter>> getOptionalParametersName() {
+		return new HashSet<Class<? extends TypeParameter>>();
 	}
 
 	@Override

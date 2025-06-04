@@ -12,7 +12,7 @@ import com.taf.logic.type.StringType;
 import com.taf.logic.type.Type;
 import com.taf.util.HashSetBuilder;
 
-public class TypeManager {
+public class TypeManager extends Manager {
 
 	private static final TypeManager instance = new TypeManager();
 
@@ -34,9 +34,9 @@ public class TypeManager {
 
 	// TODO Create a type annotation to check at compile time if first constructor
 	// has no args.
-	public Type instanciateType(String typeName) {
+	public Type instanciateTypeFromClassName(String typeClassName) {
 		for (var basicType : basicTypeSet) {
-			if (basicType.getSimpleName().equals(typeName)) {
+			if (basicType.getSimpleName().equals(typeClassName)) {
 				try {
 					Type type = (Type) basicType.getConstructors()[0].newInstance();
 					return type;
@@ -50,7 +50,17 @@ public class TypeManager {
 		
 		return null;
 	}
+	
+	public Type instanciateTypeFromTypeName(String typeName) {
+		String typeClassName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1) + "Type";
+		return instanciateTypeFromClassName(typeClassName);
+	}
 
+	@Override
+	public void initManager() {
+		// Nothing to do here
+	}
+	
 	public static TypeManager getInstance() {
 		return instance;
 	}

@@ -1,26 +1,23 @@
 package com.taf.logic.type.parameter;
 
-public class MinInstanceParameter extends TypeParameter {
+import com.taf.exception.ParseException;
 
-	private static final String PARAMETER_NAME = "min";
-	
-	private Integer value;
+public class MinInstanceParameter extends MinParameter {
+
+	public MinInstanceParameter() {
+		super();
+	}
 
 	public MinInstanceParameter(Integer value) {
-		super(PARAMETER_NAME);
-		this.value = value;
+		super(value, false);
 	}
 
-	public void setValue(Integer value) {
-		this.value = value;
-	}
-
-	public int getValue() {
-		return value;
-	}
-	
 	@Override
-	public String valueToString() {
-		return String.valueOf(value.longValue());
+	protected void valuefromString(String stringValue) throws ParseException {
+		try {
+			this.value = Integer.valueOf(stringValue);
+		} catch (NumberFormatException e) {
+			throw new ParseException("Min instance number must be an integer!");
+		}
 	}
 }

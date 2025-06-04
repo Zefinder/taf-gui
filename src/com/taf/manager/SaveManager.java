@@ -1,0 +1,308 @@
+package com.taf.manager;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.taf.exception.ParseException;
+import com.taf.logic.field.Node;
+import com.taf.logic.field.Parameter;
+import com.taf.logic.field.Root;
+import com.taf.logic.type.AnonymousType;
+import com.taf.logic.type.BooleanType;
+import com.taf.logic.type.IntegerType;
+import com.taf.logic.type.Type;
+import com.taf.util.OSValidator;
+
+/**
+ * <p>
+ * Manager in charge of saving and reading TAF project files. The file syntax is
+ * easy to understand:
+ * <ul>
+ * <li>Each element has arguments with the following regex:
+ * arg_name="arg_value". There must be no space between the name and the equal
+ * sign and between the equal sign and the double-quote.
+ * <li>The argument separator is a space just to be readable (it is not
+ * mandatory to have a separator since we match pattern.
+ * <lI>Each node has an implicit id (starting with 0 being the root).
+ * <li>Each element must have a non empty <code>entity</code>,
+ * <code>name</code>, and <code>parent</code>. The root's parent id is -1.
+ * <li>Entity is either <code>parameter</code>, <code>node</code>, or
+ * <code>constraint</code>
+ * </ul>
+ * </p>
+ * 
+ * <p>
+ * The grammar for each line is the following: (value is a non-empty string that
+ * does not contain the double-quote character (&quot;)
+ * 
+ * <pre>
+ * tEQ   ::= '='
+ * tQUOT ::= '&quot;'
+ * 
+ * tENTITY ::= 'entity'
+ * tPARENT ::= 'parent'
+ * tNAME   ::= 'name'
+ * 
+ * line ::= line_args
+ *       |  line_args args
+ *       
+ * line_args ::= entity_arg parent_arg name_arg
+ * 
+ * entity_arg ::= tENTITY arg_value
+ * parent_arg ::= tPARENT arg_value
+ * name_arg   ::= tNAME arg_value
+ * 
+ * args ::= arg args
+ *       |  arg    
+ *            
+ * arg       ::= arg_name arg_value
+ * arg_value ::= tEQ tQUOT value tQUOT
+ * </pre>
+ * 
+ * <code>arg_name</code> is the type-specific parameter of the entity (for
+ * instance, strings will have <code>values</code> and <code>weights</code>).
+ * </p>
+ * 
+ * <p>
+ * An example of this can be:
+ * 
+ * <pre>
+ * entity="node" parent="-1" name="root"
+ * entity="node" parent="0" name="node" nb_instances="2"
+ * entity="parameter" parent="1" name="node_int" type="integer"
+ * entity="parameter" parent="0" name="test" type="boolean"
+ * </pre>
+ * 
+ * This will create the following tree:
+ * 
+ * <pre>
+ * root
+ * |___ node: node
+ * |    |___ node_int: integer
+ * |
+ * |___ test: boolean
+ * </pre>
+ * </p>
+ */
+public class SaveManager extends Manager {
+
+	private static final SaveManager instance = new SaveManager();
+
+	private final Set<File> projectNames;
+	private final OSValidator OS;
+
+	private String mainDirectory;
+	private File mainDirectoryFile;
+
+	public SaveManager() {
+		projectNames = new HashSet<File>();
+		OS = OSValidator.getOS();
+	}
+
+	@Override
+	public void initManager() {
+		// For each OS, check if the main directory is present
+		switch (OS) {
+		case WINDOWS:
+			// Create in appdata
+			mainDirectory = System.getenv("APPDATA");
+			break;
+
+		case MAC:
+		case UNIX:
+			// Create in home
+			mainDirectory = System.getProperty("user.home");
+			break;
+
+		default:
+			// Use the current directory
+			mainDirectory = ".";
+			break;
+		}
+
+		// TODO Tell the user that a directory will be created
+		mainDirectory += File.separator + "tafgui";
+		mainDirectoryFile = new File(mainDirectory);
+
+		// Create all directories if do not exist
+		initCreation();
+
+		// Register all project files
+		initProjectFiles();
+	}
+
+	private void initCreation() {
+		if (!mainDirectoryFile.exists()) {
+			mainDirectoryFile.mkdirs();
+		}
+	}
+
+	private void initProjectFiles() {
+		File[] tafFiles = mainDirectoryFile.listFiles((dir, name) -> name.endsWith(".taf"));
+		for (File tafFile : tafFiles) {
+			projectNames.add(tafFile);
+		}
+	}
+
+	private Optional<String> getArgument(String line, String argumentName) {
+		Pattern argumentPattern = Pattern.compile("%s=\"([^\"]+)\"".formatted(argumentName));
+		Matcher m = argumentPattern.matcher(line);
+		if (m.find()) {
+			return Optional.of(m.group(1));
+		}
+
+		return Optional.empty();
+	}
+
+	/**
+	 * Open the project with the specified file. The save file syntax is defined in
+	 * {@link SaveManager}. It returns the root of the project, containing all nodes
+	 * and parameters.
+	 * 
+	 * @return the project root.
+	 * @throws ParseException
+	 * @throws FileNotFoundException
+	 */
+	public Root openProject(File projectFile) throws IOException, ParseException {
+		Root root = null;
+		int lineNumber = 1;
+		List<Node> nodes = new ArrayList<Node>();
+		
+		try (BufferedReader reader = new BufferedReader(new FileReader(projectFile))) {
+			String line;
+			while ((line = reader.readLine()) != null) {
+				// Get entity type
+				Optional<String> entityTypeOp = getArgument(line, "entity");
+				if (entityTypeOp.isEmpty()) {
+					throwParseException("The entity must have a type", lineNumber);
+				}
+				String entityType = entityTypeOp.get();
+
+				// Get parent id
+				Optional<String> parentIdOp = getArgument(line, "parent");
+				if (parentIdOp.isEmpty()) {
+					throwParseException("The entity must have a parent", lineNumber);
+				}
+				int parentId = Integer.valueOf(parentIdOp.get().strip());
+
+				// Check if parent exists
+				if (parentId < -1 || parentId >= nodes.size()) {
+					throwParseException("The parent %d does not exist!".formatted(parentId), lineNumber);
+				}
+				
+				// TODO Check if multiple roots
+				
+				// Search for the name
+				Optional<String> entityNameOp = getArgument(line, "name");
+				if (entityNameOp.isEmpty()) {
+					throw new ParseException("Entity must have a name! (line %d)".formatted(lineNumber));
+				}
+				String entityName = entityNameOp.get();
+
+				switch (entityType) {
+				case "node":
+					Node node;
+
+					if (parentId == -1) {
+						// This is the root node
+						root = new Root(entityName);
+						node = root;
+
+					} else {
+						AnonymousType type = new AnonymousType();
+
+						// Check if number of instances or min-max, else throw
+						Optional<String> instanceNumberOp = getArgument(line, "nb_instances");
+						if (instanceNumberOp.isEmpty()) {
+							Optional<String> minNumberOp = getArgument(line, "min");
+							Optional<String> maxNumberOp = getArgument(line, "max");
+
+							if (minNumberOp.isEmpty() || maxNumberOp.isEmpty()) {
+								throwParseException(
+										"Node must have either an instance number or a minimum and a maximum number",
+										lineNumber);
+							}
+
+							int minNumber = Integer.valueOf(minNumberOp.get().strip());
+							int maxNumber = Integer.valueOf(maxNumberOp.get().strip());
+							type.addMinMaxInstanceParameter(minNumber, maxNumber);
+							
+						} else {
+							int instanceNumber = Integer.valueOf(instanceNumberOp.get().strip());
+							type.editInstanceNumberParameter(instanceNumber);
+						}
+						
+						node = new Node(entityName, type);
+						nodes.get(parentId).addField(node);					
+					}
+
+					nodes.add(node);
+					break;
+
+				case "parameter":
+					// Get parameter type
+					Optional<String> typeNameOp = getArgument(line, "type");
+					if (typeNameOp.isEmpty()) {
+						throwParseException("Parameter must have a type", lineNumber);
+					}
+					String typeName = typeNameOp.get();
+					Type type = null; // Set to null for compiler
+					
+					switch (typeName) {
+					case BooleanType.TYPE_NAME:
+						type = new BooleanType();
+						break;
+					
+					case IntegerType.TYPE_NAME:
+						type = new IntegerType();
+//					for (String mandatoryType : type.getMandatoryParametersName()) {
+//						// TODO Create String constructor for type parameter and use type class
+//					}
+						
+						break;
+
+					default:
+						throwParseException("Parameter type must be known", lineNumber);
+					}
+					
+					Parameter parameter = new Parameter(entityName, type);
+					nodes.get(parentId).addField(parameter);
+					break;
+
+				case "constraint":
+					// TODO
+					break;
+				}
+
+				lineNumber++;
+			}
+		} catch (NumberFormatException e) {
+			throwParseException("An argument value was not a number (no more information)", lineNumber);
+		}
+		return root;
+	}
+	
+	public static void main(String[] args) throws IOException, ParseException {
+		Root root = SaveManager.instance.openProject(new File("/tmp/test.taf"));
+		System.out.println(root);
+	}
+
+	private static void throwParseException(String message, int lineNumber) throws ParseException {
+		throw new ParseException("%s (line %d)".formatted(message, lineNumber));
+	}
+
+	public static SaveManager getInstance() {
+		return instance;
+	}
+
+}

@@ -2,23 +2,22 @@ package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
 
-public class MaxInstanceParameter extends MaxParameter {
-
-	public MaxInstanceParameter() {
+public class MinIntegerParameter extends MinParameter {
+	
+	public MinIntegerParameter() {
 		super();
 	}
 	
-	public MaxInstanceParameter(Integer value) {
+	public MinIntegerParameter(Number value) {
 		super(value, false);
 	}
-
+	
 	@Override
 	protected void valuefromString(String stringValue) throws ParseException {
 		try {			
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Max instance number must be an integer!");
+			throw new ParseException("Min integer number must be an integer!");
 		}
 	}
-
 }

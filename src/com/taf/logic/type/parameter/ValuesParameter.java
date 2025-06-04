@@ -1,9 +1,11 @@
 package com.taf.logic.type.parameter;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.taf.exception.ParseException;
 import com.taf.manager.ConstantManager;
 
 public class ValuesParameter extends TypeParameter {
@@ -14,7 +16,7 @@ public class ValuesParameter extends TypeParameter {
 
 	public ValuesParameter() {
 		super(PARAMETER_NAME);
-		valueMap = new HashMap<String, Integer>();
+		valueMap = new LinkedHashMap<String, Integer>();
 	}
 
 	/**
@@ -97,6 +99,18 @@ public class ValuesParameter extends TypeParameter {
 
 	public Set<Entry<String, Integer>> getValues() {
 		return valueMap.entrySet();
+	}
+	
+	@Override
+	protected void valuefromString(String stringValue) throws ParseException {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		String[] values = stringValue.split(separator);
+		
+		for (String value : values) {
+			if (!value.isBlank()) {
+				addValue(value);
+			}
+		}
 	}
 
 	@Override
