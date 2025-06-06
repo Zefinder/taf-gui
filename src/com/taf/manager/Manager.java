@@ -18,6 +18,7 @@ public abstract class Manager {
 	
 	public abstract void initManager();
 	
+	// TODO Add annotation for init order
 	public static final void initAllManagers() {
 		for (Manager manager : MANAGERS) {
 			manager.initManager();

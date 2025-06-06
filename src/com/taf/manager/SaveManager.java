@@ -1,9 +1,11 @@
 package com.taf.manager;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -14,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taf.exception.ParseException;
+import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Root;
@@ -109,6 +112,9 @@ public class SaveManager extends Manager {
 	private String mainDirectory;
 	private File mainDirectoryFile;
 
+	private File projectFile;
+	private Root projectRoot;
+
 	public SaveManager() {
 		projectNames = new HashSet<File>();
 		OS = OSValidator.getOS();
@@ -169,6 +175,10 @@ public class SaveManager extends Manager {
 		return Optional.empty();
 	}
 
+	private File getProjectFileFromName(String projectName) {
+		return new File(mainDirectory + File.separator + projectName);
+	}
+
 	/**
 	 * Open the project with the specified file. The save file syntax is defined in
 	 * {@link SaveManager}. It returns the root of the project, containing all nodes
@@ -178,7 +188,8 @@ public class SaveManager extends Manager {
 	 * @throws ParseException
 	 * @throws FileNotFoundException
 	 */
-	public Root openProject(File projectFile) throws IOException, ParseException {
+	public Root openProject(String projectName) throws IOException, ParseException {
+		this.projectFile = getProjectFileFromName(projectName);
 		Root root = null;
 		int lineNumber = 1;
 		List<Node> nodes = new ArrayList<Node>();
@@ -329,11 +340,66 @@ public class SaveManager extends Manager {
 		} catch (ParseException e1) {
 			throwParseException(e1.getMessage(), lineNumber);
 		}
+
+		this.projectRoot = root;
+		System.out.println(root.getType().toString());
 		return root;
+	}
+
+	private void writeNode(BufferedWriter writer, String format, Node node, int nodeId) throws IOException {
+		final String newLine = ConstantManager.LINE_JUMP;
+
+		for (Field field : node.getFieldList()) {
+			boolean isNode = field instanceof Node;
+			String entityString = "node";
+			if (!isNode) {
+				entityString = "parameter";
+			}
+			
+			writer.write(format.formatted("entity", entityString));
+			writer.write(format.formatted("parent", nodeId));
+			writer.write(format.formatted("name", field.getName()));
+			writer.write(field.getType().toString());
+			writer.write(newLine);
+			
+			if (isNode) {
+				writeNode(writer, format, (Node) field, nodeId + 1);
+			}
+		}
+	}
+
+	public void saveProject() throws IOException {
+		final String separator = ConstantManager.PARAMETER_SEPARATOR;
+		final String newLine = ConstantManager.LINE_JUMP;
+		final String format = ConstantManager.PARAMETER_STRING_FORMAT + separator;
+
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
+			// Write root node
+			writer.write(format.formatted("entity", "node"));
+			writer.write(format.formatted("parent", "-1"));
+			writer.write(format.formatted("name", projectRoot.getName()));
+			writer.write(newLine);
+			writeNode(writer, format, projectRoot, 0);
+		}
+	}
+	
+	public boolean createProject(String projectName) throws IOException {
+		File newProjectFile = getProjectFileFromName(projectName);
+		if (newProjectFile.exists()) {
+			return false;
+		}
+		
+		newProjectFile.createNewFile();
+		// TODO Create root node and write it in the file.
+		return true;
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
 		throw new ParseException("%s (line %d)".formatted(message, lineNumber));
+	}
+	
+	public String[] getProjectNames() {
+		return projectNames.stream().map(file -> file.getName()).toArray(String[]::new);
 	}
 
 	public static SaveManager getInstance() {

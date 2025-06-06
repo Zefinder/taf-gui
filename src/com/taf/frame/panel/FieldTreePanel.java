@@ -86,7 +86,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			Event event = new FieldSelectedEvent(nodeInfo.getField());
 			EventManager.getInstance().fireEvent(event);
 			
-			if (nodeInfo.isRoot) {				
+			if (nodeInfo.isRoot) {
 				System.out.println(nodeInfo.getField());
 			}
 		});
@@ -177,6 +177,10 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		// If the node is the root and had no children, expand
 		tree.expandRow(getNodeRow(node));
 	}
+	
+	// TODO Add Constraint
+	
+	// TODO Add remove field
 	
 	@EventMethod
 	public void onFieldNameChanged(FieldNameChangedEvent event) {

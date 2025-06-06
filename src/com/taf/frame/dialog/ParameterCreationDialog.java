@@ -23,6 +23,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 	public ParameterCreationDialog() {
 		this.setTitle("Create a new parameter");
 
+		// TODO Replace with ConstantManager
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(20, 15, 5, 5);

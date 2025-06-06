@@ -6,20 +6,16 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import com.taf.logic.field.Field;
-import com.taf.logic.field.Node;
-import com.taf.logic.type.AnonymousType;
+public class ProjectCreationDialog extends InputInformationDialog {
 
-public class NodeCreationDialog extends InputInformationDialog {
-
-	private static final long serialVersionUID = 8094717940445682259L;
+	private static final long serialVersionUID = -8365643430677886812L;
 
 	private final JTextField fieldName;
 
-	private Field createdField;
+	private String projectName;
 
-	public NodeCreationDialog() {
-		this.setTitle("Create a new node");
+	public ProjectCreationDialog() {
+		this.setTitle("Create a new project");
 
 		// TODO Replace with ConstantManager
 		GridBagConstraints c = new GridBagConstraints();
@@ -30,7 +26,7 @@ public class NodeCreationDialog extends InputInformationDialog {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel fieldLabel = new JLabel("Parameter name");
+		JLabel fieldLabel = new JLabel("Project name");
 		addComponent(fieldLabel, c);
 
 		c.insets = new Insets(20, 5, 5, 15);
@@ -43,21 +39,19 @@ public class NodeCreationDialog extends InputInformationDialog {
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
-			com.taf.logic.type.Type type = new AnonymousType();
-			createdField = new Node(name, type);
+			projectName = name;
 			dispose();
 		}
 	}
-	
-	public Field getField() {
-		return createdField;
+
+	public String getProjectName() {
+		return projectName;
 	}
 
 	@Override
 	public void initDialog() {
-		createdField = null;
+		projectName = null;
 		super.initDialog();
 	}
-
 
 }
