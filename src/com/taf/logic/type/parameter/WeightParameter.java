@@ -9,10 +9,10 @@ public class WeightParameter extends TypeParameter {
 
 	private int[] weights;
 
-	public WeightParameter() {		
+	public WeightParameter() {
 		super(PARAMETER_NAME);
 	}
-	
+
 	public WeightParameter(int... weights) {
 		this();
 		this.weights = weights;
@@ -23,12 +23,17 @@ public class WeightParameter extends TypeParameter {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 		weights = new int[values.length];
-		
-		for (String value : values) {
-			// TOOO
-		}	
+
+		try {
+			for (int i = 0; i < values.length; i++) {
+				int value = Integer.valueOf(values[i]);
+				weights[i] = value < 0 ? 0 : value;
+			}
+		} catch (NumberFormatException e) {
+			throw new ParseException("Weight value must be an integer!");
+		}
 	}
-	
+
 	@Override
 	public String valueToString() {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
@@ -36,7 +41,7 @@ public class WeightParameter extends TypeParameter {
 
 		for (int i = 0; i < weights.length; i++) {
 			valueStr += String.valueOf(weights[i]);
-			
+
 			if (i != weights.length - 1) {
 				valueStr += separator;
 			}

@@ -45,7 +45,7 @@ public class AnonymousType extends Type {
 			return 0;
 		}
 		
-		return min.getValue();
+		return min.getValue().intValue();
 	}
 
 	public void editMaxInstanceParameter(int maxValue) {
@@ -59,7 +59,7 @@ public class AnonymousType extends Type {
 			return 0;
 		}
 		
-		return max.getValue();
+		return max.getValue().intValue();
 	}
 	
 	public boolean hasMinMaxInstance() {
