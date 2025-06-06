@@ -6,19 +6,19 @@ import com.taf.manager.ConstantManager;
 
 public abstract class MaxParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "max";
-
+	public static final String PARAMETER_NAME = "max";
+	
 	private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
 
 	protected Number value;
 	private boolean isReal;
 
-	public MaxParameter() {
-		super(PARAMETER_NAME);
+	MaxParameter(String name) {
+		super(name);
 	}
 	
-	public MaxParameter(Number value, boolean isReal) {
-		this();
+	public MaxParameter(String name, Number value, boolean isReal) {
+		this(name);
 		this.value = value;
 		this.isReal = isReal;
 	}

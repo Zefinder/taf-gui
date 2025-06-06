@@ -20,9 +20,9 @@ public class RealType extends Type {
 			.add(MinRealParameter.class)
 			.build();
 	
-	private static final HashSet<Class<? extends TypeParameter>> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
-			.add(MaxRealParameter.class)
-			.add(MinRealParameter.class)
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(MaxRealParameter.PARAMETER_NAME)
+			.add(MinRealParameter.PARAMETER_NAME)
 			.build();
 
 	private TypeParameter typeName;
@@ -103,12 +103,12 @@ public class RealType extends Type {
 	}
 	
 	@Override
-	public Set<Class<? extends TypeParameter>> getMandatoryParametersName() {
-		return new HashSet<Class<? extends TypeParameter>>();
+	public Set<String> getMandatoryParametersName() {
+		return new HashSet<String>();
 	}
 	
 	@Override
-	public Set<Class<? extends TypeParameter>> getOptionalParametersName() {
+	public Set<String> getOptionalParametersName() {
 		return OPTIONAL_TYPE_PARAMETERS;
 	}
 	

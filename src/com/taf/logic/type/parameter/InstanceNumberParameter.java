@@ -4,11 +4,11 @@ import com.taf.exception.ParseException;
 
 public class InstanceNumberParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "nb_instances";
+	public static final String PARAMETER_NAME = "nb_instances";
 	
 	private int instanceNumber;
 	
-	public InstanceNumberParameter() {
+	InstanceNumberParameter() {
 		super(PARAMETER_NAME);
 	}
 	
@@ -26,7 +26,7 @@ public class InstanceNumberParameter extends TypeParameter {
 	}
 	
 	@Override
-	protected void valuefromString(String stringValue) throws ParseException {
+	public void valuefromString(String stringValue) throws ParseException {
 		try {			
 			this.instanceNumber = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

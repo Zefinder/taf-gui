@@ -5,21 +5,27 @@ import com.taf.manager.ConstantManager;
 
 public class WeightParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "weights";
+	public static final String PARAMETER_NAME = "weights";
 
 	private int[] weights;
 
-	public WeightParameter() {
+	WeightParameter() {
 		super(PARAMETER_NAME);
+		this.weights = new int[0];
 	}
 
 	public WeightParameter(int... weights) {
 		this();
+		// TODO Check if positive values
 		this.weights = weights;
+	}
+	
+	public int[] getWeights() {
+		return weights;
 	}
 
 	@Override
-	protected void valuefromString(String stringValue) throws ParseException {
+	public void valuefromString(String stringValue) throws ParseException {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 		weights = new int[values.length];

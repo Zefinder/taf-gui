@@ -4,16 +4,18 @@ import com.taf.exception.ParseException;
 
 public class MinRealParameter extends MinParameter {
 	
-	public MinRealParameter() {
-		super();
+	public static final String PARAMETER_NAME = "min";
+	
+	MinRealParameter() {
+		super(PARAMETER_NAME);
 	}
 	
 	public MinRealParameter(Number value) {
-		super(value, true);
+		super(PARAMETER_NAME, value, true);
 	}
 	
 	@Override
-	protected void valuefromString(String stringValue) throws ParseException {
+	public void valuefromString(String stringValue) throws ParseException {
 		try {			
 			this.value = Double.valueOf(stringValue);
 		} catch (NumberFormatException e) {

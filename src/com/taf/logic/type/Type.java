@@ -16,19 +16,15 @@ public abstract class Type {
 		this.parameterList = new ArrayList<TypeParameter>();
 	}
 	
-	protected void addTypeParameter(TypeParameter typeParameter) {
-		if (isAllowedTypeParameter(typeParameter)) {
-			parameterList.add(typeParameter);
-		}
-	}
+	public abstract void addTypeParameter(TypeParameter typeParameter); 
 
 	public void removeTypeParameter(int index) {
 		parameterList.remove(index);
 	}
 
-	public abstract Set<Class<? extends TypeParameter>> getMandatoryParametersName();
+	public abstract Set<String> getMandatoryParametersName();
 	
-	public abstract Set<Class<? extends TypeParameter>> getOptionalParametersName();
+	public abstract Set<String> getOptionalParametersName();
 	
 	// TODO Remove this method
 	public abstract boolean isAllowedTypeParameter(TypeParameter typeParameter);

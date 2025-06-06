@@ -4,16 +4,18 @@ import com.taf.exception.ParseException;
 
 public class MaxRealParameter extends MaxParameter {
 
-	public MaxRealParameter() {
-		super();
+	public static final String PARAMETER_NAME = "max";
+	
+	MaxRealParameter() {
+		super(PARAMETER_NAME);
 	}
 	
 	public MaxRealParameter(Number value) {
-		super(value, true);
+		super(PARAMETER_NAME, value, true);
 	}
 	
 	@Override
-	protected void valuefromString(String stringValue) throws ParseException {
+	public void valuefromString(String stringValue) throws ParseException {
 		try {			
 			this.value = Double.valueOf(stringValue);
 		} catch (NumberFormatException e) {

@@ -6,19 +6,19 @@ import com.taf.manager.ConstantManager;
 
 public abstract class MinParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "min";
+	public static final String PARAMETER_NAME = "min";
 
 	private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
 
 	protected Number value;
 	private boolean isReal;
 
-	public MinParameter() {
-		super(PARAMETER_NAME);
+	MinParameter(String name) {
+		super(name);
 	}
 	
-	public MinParameter(Number value, boolean isReal) {
-		this();
+	public MinParameter(String name, Number value, boolean isReal) {
+		this(name);
 		this.value = value;
 		this.isReal = isReal;
 	}

@@ -21,6 +21,8 @@ public class ConstantManager extends Manager {
 	public static final String HASH_SEPARATOR = ":";
 	public static final String ELEMENT_SEPARATOR = ";";
 	public static final String PARAMETER_SEPARATOR = " ";
+	
+	public static final String DEFAULT_ROOT_NAME = "test_cases";
 
 	public static final GridBagConstraints getDefaultConstraint() {
 		GridBagConstraints c = new GridBagConstraints();

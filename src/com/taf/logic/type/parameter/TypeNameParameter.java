@@ -4,11 +4,11 @@ import com.taf.exception.ParseException;
 
 public class TypeNameParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "type";
+	public static final String PARAMETER_NAME = "type";
 	
 	private String typeName;
 	
-	public TypeNameParameter() {
+	TypeNameParameter() {
 		super(PARAMETER_NAME);
 	}
 	
@@ -22,7 +22,7 @@ public class TypeNameParameter extends TypeParameter {
 	}
 	
 	@Override
-	protected void valuefromString(String stringValue) throws ParseException {
+	public void valuefromString(String stringValue) throws ParseException {
 		this.typeName = stringValue;
 	}
 

@@ -4,16 +4,18 @@ import com.taf.exception.ParseException;
 
 public class MinInstanceParameter extends MinParameter {
 
-	public MinInstanceParameter() {
-		super();
+	public static final String PARAMETER_NAME = "min";
+	
+	MinInstanceParameter() {
+		super(PARAMETER_NAME);
 	}
 
 	public MinInstanceParameter(Integer value) {
-		super(value, false);
+		super(PARAMETER_NAME, value, false);
 	}
 
 	@Override
-	protected void valuefromString(String stringValue) throws ParseException {
+	public void valuefromString(String stringValue) throws ParseException {
 		try {
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

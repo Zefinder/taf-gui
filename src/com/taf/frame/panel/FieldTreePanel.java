@@ -33,7 +33,6 @@ import com.taf.manager.EventManager;
 public class FieldTreePanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = -8299875121910645683L;
-	private static final String DEFAULT_ROOT_NAME = "test_cases";
 
 	private JTree tree;
 	private DefaultTreeModel treeModel;
@@ -42,7 +41,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 
 	private DefaultMutableTreeNode rootNode;
 
-	public FieldTreePanel() {
+	public FieldTreePanel(Root root) {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		EventManager.getInstance().registerEventListener(this);
@@ -72,8 +71,8 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		c.gridx = 0;
 		c.gridy = 1;
 		c.weighty = 1;
-		Field field = new Root(DEFAULT_ROOT_NAME);
-		rootNode = new DefaultMutableTreeNode(new NodeObject(field));
+		rootNode = new DefaultMutableTreeNode(new NodeObject(root));
+		initTreeNodes(rootNode, root);
 		tree = new JTree(rootNode);
 		treeModel = (DefaultTreeModel) tree.getModel();
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -95,6 +94,17 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		this.add(treeView, c);
 	}
 
+	private void initTreeNodes(DefaultMutableTreeNode parentNode, Node node) {
+		for (Field field : node.getFieldList()) {
+			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(field));
+			parentNode.add(treeNode);
+			
+			if (field instanceof Node) {
+				initTreeNodes(treeNode, (Node) field);
+			}
+		}
+	}
+	
 	private DefaultMutableTreeNode getNearestNodeField() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		if (node == null) {

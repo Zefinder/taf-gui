@@ -18,9 +18,9 @@ public class IntegerType extends Type {
 			.add(MinIntegerParameter.class)
 			.build();
 	
-	private static final HashSet<Class<? extends TypeParameter>> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
-			.add(MaxIntegerParameter.class)
-			.add(MinIntegerParameter.class)
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(MaxIntegerParameter.PARAMETER_NAME)
+			.add(MinIntegerParameter.PARAMETER_NAME)
 			.build();
 
 	private TypeParameter typeName;
@@ -101,12 +101,12 @@ public class IntegerType extends Type {
 	}
 	
 	@Override
-	public Set<Class<? extends TypeParameter>> getMandatoryParametersName() {
-		return new HashSet<Class<? extends TypeParameter>>();
+	public Set<String> getMandatoryParametersName() {
+		return new HashSet<String>();
 	}
 	
 	@Override
-	public Set<Class<? extends TypeParameter>> getOptionalParametersName() {
+	public Set<String> getOptionalParametersName() {
 		return OPTIONAL_TYPE_PARAMETERS;
 	}
 	

@@ -78,15 +78,20 @@ public class AnonymousType extends Type {
 		min = null;
 		max = null;
 	}
+	
+	@Override
+	public void addTypeParameter(TypeParameter typeParameter) {
+		return;
+	}
 
 	@Override
-	public Set<Class<? extends TypeParameter>> getMandatoryParametersName() {
-		return new HashSet<Class<? extends TypeParameter>>();
+	public Set<String> getMandatoryParametersName() {
+		return new HashSet<String>();
 	}
 	
 	@Override
-	public Set<Class<? extends TypeParameter>> getOptionalParametersName() {
-		return new HashSet<Class<? extends TypeParameter>>();
+	public Set<String> getOptionalParametersName() {
+		return new HashSet<String>();
 	}
 
 	@Override

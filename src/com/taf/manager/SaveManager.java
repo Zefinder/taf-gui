@@ -20,7 +20,12 @@ import com.taf.logic.field.Root;
 import com.taf.logic.type.AnonymousType;
 import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.IntegerType;
+import com.taf.logic.type.RealType;
+import com.taf.logic.type.StringType;
 import com.taf.logic.type.Type;
+import com.taf.logic.type.parameter.TypeParameter;
+import com.taf.logic.type.parameter.TypeParameterFactory;
+import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
 import com.taf.util.OSValidator;
 
 /**
@@ -177,7 +182,7 @@ public class SaveManager extends Manager {
 		Root root = null;
 		int lineNumber = 1;
 		List<Node> nodes = new ArrayList<Node>();
-		
+
 		try (BufferedReader reader = new BufferedReader(new FileReader(projectFile))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -193,15 +198,15 @@ public class SaveManager extends Manager {
 				if (parentIdOp.isEmpty()) {
 					throwParseException("The entity must have a parent", lineNumber);
 				}
-				int parentId = Integer.valueOf(parentIdOp.get().strip());
+				int parentId = Integer.valueOf(parentIdOp.get());
 
 				// Check if parent exists
 				if (parentId < -1 || parentId >= nodes.size()) {
 					throwParseException("The parent %d does not exist!".formatted(parentId), lineNumber);
 				}
-				
+
 				// TODO Check if multiple roots
-				
+
 				// Search for the name
 				Optional<String> entityNameOp = getArgument(line, "name");
 				if (entityNameOp.isEmpty()) {
@@ -228,22 +233,21 @@ public class SaveManager extends Manager {
 							Optional<String> maxNumberOp = getArgument(line, "max");
 
 							if (minNumberOp.isEmpty() || maxNumberOp.isEmpty()) {
-								throwParseException(
-										"Node must have either an instance number or a minimum and a maximum number",
-										lineNumber);
+								throw new ParseException(
+										"Node must have either an instance number or a minimum and a maximum number");
 							}
 
-							int minNumber = Integer.valueOf(minNumberOp.get().strip());
-							int maxNumber = Integer.valueOf(maxNumberOp.get().strip());
+							int minNumber = Integer.valueOf(minNumberOp.get());
+							int maxNumber = Integer.valueOf(maxNumberOp.get());
 							type.addMinMaxInstanceParameter(minNumber, maxNumber);
-							
+
 						} else {
-							int instanceNumber = Integer.valueOf(instanceNumberOp.get().strip());
+							int instanceNumber = Integer.valueOf(instanceNumberOp.get());
 							type.editInstanceNumberParameter(instanceNumber);
 						}
-						
+
 						node = new Node(entityName, type);
-						nodes.get(parentId).addField(node);					
+						nodes.get(parentId).addField(node);
 					}
 
 					nodes.add(node);
@@ -256,25 +260,59 @@ public class SaveManager extends Manager {
 						throwParseException("Parameter must have a type", lineNumber);
 					}
 					String typeName = typeNameOp.get();
-					Type type = null; // Set to null for compiler
-					
-					switch (typeName) {
-					case BooleanType.TYPE_NAME:
-						type = new BooleanType();
-						break;
-					
-					case IntegerType.TYPE_NAME:
-						type = new IntegerType();
-//					for (String mandatoryType : type.getMandatoryParametersName()) {
-//						// TODO Create String constructor for type parameter and use type class
-//					}
-						
-						break;
+					TypeParameterFactory.MinMaxTypeParameterType maxTypeParameterType;
+					Type type = switch (typeName) {
+					case BooleanType.TYPE_NAME: {
+						maxTypeParameterType = MinMaxTypeParameterType.NONE;
+						yield new BooleanType();
+					}
+
+					case IntegerType.TYPE_NAME: {
+						maxTypeParameterType = MinMaxTypeParameterType.INTEGER;
+						yield new IntegerType();
+					}
+
+					case RealType.TYPE_NAME: {
+						maxTypeParameterType = MinMaxTypeParameterType.REAL;
+						yield new RealType();
+					}
+
+					case StringType.TYPE_NAME: {
+						maxTypeParameterType = MinMaxTypeParameterType.NONE;
+						yield new StringType();
+					}
 
 					default:
-						throwParseException("Parameter type must be known", lineNumber);
+						throw new ParseException("Unexpected parameter type value: " + typeName);
+					};
+
+					for (String mandatoryTypeName : type.getMandatoryParametersName()) {
+						Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
+						if (mandatoryTypeOp.isEmpty()) {
+							throw new ParseException(
+									"Type %s must have the \"%s\" argument".formatted(typeName, mandatoryTypeName));
+						}
+						String typeParameterValue = mandatoryTypeOp.get();
+
+						TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
+								maxTypeParameterType);
+						typeParameter.valuefromString(typeParameterValue);
+						type.addTypeParameter(typeParameter);
 					}
-					
+
+					// TODO Create function to add to type
+					for (String optionalTypeName : type.getOptionalParametersName()) {
+						Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
+						if (!optionalTypeOp.isEmpty()) {
+							String typeParameterValue = optionalTypeOp.get();
+
+							TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
+									maxTypeParameterType);
+							typeParameter.valuefromString(typeParameterValue);
+							type.addTypeParameter(typeParameter);
+						}
+					}
+
 					Parameter parameter = new Parameter(entityName, type);
 					nodes.get(parentId).addField(parameter);
 					break;
@@ -288,13 +326,10 @@ public class SaveManager extends Manager {
 			}
 		} catch (NumberFormatException e) {
 			throwParseException("An argument value was not a number (no more information)", lineNumber);
+		} catch (ParseException e1) {
+			throwParseException(e1.getMessage(), lineNumber);
 		}
 		return root;
-	}
-	
-	public static void main(String[] args) throws IOException, ParseException {
-		Root root = SaveManager.instance.openProject(new File("/tmp/test.taf"));
-		System.out.println(root);
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {

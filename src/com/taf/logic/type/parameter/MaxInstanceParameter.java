@@ -4,16 +4,18 @@ import com.taf.exception.ParseException;
 
 public class MaxInstanceParameter extends MaxParameter {
 
-	public MaxInstanceParameter() {
-		super();
+	public static final String PARAMETER_NAME = "max";
+	
+	MaxInstanceParameter() {
+		super(PARAMETER_NAME);
 	}
 	
 	public MaxInstanceParameter(Integer value) {
-		super(value, false);
+		super(PARAMETER_NAME, value, false);
 	}
 
 	@Override
-	protected void valuefromString(String stringValue) throws ParseException {
+	public void valuefromString(String stringValue) throws ParseException {
 		try {			
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

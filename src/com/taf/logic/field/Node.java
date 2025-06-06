@@ -68,7 +68,10 @@ public class Node extends Field {
 		}
 
 		return strConstraints;
-
+	}
+	
+	public List<Field> getFieldList() {
+		return fieldList;
 	}
 
 	@Override
