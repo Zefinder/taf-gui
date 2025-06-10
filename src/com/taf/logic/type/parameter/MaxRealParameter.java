@@ -3,6 +3,8 @@ package com.taf.logic.type.parameter;
 import com.taf.exception.ParseException;
 
 public class MaxRealParameter extends MaxParameter {
+	
+	private static final String ERROR_MESSAGE = "Max real number must be an integer or a real!";
 
 	public static final String PARAMETER_NAME = "max";
 	
@@ -19,7 +21,7 @@ public class MaxRealParameter extends MaxParameter {
 		try {			
 			this.value = Double.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Max real number must be an integer or a real!");
+			throw new ParseException(ERROR_MESSAGE);
 		}
 	}
 }

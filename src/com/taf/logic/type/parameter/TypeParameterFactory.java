@@ -3,6 +3,10 @@ package com.taf.logic.type.parameter;
 import com.taf.exception.ParseException;
 
 public class TypeParameterFactory {
+	
+	private static final String MAX_PARAMETER_ERROR_MESSAGE = "The parameter type for max must be different from NONE";
+	private static final String MIN_PARAMETER_ERROR_MESSAGE = "The parameter type for min must be different from NONE";
+	private static final String UNEXPECTED_VALUE_ERROR_MESSAGE = "Unexpected type name: ";
 
 	public enum MinMaxTypeParameterType {
 		INTEGER, REAL, INSTANCE, NONE;
@@ -35,7 +39,7 @@ public class TypeParameterFactory {
 				yield new MaxInstanceParameter();
 
 			default:
-				throw new ParseException("The parameter type for max must be different from NONE");
+				throw new ParseException(MAX_PARAMETER_ERROR_MESSAGE);
 			}
 		}
 
@@ -51,7 +55,7 @@ public class TypeParameterFactory {
 				yield new MinInstanceParameter();
 
 			default:
-				throw new ParseException("The parameter type for min must be different from NONE");
+				throw new ParseException(MIN_PARAMETER_ERROR_MESSAGE);
 			}
 		}
 
@@ -68,7 +72,7 @@ public class TypeParameterFactory {
 		}
 
 		default:
-			throw new ParseException("Unexpected type name: " + typeName);
+			throw new ParseException(UNEXPECTED_VALUE_ERROR_MESSAGE + typeName);
 		};
 
 		return type;

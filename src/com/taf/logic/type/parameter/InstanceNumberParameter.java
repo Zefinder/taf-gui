@@ -4,6 +4,8 @@ import com.taf.exception.ParseException;
 
 public class InstanceNumberParameter extends TypeParameter {
 
+	private static final String ERROR_MESSAGE = "Instance number must be an integer!";
+	
 	public static final String PARAMETER_NAME = "nb_instances";
 	
 	private int instanceNumber;
@@ -30,7 +32,7 @@ public class InstanceNumberParameter extends TypeParameter {
 		try {			
 			this.instanceNumber = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Instance number must be an integer!");
+			throw new ParseException(ERROR_MESSAGE);
 		}
 	}
 
