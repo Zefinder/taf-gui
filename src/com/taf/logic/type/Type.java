@@ -2,6 +2,7 @@ package com.taf.logic.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.manager.ConstantManager;
@@ -14,17 +15,18 @@ public abstract class Type {
 	public Type() {
 		this.parameterList = new ArrayList<TypeParameter>();
 	}
-
-	protected void addTypeParameter(TypeParameter typeParameter) {
-		if (isAllowedTypeParameter(typeParameter)) {
-			parameterList.add(typeParameter);
-		}
-	}
+	
+	public abstract void addTypeParameter(TypeParameter typeParameter); 
 
 	public void removeTypeParameter(int index) {
 		parameterList.remove(index);
 	}
 
+	public abstract Set<String> getMandatoryParametersName();
+	
+	public abstract Set<String> getOptionalParametersName();
+	
+	// TODO Remove this method
 	public abstract boolean isAllowedTypeParameter(TypeParameter typeParameter);
 
 	public abstract String typeToString();

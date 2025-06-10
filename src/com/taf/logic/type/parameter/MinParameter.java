@@ -4,17 +4,21 @@ import java.text.DecimalFormat;
 
 import com.taf.manager.ConstantManager;
 
-public class MinParameter extends TypeParameter {
+public abstract class MinParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "min";
-	
+	public static final String PARAMETER_NAME = "min";
+
 	private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
 
-	private Number value;
+	protected Number value;
 	private boolean isReal;
 
-	public MinParameter(Number value, boolean isReal) {
-		super(PARAMETER_NAME);
+	MinParameter(String name) {
+		super(name);
+	}
+	
+	public MinParameter(String name, Number value, boolean isReal) {
+		this(name);
 		this.value = value;
 		this.isReal = isReal;
 	}
@@ -22,11 +26,11 @@ public class MinParameter extends TypeParameter {
 	public void setValue(Number value) {
 		this.value = value;
 	}
-	
+
 	public Number getValue() {
 		return value;
 	}
-
+	
 	@Override
 	public String valueToString() {
 		return isReal ? realFormatter.format(value.doubleValue()) : String.valueOf(value.longValue());

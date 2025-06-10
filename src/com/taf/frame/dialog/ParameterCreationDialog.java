@@ -23,6 +23,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 	public ParameterCreationDialog() {
 		this.setTitle("Create a new parameter");
 
+		// TODO Replace with ConstantManager
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(20, 15, 5, 5);
@@ -55,7 +56,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {			
 			String typeName = (String) typeNames.getSelectedItem();
-			com.taf.logic.type.Type type = TypeManager.getInstance().instanciateType(typeName);
+			com.taf.logic.type.Type type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
 			createdField = new Parameter(name, type);
 			dispose();
 		}

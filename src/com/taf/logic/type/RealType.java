@@ -1,9 +1,10 @@
 package com.taf.logic.type;
 
 import java.util.HashSet;
+import java.util.Set;
 
-import com.taf.logic.type.parameter.MaxParameter;
-import com.taf.logic.type.parameter.MinParameter;
+import com.taf.logic.type.parameter.MaxRealParameter;
+import com.taf.logic.type.parameter.MinRealParameter;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.manager.ConstantManager;
@@ -11,15 +12,20 @@ import com.taf.util.HashSetBuilder;
 
 public class RealType extends Type {
 
-	private static final String TYPE_NAME = "real";
+	public static final String TYPE_NAME = "real";
 	private static final HashSet<Class<? extends TypeParameter>> ALLOWED_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
-			.add(MaxParameter.class)
-			.add(MinParameter.class)
+			.add(MaxRealParameter.class)
+			.add(MinRealParameter.class)
+			.build();
+	
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(MaxRealParameter.PARAMETER_NAME)
+			.add(MinRealParameter.PARAMETER_NAME)
 			.build();
 
 	private TypeParameter typeName;
-	private MinParameter min;
-	private MaxParameter max;
+	private MinRealParameter min;
+	private MaxRealParameter max;
 
 	public RealType() {
 		typeName = new TypeNameParameter(TYPE_NAME);
@@ -27,7 +33,7 @@ public class RealType extends Type {
 
 	public void addMinParameter(double minValue) {
 		if (min == null) {
-			min = new MinParameter(minValue, true);
+			min = new MinRealParameter(minValue);
 		} else {
 			min.setValue(minValue);
 		}
@@ -57,7 +63,7 @@ public class RealType extends Type {
 
 	public void addMaxParameter(double maxValue) {
 		if (max == null) {
-			max = new MaxParameter(maxValue, true);
+			max = new MaxRealParameter(maxValue);
 		} else {
 			max.setValue(maxValue);
 		}
@@ -85,6 +91,25 @@ public class RealType extends Type {
 		return max != null;
 	}
 
+	@Override
+	public void addTypeParameter(TypeParameter typeParameter) {
+		if (typeParameter instanceof MinRealParameter) {
+			addMinParameter(((MinRealParameter) typeParameter).getValue().doubleValue());
+		} else if (typeParameter instanceof MaxRealParameter) {
+			addMaxParameter(((MaxRealParameter) typeParameter).getValue().doubleValue());
+		}
+	}
+	
+	@Override
+	public Set<String> getMandatoryParametersName() {
+		return new HashSet<String>();
+	}
+	
+	@Override
+	public Set<String> getOptionalParametersName() {
+		return OPTIONAL_TYPE_PARAMETERS;
+	}
+	
 	@Override
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());

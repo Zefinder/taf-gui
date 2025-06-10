@@ -2,24 +2,24 @@ package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
 
-public class MinInstanceParameter extends MinParameter {
-
+public class MinRealParameter extends MinParameter {
+	
 	public static final String PARAMETER_NAME = "min";
 	
-	MinInstanceParameter() {
+	MinRealParameter() {
 		super(PARAMETER_NAME);
 	}
-
-	public MinInstanceParameter(Integer value) {
-		super(PARAMETER_NAME, value, false);
+	
+	public MinRealParameter(Number value) {
+		super(PARAMETER_NAME, value, true);
 	}
-
+	
 	@Override
 	public void valuefromString(String stringValue) throws ParseException {
-		try {
-			this.value = Integer.valueOf(stringValue);
+		try {			
+			this.value = Double.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Min instance number must be an integer!");
+			throw new ParseException("Min real number must be an integer or a real!");
 		}
 	}
 }

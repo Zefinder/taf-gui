@@ -4,17 +4,21 @@ import java.text.DecimalFormat;
 
 import com.taf.manager.ConstantManager;
 
-public class MaxParameter extends TypeParameter {
+public abstract class MaxParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "max";
-
+	public static final String PARAMETER_NAME = "max";
+	
 	private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
 
-	private Number value;
+	protected Number value;
 	private boolean isReal;
 
-	public MaxParameter(Number value, boolean isReal) {
-		super(PARAMETER_NAME);
+	MaxParameter(String name) {
+		super(name);
+	}
+	
+	public MaxParameter(String name, Number value, boolean isReal) {
+		this(name);
 		this.value = value;
 		this.isReal = isReal;
 	}

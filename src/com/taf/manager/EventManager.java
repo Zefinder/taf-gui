@@ -10,7 +10,7 @@ import com.taf.event.Event;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 
-public class EventManager {
+public class EventManager extends Manager {
 
 	private static final EventManager instance = new EventManager();
 
@@ -62,6 +62,11 @@ public class EventManager {
 
 	public static EventManager getInstance() {
 		return instance;
+	}
+	
+	@Override
+	public void initManager() {
+		// Nothing to do here
 	}
 
 	private static class ListenerObject {

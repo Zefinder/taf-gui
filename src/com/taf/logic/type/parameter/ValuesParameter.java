@@ -1,20 +1,22 @@
 package com.taf.logic.type.parameter;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.taf.exception.ParseException;
 import com.taf.manager.ConstantManager;
 
 public class ValuesParameter extends TypeParameter {
 
-	private static final String PARAMETER_NAME = "values";
+	public static final String PARAMETER_NAME = "values";
 
 	private final HashMap<String, Integer> valueMap;
 
 	public ValuesParameter() {
 		super(PARAMETER_NAME);
-		valueMap = new HashMap<String, Integer>();
+		valueMap = new LinkedHashMap<String, Integer>();
 	}
 
 	/**
@@ -81,6 +83,24 @@ public class ValuesParameter extends TypeParameter {
 	}
 
 	/**
+	 * Sets the weights for the values. The weights will be attributed in order,
+	 * meaning that the 1st element will receive the 1st weight, etc... If there is
+	 * less weights than values, it will let the remaining values with their default
+	 * weights. If there is more weights than values, it will discard the weights
+	 * that do not correspond to a value.
+	 * 
+	 * @param weights the weights
+	 */
+	public void setWeights(int... weights) {
+		String[] values = valueMap.keySet().toArray(String[]::new);
+		int maxIndex = Math.min(values.length, weights.length);
+
+		for (int i = 0; i < maxIndex; i++) {
+			setWeight(values[i], weights[i]);
+		}
+	}
+
+	/**
 	 * Removes a value. If the value does not exist, this returns false.
 	 * 
 	 * @param value the value to remove
@@ -97,6 +117,18 @@ public class ValuesParameter extends TypeParameter {
 
 	public Set<Entry<String, Integer>> getValues() {
 		return valueMap.entrySet();
+	}
+
+	@Override
+	public void valuefromString(String stringValue) throws ParseException {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		String[] values = stringValue.split(separator);
+
+		for (String value : values) {
+			if (!value.isBlank()) {
+				addValue(value);
+			}
+		}
 	}
 
 	@Override

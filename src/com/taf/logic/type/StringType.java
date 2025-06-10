@@ -1,16 +1,22 @@
 package com.taf.logic.type;
 
+import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
+import com.taf.logic.type.parameter.WeightParameter;
 import com.taf.manager.ConstantManager;
+import com.taf.util.HashSetBuilder;
 
 public class StringType extends Type {
 
-	private static final String TYPE_NAME = "string";
+	public static final String TYPE_NAME = "string";
+
+	private static final HashSet<String> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(ValuesParameter.PARAMETER_NAME).add(WeightParameter.PARAMETER_NAME).build();
 
 	private TypeParameter typeName;
 	private ValuesParameter values;
@@ -42,6 +48,29 @@ public class StringType extends Type {
 
 	public Set<Entry<String, Integer>> getValues() {
 		return values.getValues();
+	}
+
+	@Override
+	public void addTypeParameter(TypeParameter typeParameter) {
+		// We assume that ValuesParameter comes first and then WeightParameter
+		// We also assume that weights and values are ordered the same way
+		if (typeParameter instanceof ValuesParameter) {
+			for (Entry<String, Integer> value : ((ValuesParameter) typeParameter).getValues()) {
+				values.addValue(value.getKey());
+			}
+		} else if (typeParameter instanceof WeightParameter) {
+			values.setWeights(((WeightParameter) typeParameter).getWeights());
+		}
+	}
+
+	@Override
+	public Set<String> getMandatoryParametersName() {
+		return MANDATORY_TYPE_PARAMETERS;
+	}
+
+	@Override
+	public Set<String> getOptionalParametersName() {
+		return new HashSet<String>();
 	}
 
 	@Override

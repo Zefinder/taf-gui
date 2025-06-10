@@ -1,6 +1,7 @@
 package com.taf.logic.type;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import com.taf.logic.type.parameter.InstanceNumberParameter;
 import com.taf.logic.type.parameter.MaxInstanceParameter;
@@ -44,7 +45,7 @@ public class AnonymousType extends Type {
 			return 0;
 		}
 		
-		return min.getValue();
+		return min.getValue().intValue();
 	}
 
 	public void editMaxInstanceParameter(int maxValue) {
@@ -58,7 +59,7 @@ public class AnonymousType extends Type {
 			return 0;
 		}
 		
-		return max.getValue();
+		return max.getValue().intValue();
 	}
 	
 	public boolean hasMinMaxInstance() {
@@ -76,6 +77,21 @@ public class AnonymousType extends Type {
 	public void removeMinMaxInstanceParameter() {
 		min = null;
 		max = null;
+	}
+	
+	@Override
+	public void addTypeParameter(TypeParameter typeParameter) {
+		return;
+	}
+
+	@Override
+	public Set<String> getMandatoryParametersName() {
+		return new HashSet<String>();
+	}
+	
+	@Override
+	public Set<String> getOptionalParametersName() {
+		return new HashSet<String>();
 	}
 
 	@Override

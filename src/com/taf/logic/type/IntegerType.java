@@ -1,9 +1,10 @@
 package com.taf.logic.type;
 
 import java.util.HashSet;
+import java.util.Set;
 
-import com.taf.logic.type.parameter.MaxParameter;
-import com.taf.logic.type.parameter.MinParameter;
+import com.taf.logic.type.parameter.MaxIntegerParameter;
+import com.taf.logic.type.parameter.MinIntegerParameter;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.manager.ConstantManager;
@@ -11,15 +12,20 @@ import com.taf.util.HashSetBuilder;
 
 public class IntegerType extends Type {
 
-	private static final String TYPE_NAME = "integer";
+	public static final String TYPE_NAME = "integer";
 	private static final HashSet<Class<? extends TypeParameter>> ALLOWED_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
-			.add(MaxParameter.class)
-			.add(MinParameter.class)
+			.add(MaxIntegerParameter.class)
+			.add(MinIntegerParameter.class)
+			.build();
+	
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(MaxIntegerParameter.PARAMETER_NAME)
+			.add(MinIntegerParameter.PARAMETER_NAME)
 			.build();
 
 	private TypeParameter typeName;
-	private MinParameter min;
-	private MaxParameter max;
+	private MinIntegerParameter min;
+	private MaxIntegerParameter max;
 
 	public IntegerType() {
 		typeName = new TypeNameParameter(TYPE_NAME);
@@ -27,7 +33,7 @@ public class IntegerType extends Type {
 
 	public void addMinParameter(long minValue) {
 		if (min == null) {
-			min = new MinParameter(minValue, false);
+			min = new MinIntegerParameter(minValue);
 		} else {
 			min.setValue(minValue);
 		}
@@ -57,7 +63,7 @@ public class IntegerType extends Type {
 
 	public void addMaxParameter(long maxValue) {
 		if (max == null) {
-			max = new MaxParameter(maxValue, false);
+			max = new MaxIntegerParameter(maxValue);
 		} else {
 			max.setValue(maxValue);
 		}
@@ -86,10 +92,29 @@ public class IntegerType extends Type {
 	}
 
 	@Override
+	public void addTypeParameter(TypeParameter typeParameter) {
+		if (typeParameter instanceof MinIntegerParameter) {
+			addMinParameter(((MinIntegerParameter) typeParameter).getValue().longValue());
+		} else if (typeParameter instanceof MaxIntegerParameter) {
+			addMaxParameter(((MaxIntegerParameter) typeParameter).getValue().longValue());
+		}
+	}
+	
+	@Override
+	public Set<String> getMandatoryParametersName() {
+		return new HashSet<String>();
+	}
+	
+	@Override
+	public Set<String> getOptionalParametersName() {
+		return OPTIONAL_TYPE_PARAMETERS;
+	}
+	
+	@Override
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());
 	}
-	
+
 	@Override
 	public String getName() {
 		return TYPE_NAME;
