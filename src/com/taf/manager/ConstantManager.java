@@ -14,9 +14,15 @@ public class ConstantManager extends Manager {
 	public static final DecimalFormat REAL_FORMATTER = new DecimalFormat("0.0##",
 			DecimalFormatSymbols.getInstance(Locale.US));
 
+	public static final String TAF_FILE_EXTENSION = ".taf";
+	
 	public static final String PARAMETER_ENTITY_NAME = "parameter";
 	public static final String NODE_ENTITY_NAME = "node";
 	public static final String CONSTRAINT_ENTITY_NAME = "constraint";
+	
+	public static final String PARAMETER_NAME_LABEL_TEXT = "Parameter name";
+	public static final String PARAMETER_TYPE_LABEL_TEXT = "Parameter type";
+	public static final String NODE_NAME_LABEL_TEXT = "Node name";
 	
 	public static final String PARAMETER_STRING_FORMAT = "%s=\"%s\"";
 	public static final String FIELD_STRING_FORMAT = "name=\"%s\" %s";

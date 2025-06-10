@@ -9,17 +9,20 @@ import javax.swing.JTextField;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.type.AnonymousType;
+import com.taf.manager.ConstantManager;
 
 public class NodeCreationDialog extends InputInformationDialog {
 
 	private static final long serialVersionUID = 8094717940445682259L;
+	
+	private static final String DIALOG_TITLE = "Create a new node";
 
 	private final JTextField fieldName;
 
 	private Field createdField;
 
 	public NodeCreationDialog() {
-		this.setTitle("Create a new node");
+		this.setTitle(DIALOG_TITLE);
 
 		// TODO Replace with ConstantManager
 		GridBagConstraints c = new GridBagConstraints();
@@ -30,12 +33,12 @@ public class NodeCreationDialog extends InputInformationDialog {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel fieldLabel = new JLabel("Parameter name");
+		JLabel fieldLabel = new JLabel(ConstantManager.NODE_NAME_LABEL_TEXT);
 		addComponent(fieldLabel, c);
 
 		c.insets = new Insets(20, 5, 5, 15);
 		c.gridx = 1;
-		fieldName = new JTextField(20);
+		fieldName = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addComponent(fieldName, c);
 	}
 
@@ -48,7 +51,7 @@ public class NodeCreationDialog extends InputInformationDialog {
 			dispose();
 		}
 	}
-	
+
 	public Field getField() {
 		return createdField;
 	}
@@ -58,6 +61,5 @@ public class NodeCreationDialog extends InputInformationDialog {
 		createdField = null;
 		super.initDialog();
 	}
-
 
 }

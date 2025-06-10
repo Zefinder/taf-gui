@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import com.taf.event.ProjectClosedEvent;
 import com.taf.frame.MainMenuFrame;
+import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.SaveManager;
 
@@ -16,20 +17,31 @@ public class TafProjectMenuBar extends JMenuBar {
 
 	private static final long serialVersionUID = -7423744825543652418L;
 
-	public TafProjectMenuBar() {
-		JMenu projectMenu = new JMenu("Project");
-		JMenuItem saveItem = new JMenuItem("Save project");
-		JMenuItem runMenu = new JMenuItem("Run TAF");
-		JMenuItem quitItem = new JMenuItem("Quit");
+	private static final String PROJECT_MENU_TEXT = "Project";
+	private static final String SAVE_ITEM_TEXT = "Save project";
+	private static final String RUN_ITEM_TEXT = "Run TAF";
+	private static final String QUIT_ITEM_TEXT = "Quit";
+	private static final String SETTINGS_MENU_TEXT = "Settings";
+	private static final String PATH_ITEM_TEXT = "Path settings";
 
-		JMenu settingsMenu = new JMenu("Settings");
-		JMenuItem pathItem = new JMenuItem("Path settings");
+	private static final String ERROR_DIALOG_TEXT = "An error occured when trying to save...\n";
+	private static final String ERROR_INPUT_DIALOG_TITLE = "Error!";
+	private static final String ERROR_INPUT_DIALOG_TEXT = "An error occured when trying to save... Do you want to quit anyways?\n";
+
+	public TafProjectMenuBar() {
+		JMenu projectMenu = new JMenu(PROJECT_MENU_TEXT);
+		JMenuItem saveItem = new JMenuItem(SAVE_ITEM_TEXT);
+		JMenuItem runItem = new JMenuItem(RUN_ITEM_TEXT);
+		JMenuItem quitItem = new JMenuItem(QUIT_ITEM_TEXT);
+
+		JMenu settingsMenu = new JMenu(SETTINGS_MENU_TEXT);
+		JMenuItem pathItem = new JMenuItem(PATH_ITEM_TEXT);
 
 		saveItem.addActionListener(e -> save());
 		quitItem.addActionListener(e -> quit());
 
 		projectMenu.add(saveItem);
-		projectMenu.add(runMenu);
+		projectMenu.add(runItem);
 		projectMenu.add(quitItem);
 
 		settingsMenu.add(pathItem);
@@ -42,8 +54,7 @@ public class TafProjectMenuBar extends JMenuBar {
 		try {
 			SaveManager.getInstance().saveProject();
 		} catch (IOException e) {
-			JOptionPane.showMessageDialog(null, "An error occured when trying to save...\n" + e.getMessage(), "Error",
-					JOptionPane.ERROR_MESSAGE);
+			ConstantManager.showError(ERROR_DIALOG_TEXT + e.getMessage());
 		}
 	}
 
@@ -51,9 +62,8 @@ public class TafProjectMenuBar extends JMenuBar {
 		try {
 			SaveManager.getInstance().saveProject();
 		} catch (IOException e) {
-			int answer = JOptionPane.showConfirmDialog(null,
-					"An error occured when trying to save... Do you want to quit anyways?\n" + e.getMessage(), "Error",
-					JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+			int answer = JOptionPane.showConfirmDialog(null, ERROR_INPUT_DIALOG_TEXT + e.getMessage(),
+					ERROR_INPUT_DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
 			if (answer != JOptionPane.YES_OPTION) {
 				return;
 			}

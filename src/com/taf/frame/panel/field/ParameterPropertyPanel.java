@@ -18,9 +18,6 @@ import com.taf.manager.TypeManager;
 public class ParameterPropertyPanel extends FieldPropertyPanel {
 
 	private static final long serialVersionUID = 8925850604078710611L;
-
-	private static final String FIELD_LABEL_TEXT = "Parameter name";
-	private static final String TYPE_NAME_LABEL_TEXT = "Parameter type";
 	
 	private static final String TYPE_STRING_FORMAT = "%s%sType";
 
@@ -35,7 +32,7 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 		c.insets = new Insets(0, 0, 5, 5);
 		c.weightx = 0;
 		c.weighty = 0;
-		JLabel fieldLabel = new JLabel(FIELD_LABEL_TEXT);
+		JLabel fieldLabel = new JLabel(ConstantManager.PARAMETER_NAME_LABEL_TEXT);
 		this.add(fieldLabel, c);
 
 		c.insets = new Insets(0, 5, 5, 0);
@@ -48,7 +45,7 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
-		JLabel typeNameLabel = new JLabel(TYPE_NAME_LABEL_TEXT);
+		JLabel typeNameLabel = new JLabel(ConstantManager.PARAMETER_TYPE_LABEL_TEXT);
 		this.add(typeNameLabel, c);
 
 		c.insets = new Insets(5, 5, 0, 0);

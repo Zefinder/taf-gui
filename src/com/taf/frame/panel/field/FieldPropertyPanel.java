@@ -14,7 +14,6 @@ import com.taf.manager.EventManager;
 public abstract class FieldPropertyPanel extends JPanel {
 
 	private static final long serialVersionUID = -202000016437797783L;
-	protected static final String FIELD_LABEL_TEXT = "Parameter name";
 
 	protected final JTextField fieldName;
 	private String name;
