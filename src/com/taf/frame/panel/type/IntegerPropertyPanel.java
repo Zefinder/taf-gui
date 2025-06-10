@@ -34,13 +34,13 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		if (hasMin) {
 			minValue = type.getMinParameter();			
 		} else {
-			minValue = 0;
+			minValue = ConstantManager.DEFAULT_MIN_VALUE;
 		}
 		
 		if (hasMax) {
 			maxValue = type.getMaxParameter();
 		} else {			
-			maxValue = 10;
+			maxValue = ConstantManager.DEFAULT_MAX_VALUE;
 		}
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
@@ -49,7 +49,7 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		c.insets = new Insets(0, 0, 5, 5);
 		c.weightx = 0;
 		c.weighty = 0;
-		minBox = new JCheckBox("Min");
+		minBox = new JCheckBox(ConstantManager.MIN_TEXT);
 		minBox.setSelected(hasMin);
 		minBox.addActionListener(e -> activateMin());
 		addComponent(minBox, c);
@@ -58,9 +58,9 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		minField = new JFormattedTextField(minValue);
-		minField.setColumns(20);
+		minField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		minField.setEnabled(hasMin);
-		minField.addPropertyChangeListener("value", this);
+		minField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(minField, c);
 
 		c.insets = new Insets(5, 0, 0, 5);
@@ -68,7 +68,7 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
-		maxBox = new JCheckBox("Max");
+		maxBox = new JCheckBox(ConstantManager.MAX_TEXT);
 		maxBox.setSelected(hasMax);
 		maxBox.addActionListener(e -> activateMax());
 		addComponent(maxBox, c);
@@ -78,9 +78,9 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		maxField = new JFormattedTextField(maxValue);
-		maxField.setColumns(20);
+		maxField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		maxField.setEnabled(hasMax);
-		maxField.addPropertyChangeListener("value", this);
+		maxField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(maxField, c);
 	}
 

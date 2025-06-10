@@ -15,9 +15,11 @@ import com.taf.manager.Manager;
 public class MainMenuFrame extends JFrame implements EventListener {
 
 	private static final long serialVersionUID = 1313545451015862976L;
+	private static final String FRAME_NAME = "TAF project explorer";
 
+	
 	public MainMenuFrame() {
-		this.setTitle("TAF project explorer");
+		this.setTitle(FRAME_NAME);
 		this.setSize(400, 400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);

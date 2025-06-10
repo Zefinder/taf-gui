@@ -21,7 +21,7 @@ public class NodePropertyPanel extends FieldPropertyPanel {
 		c.insets = new Insets(0, 0, 5, 5);
 		c.weightx = 0;
 		c.weighty = 0;
-		JLabel fieldLabel = new JLabel("Parameter name");
+		JLabel fieldLabel = new JLabel(FIELD_LABEL_TEXT);
 		this.add(fieldLabel, c);
 
 		c.insets = new Insets(0, 5, 5, 0);

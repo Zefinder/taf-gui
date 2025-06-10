@@ -19,6 +19,11 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 
 	private static final long serialVersionUID = 8925850604078710611L;
 
+	private static final String FIELD_LABEL_TEXT = "Parameter name";
+	private static final String TYPE_NAME_LABEL_TEXT = "Parameter type";
+	
+	private static final String TYPE_STRING_FORMAT = "%s%sType";
+
 	private final JComboBox<String> typeNames;
 
 	public ParameterPropertyPanel(Parameter parameter) {
@@ -30,7 +35,7 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 		c.insets = new Insets(0, 0, 5, 5);
 		c.weightx = 0;
 		c.weighty = 0;
-		JLabel fieldLabel = new JLabel("Parameter name");
+		JLabel fieldLabel = new JLabel(FIELD_LABEL_TEXT);
 		this.add(fieldLabel, c);
 
 		c.insets = new Insets(0, 5, 5, 0);
@@ -43,7 +48,7 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
-		JLabel typeNameLabel = new JLabel("Parameter type");
+		JLabel typeNameLabel = new JLabel(TYPE_NAME_LABEL_TEXT);
 		this.add(typeNameLabel, c);
 
 		c.insets = new Insets(5, 5, 0, 0);
@@ -52,9 +57,13 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 		c.gridx = 1;
 		typeNames = new JComboBox<String>(TypeManager.getInstance().getTypeNames().toArray(String[]::new));
 		String typeName = parameter.getType().getName();
-		typeNames.setSelectedItem(typeName.substring(0, 1).toUpperCase() + typeName.substring(1) + "Type");
+		typeNames.setSelectedItem(typeNameToTypeString(typeName));
 		typeNames.addActionListener(e -> updateFieldType(parameter));
 		this.add(typeNames, c);
+	}
+	
+	private String typeNameToTypeString(String typeName) {
+		return TYPE_STRING_FORMAT.formatted(typeName.substring(0, 1).toUpperCase(), typeName.substring(1));
 	}
 	
 	private void updateFieldType(Field field) {

@@ -22,6 +22,19 @@ import com.taf.util.IntegerEditor;
 public class StringPropertyPanel extends TypePropertyPanel {
 
 	private static final long serialVersionUID = -6799435160247338364L;
+	
+	private static final String ELEMENT_NAME_COLUMN_NAME = "Element name";
+	private static final String WEIGHT_COLUMN_NAME = "Weight";
+	private static final int ELEMENT_NAME_COLUMN_INDEX = 0;
+	private static final int WEIGHT_COLUMN_INDEX = 1;
+	private static final String[] COLUMN_IDENTIFIERS = new String[] { ELEMENT_NAME_COLUMN_NAME, WEIGHT_COLUMN_NAME };
+	
+	private static final String ADD_ELEMENT_BUTTON_TEXT = "+ Add Element";
+	private static final String REMOVE_ELEMENT_BUTTON_TEXT = "- Remove Element";
+	
+	private static final String INPUT_DIALOG_TITLE = "Element name";
+	private static final String INPUT_DIALOG_MESSAGE = "Enter the elemnt's name";
+	private static final String ERROR_MESSAGE = "Element name already exists";
 
 	private JTable elementsTable;
 	private JButton addElementButton;
@@ -40,20 +53,20 @@ public class StringPropertyPanel extends TypePropertyPanel {
 
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 1;
+				return column == WEIGHT_COLUMN_INDEX;
 			}
 		};
-		tableModel.setColumnCount(2);
-		tableModel.setColumnIdentifiers(new String[] { "Element name", "Weight" });
+		tableModel.setColumnCount(COLUMN_IDENTIFIERS.length);
+		tableModel.setColumnIdentifiers(COLUMN_IDENTIFIERS);
 		tableModel.addTableModelListener(e -> {
 			if (e.getType() == TableModelEvent.UPDATE) {
 				int row = e.getFirstRow();
 				int column = e.getColumn();
-				String elementValue = (String) tableModel.getValueAt(row, 0);
-				Integer elementWeight = (Integer) tableModel.getValueAt(row, 1);
+				String elementValue = (String) tableModel.getValueAt(row, ELEMENT_NAME_COLUMN_INDEX);
+				Integer elementWeight = (Integer) tableModel.getValueAt(row, WEIGHT_COLUMN_INDEX);
 
 				// Only for weight column
-				if (column == 1) {
+				if (column == WEIGHT_COLUMN_INDEX) {
 					type.setWeight(elementValue, elementWeight);
 				}
 			}
@@ -69,7 +82,7 @@ public class StringPropertyPanel extends TypePropertyPanel {
 		elementsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		// Set column 1's editor as integer editor
-		TableColumn weightColumn = elementsTable.getColumnModel().getColumn(1);
+		TableColumn weightColumn = elementsTable.getColumnModel().getColumn(WEIGHT_COLUMN_INDEX);
 		weightColumn.setCellEditor(new IntegerEditor());
 
 		JScrollPane scrollPane = new JScrollPane(elementsTable);
@@ -85,28 +98,28 @@ public class StringPropertyPanel extends TypePropertyPanel {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
-		addElementButton = new JButton("+ Add Element");
+		addElementButton = new JButton(ADD_ELEMENT_BUTTON_TEXT);
 		addElementButton.addActionListener(e -> {
 			// Get name input
-			String elementName = JOptionPane.showInputDialog(null, "Enter the elemnt's name", "Element name",
+			String elementName = JOptionPane.showInputDialog(null, INPUT_DIALOG_MESSAGE, INPUT_DIALOG_TITLE,
 					JOptionPane.INFORMATION_MESSAGE);
 
 			// Add row to type, check if could be added (not same name)
 			if (type.addValue(elementName)) {
-				tableModel.addRow(new Object[] { elementName, 1 });
+				tableModel.addRow(new Object[] { elementName, ConstantManager.DEFAULT_WEIGHT_VALUE });
 			} else {
-				JOptionPane.showMessageDialog(null, "Element name already exists", "Error!", JOptionPane.ERROR_MESSAGE);
+				ConstantManager.showError(ERROR_MESSAGE);
 			}
 
 		});
 		this.add(addElementButton, c);
 
 		c.gridx = 1;
-		removeElementButton = new JButton("- Remove Element");
+		removeElementButton = new JButton(REMOVE_ELEMENT_BUTTON_TEXT);
 		removeElementButton.addActionListener(e -> {
 			int selection = elementsTable.getSelectedRow();
 			if (selection != -1) {
-				String elementName = (String) tableModel.getValueAt(selection, 0);
+				String elementName = (String) tableModel.getValueAt(selection, ELEMENT_NAME_COLUMN_INDEX);
 				type.removeValue(elementName);
 				tableModel.removeRow(selection);
 			}

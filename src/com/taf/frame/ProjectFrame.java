@@ -16,10 +16,12 @@ public class ProjectFrame extends JFrame implements EventListener {
 
 	private static final long serialVersionUID = 1724446330461662942L;
 
+	private static final String FRAME_NAME = "TAF GUI";
+	
 	// TODO Add verification to check if saved before quit !
 	
 	public ProjectFrame(Root root) {
-		this.setTitle("TAF GUI");
+		this.setTitle(FRAME_NAME);
 		this.setSize(650, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setLocationRelativeTo(null);

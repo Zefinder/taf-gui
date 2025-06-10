@@ -25,6 +25,13 @@ import com.taf.manager.SaveManager;
 public class ProjectChooserPanel extends JPanel {
 
 	private static final long serialVersionUID = 6815040547237393654L;
+	private static final String PROJECT_COLUMN_NAME = "Projects";
+	private static final int PROJECT_COLUMN_INDEX = 0;
+	private static final String[] COLUMN_IDENTIFIERS = new String[] { PROJECT_COLUMN_NAME };
+	
+	private static final String CREATE_PROJECT_BUTTON_TEXT = "Create new project";
+	private static final String OPEN_PROJECT_BUTTON_TEXT = "Open project";
+	
 
 	public ProjectChooserPanel() {
 		this.setLayout(new GridBagLayout());
@@ -42,8 +49,8 @@ public class ProjectChooserPanel extends JPanel {
 			}
 		};
 
-		tableModel.setColumnCount(1);
-		tableModel.setColumnIdentifiers(new String[] { "Projects" });
+		tableModel.setColumnCount(COLUMN_IDENTIFIERS.length);
+		tableModel.setColumnIdentifiers(COLUMN_IDENTIFIERS);
 
 		for (String projectName : SaveManager.getInstance().getProjectNames()) {
 			tableModel.addRow(new String[] { projectName });
@@ -59,7 +66,7 @@ public class ProjectChooserPanel extends JPanel {
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridy = 1;
-		JButton createButton = new JButton("Create new project");
+		JButton createButton = new JButton(CREATE_PROJECT_BUTTON_TEXT);
 		createButton.addActionListener(e -> {
 			ProjectCreationDialog dialog = new ProjectCreationDialog();
 			dialog.initDialog();
@@ -81,11 +88,11 @@ public class ProjectChooserPanel extends JPanel {
 		c.insets = new Insets(10, 5, 0, 0);
 		c.gridx = 1;
 		// TODO Disable button when nothing is selected
-		JButton openButton = new JButton("Open project");
+		JButton openButton = new JButton(OPEN_PROJECT_BUTTON_TEXT);
 		openButton.addActionListener(e -> {
 			int row = projectTable.getSelectedRow();
 			if (row != -1) {
-				String projectName = (String) tableModel.getValueAt(row, 0);
+				String projectName = (String) tableModel.getValueAt(row, PROJECT_COLUMN_INDEX);
 				try {
 					Root root = SaveManager.getInstance().openProject(projectName);
 					ProjectFrame frame = new ProjectFrame(root);

@@ -28,11 +28,14 @@ import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Root;
 import com.taf.logic.type.AnonymousType;
 import com.taf.logic.type.Type;
+import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
 public class FieldTreePanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = -8299875121910645683L;
+	private static final String ADD_PARAMETER_BUTTON_TEXT = "+ Add parameter";
+	private static final String ADD_NODE_BUTTON_TEXT = "+ Add node";
 
 	private JTree tree;
 	private DefaultTreeModel treeModel;
@@ -45,7 +48,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 		EventManager.getInstance().registerEventListener(this);
-		
+
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(0, 0, 0, 5);
@@ -56,13 +59,13 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		c.gridy = 0;
 		c.weightx = 1;
 		c.weighty = 0;
-		addParameterButton = new JButton("+ Add parameter");
+		addParameterButton = new JButton(ADD_PARAMETER_BUTTON_TEXT);
 		addParameterButton.addActionListener(e -> addParameter());
 		this.add(addParameterButton, c);
 
 		c.insets = new Insets(0, 5, 0, 0);
 		c.gridx = 1;
-		addNodeButton = new JButton("+ Add node");
+		addNodeButton = new JButton(ADD_NODE_BUTTON_TEXT);
 		addNodeButton.addActionListener(e -> addNode());
 		this.add(addNodeButton, c);
 
@@ -85,7 +88,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			NodeObject nodeInfo = (NodeObject) node.getUserObject();
 			Event event = new FieldSelectedEvent(nodeInfo.getField());
 			EventManager.getInstance().fireEvent(event);
-			
+
 			if (nodeInfo.isRoot) {
 				System.out.println(nodeInfo.getField());
 			}
@@ -98,13 +101,13 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		for (Field field : node.getFieldList()) {
 			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(field));
 			parentNode.add(treeNode);
-			
+
 			if (field instanceof Node) {
 				initTreeNodes(treeNode, (Node) field);
 			}
 		}
 	}
-	
+
 	private DefaultMutableTreeNode getNearestNodeField() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		if (node == null) {
@@ -121,67 +124,67 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		if (field instanceof Parameter) {
 			node = (DefaultMutableTreeNode) node.getParent();
 		}
-		
+
 		return node;
 	}
-	
+
 	private int getNodeRow(DefaultMutableTreeNode node) {
 		TreePath path = new TreePath(node.getPath());
 		return tree.getRowForPath(path);
 	}
-	
+
 	private void addParameter() {
 		DefaultMutableTreeNode node = getNearestNodeField();
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
 		Node parent = (Node) nodeInfo.getField();
-		
-		// Call the dialog to create a parameter 
+
+		// Call the dialog to create a parameter
 		ParameterCreationDialog dialog = new ParameterCreationDialog();
 		dialog.initDialog();
 		Field field = dialog.getField();
 		if (field == null) {
 			return;
 		}
-		
+
 		// Add to the field
 		parent.addField(field);
-		
+
 		// Add to the tree node
 		DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(new NodeObject(field), false);
 		treeModel.insertNodeInto(parameterNode, node, node.getChildCount());
-		
+
 		// If the node is the root and had no children, expand
 		tree.expandRow(getNodeRow(node));
 	}
-	
+
 	private void addNode() {
 		DefaultMutableTreeNode node = getNearestNodeField();
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
 		Node parent = (Node) nodeInfo.getField();
-		
-		// Call the dialog to create a parameter 
+
+		// Call the dialog to create a parameter
 		NodeCreationDialog dialog = new NodeCreationDialog();
 		dialog.initDialog();
 		Field field = dialog.getField();
 		if (field == null) {
 			return;
 		}
-		
+
 		// Add to the field
 		parent.addField(field);
-		
+
 		// Add to the tree node
 		DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(new NodeObject(field), true);
 		treeModel.insertNodeInto(parameterNode, node, node.getChildCount());
-		
+
 		// If the node is the root and had no children, expand
 		tree.expandRow(getNodeRow(node));
 	}
-	
+
 	// TODO Add Constraint
-	
+
 	// TODO Add remove field
-	
+
 	@EventMethod
 	public void onFieldNameChanged(FieldNameChangedEvent event) {
 		// Editable node is the selected one
@@ -199,8 +202,10 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		nodeObject.refresh();
 		treeModel.nodeChanged(node);
 	}
-	
+
 	private static class NodeObject {
+
+		private static final String DISPLAY_FORMAT = "%s: %s";
 
 		private Field field;
 		private String fieldName;
@@ -215,20 +220,20 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		public void refresh() {
 			this.fieldName = field.getName();
 			Type type = field.getType();
-			
+
 			if (field instanceof Root) {
 				isRoot = true;
 			} else {
 				isRoot = false;
 			}
-			
+
 			if (type instanceof AnonymousType) {
-				typeName = "node";
+				typeName = ConstantManager.NODE_ENTITY_NAME;
 			} else {
 				typeName = type.getName();
 			}
 		}
-		
+
 		public Field getField() {
 			return field;
 		}
@@ -238,8 +243,8 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			if (isRoot) {
 				return fieldName;
 			}
-			
-			return "%s: %s".formatted(fieldName, typeName);
+
+			return DISPLAY_FORMAT.formatted(fieldName, typeName);
 		}
 
 	}
