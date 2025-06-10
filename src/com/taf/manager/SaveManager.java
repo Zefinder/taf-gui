@@ -104,6 +104,10 @@ import com.taf.util.OSValidator;
  */
 public class SaveManager extends Manager {
 
+	private static final String separator = ConstantManager.PARAMETER_SEPARATOR;
+	private static final String newLine = ConstantManager.LINE_JUMP;
+	private static final String format = ConstantManager.PARAMETER_STRING_FORMAT + separator;
+	
 	private static final SaveManager instance = new SaveManager();
 
 	private final Set<File> projectNames;
@@ -197,6 +201,11 @@ public class SaveManager extends Manager {
 		try (BufferedReader reader = new BufferedReader(new FileReader(projectFile))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
+				// If line is empty, skip
+				if (line.isBlank()) {
+					continue;
+				}
+				
 				// Get entity type
 				Optional<String> entityTypeOp = getArgument(line, "entity");
 				if (entityTypeOp.isEmpty()) {
@@ -346,9 +355,26 @@ public class SaveManager extends Manager {
 		return root;
 	}
 
-	private void writeNode(BufferedWriter writer, String format, Node node, int nodeId) throws IOException {
-		final String newLine = ConstantManager.LINE_JUMP;
+	private void writeEntityArguments(BufferedWriter writer, String entityString, int nodeId,
+			String name) throws IOException {
+		writer.write(format.formatted("entity", entityString));
+		writer.write(format.formatted("parent", nodeId));
+		writer.write(format.formatted("name", name));
+	}
 
+	
+	private void writeRoot(BufferedWriter writer, String name) throws IOException {
+		writeEntityArguments(writer, "node", -1, name);
+		writer.write(newLine);
+	}
+
+	private void writeField(BufferedWriter writer, Field field, String entityString, int nodeId) throws IOException {
+		writeEntityArguments(writer, entityString, nodeId, field.getName());
+		writer.write(field.getType().toString());
+		writer.write(newLine);
+	}
+
+	private void writeNode(BufferedWriter writer, Node node, int nodeId) throws IOException {
 		for (Field field : node.getFieldList()) {
 			boolean isNode = field instanceof Node;
 			String entityString = "node";
@@ -356,48 +382,46 @@ public class SaveManager extends Manager {
 				entityString = "parameter";
 			}
 			
-			writer.write(format.formatted("entity", entityString));
-			writer.write(format.formatted("parent", nodeId));
-			writer.write(format.formatted("name", field.getName()));
-			writer.write(field.getType().toString());
-			writer.write(newLine);
-			
+			writeField(writer, field, entityString, nodeId);
+
 			if (isNode) {
-				writeNode(writer, format, (Node) field, nodeId + 1);
+				writeNode(writer, (Node) field, nodeId + 1);
 			}
 		}
 	}
 
 	public void saveProject() throws IOException {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
-		final String newLine = ConstantManager.LINE_JUMP;
-		final String format = ConstantManager.PARAMETER_STRING_FORMAT + separator;
-
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
 			// Write root node
-			writer.write(format.formatted("entity", "node"));
-			writer.write(format.formatted("parent", "-1"));
-			writer.write(format.formatted("name", projectRoot.getName()));
+			writeRoot(writer, projectRoot.getName());
 			writer.write(newLine);
-			writeNode(writer, format, projectRoot, 0);
+			writeNode(writer, projectRoot, 0);
 		}
 	}
-	
+
 	public boolean createProject(String projectName) throws IOException {
+		// Name must finish by .taf
+		if (!projectName.endsWith(".taf")) {
+			return false;
+		}
+		
 		File newProjectFile = getProjectFileFromName(projectName);
 		if (newProjectFile.exists()) {
 			return false;
 		}
-		
+
 		newProjectFile.createNewFile();
-		// TODO Create root node and write it in the file.
+		BufferedWriter writer = new BufferedWriter(new FileWriter(newProjectFile));
+		writeRoot(writer, projectName.substring(0, projectName.length() - 4));
+		writer.close();
+
 		return true;
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
 		throw new ParseException("%s (line %d)".formatted(message, lineNumber));
 	}
-	
+
 	public String[] getProjectNames() {
 		return projectNames.stream().map(file -> file.getName()).toArray(String[]::new);
 	}

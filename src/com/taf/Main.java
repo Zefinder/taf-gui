@@ -1,27 +1,8 @@
 package com.taf;
 
-import java.util.Arrays;
-
-import com.taf.logic.constraint.Constraint;
-import com.taf.logic.constraint.parameter.ConstraintParameter;
-import com.taf.logic.constraint.parameter.ExpressionConstraintParameter;
-import com.taf.logic.constraint.parameter.QuantifiersConstraintParameter;
-import com.taf.logic.constraint.parameter.RangeConstraintParameter;
-import com.taf.logic.constraint.parameter.TypeConstraintParameter;
-import com.taf.logic.constraint.parameter.TypeConstraintParameterEnum;
-import com.taf.logic.field.Field;
-import com.taf.logic.field.Node;
-import com.taf.logic.field.Parameter;
-import com.taf.logic.field.Root;
-import com.taf.logic.type.AnonymousType;
-import com.taf.logic.type.BooleanType;
-import com.taf.logic.type.RealType;
-import com.taf.logic.type.StringType;
-import com.taf.manager.Manager;
-
 public class Main {
 
-	public static void main(String[] args) {
+//	public static void main(String[] args) {
 //		Root root = new Root("test_case");
 //		Node fieldNode = new Node("field", new AnonymousType());
 //
@@ -76,8 +57,8 @@ public class Main {
 //		root.addField(param1);
 //		root.addField(node);
 //		System.out.println(root);
-		var a = "a      b".split(" ");
-		System.out.println(Arrays.toString(a));
-	}
+//		var a = "a      b".split(" ");
+//		System.out.println(Arrays.toString(a));
+//	}
 
 }

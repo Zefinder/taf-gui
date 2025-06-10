@@ -3,9 +3,7 @@ package com.taf.logic.type;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.taf.logic.type.parameter.MaxIntegerParameter;
 import com.taf.logic.type.parameter.MaxRealParameter;
-import com.taf.logic.type.parameter.MinIntegerParameter;
 import com.taf.logic.type.parameter.MinRealParameter;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
@@ -95,10 +93,10 @@ public class RealType extends Type {
 
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
-		if (typeParameter instanceof MinIntegerParameter) {
-			addMinParameter(((MinIntegerParameter) typeParameter).getValue().doubleValue());
-		} else if (typeParameter instanceof MaxIntegerParameter) {
-			addMaxParameter(((MaxIntegerParameter) typeParameter).getValue().doubleValue());
+		if (typeParameter instanceof MinRealParameter) {
+			addMinParameter(((MinRealParameter) typeParameter).getValue().doubleValue());
+		} else if (typeParameter instanceof MaxRealParameter) {
+			addMaxParameter(((MaxRealParameter) typeParameter).getValue().doubleValue());
 		}
 	}
 	

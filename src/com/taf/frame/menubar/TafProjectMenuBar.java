@@ -7,6 +7,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import com.taf.event.ProjectClosedEvent;
+import com.taf.frame.MainMenuFrame;
+import com.taf.manager.EventManager;
 import com.taf.manager.SaveManager;
 
 public class TafProjectMenuBar extends JMenuBar {
@@ -57,6 +60,9 @@ public class TafProjectMenuBar extends JMenuBar {
 		}
 
 		// TODO Quit project and change frame
+		MainMenuFrame frame = new MainMenuFrame();
+		frame.initFrame();
+		EventManager.getInstance().fireEvent(new ProjectClosedEvent());
 	}
 
 }

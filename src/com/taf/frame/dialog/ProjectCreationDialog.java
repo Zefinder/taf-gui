@@ -39,6 +39,11 @@ public class ProjectCreationDialog extends InputInformationDialog {
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
+			// Check if ends with .taf, adds it otherwise
+			if (!name.endsWith(".taf")) {
+				name += ".taf";
+			}
+			
 			projectName = name;
 			dispose();
 		}
