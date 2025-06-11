@@ -53,6 +53,9 @@ import javax.swing.text.NumberFormatter;
 public class IntegerEditor extends DefaultCellEditor {
 
 	private static final long serialVersionUID = -6290272775924941609L;
+	
+	private static final String CHECK_ACTION = "check";
+	private static final String UNKNWON_VALUE_ERROR_MESSAGE = "getCellEditorValue: can't parse o: ";
 
 	private JFormattedTextField integerField;
 	private NumberFormat integerFormat;
@@ -72,8 +75,8 @@ public class IntegerEditor extends DefaultCellEditor {
 		integerField.setFocusLostBehavior(JFormattedTextField.PERSIST);
 
 		// Set action when enter (and focus lost in general)
-		integerField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "check");
-		integerField.getActionMap().put("check", new AbstractAction() {
+		integerField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), CHECK_ACTION);
+		integerField.getActionMap().put(CHECK_ACTION, new AbstractAction() {
 			private static final long serialVersionUID = -7031956174719188660L;
 
 			public void actionPerformed(ActionEvent e) {
@@ -104,7 +107,7 @@ public class IntegerEditor extends DefaultCellEditor {
 				return integerFormat.parseObject(o.toString());
 			} catch (ParseException exc) {
 				// Should never go here if initialized correctly...
-				System.err.println("getCellEditorValue: can't parse o: " + o);
+				System.err.println(UNKNWON_VALUE_ERROR_MESSAGE + o);
 				return null;
 			}
 		}
