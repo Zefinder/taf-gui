@@ -1,5 +1,6 @@
 package com.taf.frame.panel.type;
 
+import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.AnonymousType;
 import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.IntegerType;
@@ -7,17 +8,17 @@ import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
 import com.taf.logic.type.Type;
 
-public class TypePanelFactory {
+public class EntitySecondaryPanelFactory {
 
-	private TypePanelFactory() {
+	private EntitySecondaryPanelFactory() {
 	}
 
-	public static TypePropertyPanel createRootPropertyPanel() {
+	public static EntitySecondaryPropertyPanel createRootPropertyPanel() {
 		// TODO
 		return null;
 	}
 	
-	public static TypePropertyPanel createFieldPropertyPanel(Type type) {
+	public static EntitySecondaryPropertyPanel createFieldPropertyPanel(Type type) {
 		if (type instanceof AnonymousType) {
 			return new AnonymousPropertyPanel((AnonymousType) type);
 		}
@@ -41,9 +42,8 @@ public class TypePanelFactory {
 		return null;
 	}
 	
-	public static TypePropertyPanel createConstraintPropertyPanel() {
-		// TODO
-		return null;
+	public static EntitySecondaryPropertyPanel createConstraintPropertyPanel(Constraint constraint) {
+		return new ConstraintSecondaryPropertyPanel(constraint);
 	}
 
 }

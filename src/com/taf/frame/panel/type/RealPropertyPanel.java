@@ -14,7 +14,7 @@ import javax.swing.JFormattedTextField;
 import com.taf.logic.type.RealType;
 import com.taf.manager.ConstantManager;
 
-public class RealPropertyPanel extends TypePropertyPanel implements PropertyChangeListener {
+public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -9035183700723112945L;
 

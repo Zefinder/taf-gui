@@ -107,6 +107,11 @@ public class FieldTreePanel extends JPanel implements EventListener {
 				initTreeNodes(treeNode, (Node) field);
 			}
 		}
+
+		for (Constraint constraint : node.getConstraintList()) {
+			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(constraint));
+			parentNode.add(treeNode);
+		}
 	}
 
 	private DefaultMutableTreeNode getNearestNodeField() {

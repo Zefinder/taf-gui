@@ -6,11 +6,11 @@ import java.awt.GridBagLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
-public abstract class TypePropertyPanel extends JPanel {
+public abstract class EntitySecondaryPropertyPanel extends JPanel {
 
 	private static final long serialVersionUID = 3797269772034697720L;
 
-	public TypePropertyPanel() {
+	public EntitySecondaryPropertyPanel() {
 		this.setLayout(new GridBagLayout());
 	}
 	

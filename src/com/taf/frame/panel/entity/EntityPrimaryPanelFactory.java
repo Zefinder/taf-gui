@@ -5,12 +5,12 @@ import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
 
-public class EntityPanelFactory {
+public class EntityPrimaryPanelFactory {
 
-	private EntityPanelFactory() {
+	private EntityPrimaryPanelFactory() {
 	}
 	
-	public static final EntityPropertyPanel createEntityPropertyPanel(Entity entity) {
+	public static final EntityPrimaryPropertyPanel createEntityPropertyPanel(Entity entity) {
 		if (entity instanceof Node) {
 			return new NodePropertyPanel((Node) entity);
 		}
@@ -20,7 +20,7 @@ public class EntityPanelFactory {
 		}
 		
 		if (entity instanceof Constraint) {
-			return new ConstraintPropertyPanel((Constraint) entity);
+			return new ConstraintPrimaryPropertyPanel((Constraint) entity);
 		}
 		
 		return null;

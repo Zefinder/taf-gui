@@ -15,7 +15,7 @@ import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.TypeManager;
 
-public class ParameterPropertyPanel extends EntityPropertyPanel {
+public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8925850604078710611L;
 

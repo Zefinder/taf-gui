@@ -13,10 +13,10 @@ import com.taf.event.EntitySelectedEvent;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 import com.taf.event.FieldTypeChangedEvent;
-import com.taf.frame.panel.entity.EntityPanelFactory;
-import com.taf.frame.panel.entity.EntityPropertyPanel;
-import com.taf.frame.panel.type.TypePanelFactory;
-import com.taf.frame.panel.type.TypePropertyPanel;
+import com.taf.frame.panel.entity.EntityPrimaryPanelFactory;
+import com.taf.frame.panel.entity.EntityPrimaryPropertyPanel;
+import com.taf.frame.panel.type.EntitySecondaryPanelFactory;
+import com.taf.frame.panel.type.EntitySecondaryPropertyPanel;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Field;
@@ -29,8 +29,8 @@ public class PropertyPanel extends JPanel implements EventListener {
 	private static final long serialVersionUID = -1873086205248435494L;
 
 	private Entity entity;
-	private EntityPropertyPanel entityPropertyPanel;
-	private TypePropertyPanel typePropertyPanel;
+	private EntityPrimaryPropertyPanel entityPropertyPanel;
+	private EntitySecondaryPropertyPanel typePropertyPanel;
 
 	public PropertyPanel() {
 		this.setLayout(new GridBagLayout());
@@ -56,16 +56,16 @@ public class PropertyPanel extends JPanel implements EventListener {
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
 			c.weighty = 0;
-			entityPropertyPanel = EntityPanelFactory.createEntityPropertyPanel(entity);
+			entityPropertyPanel = EntityPrimaryPanelFactory.createEntityPropertyPanel(entity);
 			this.add(entityPropertyPanel, c);
 
 			typePropertyPanel = null;
 			if (entity instanceof Root) {
-				typePropertyPanel = TypePanelFactory.createRootPropertyPanel();
+				typePropertyPanel = EntitySecondaryPanelFactory.createRootPropertyPanel();
 			} else if (entity instanceof Field) {
-				typePropertyPanel = TypePanelFactory.createFieldPropertyPanel(((Field) entity).getType());
+				typePropertyPanel = EntitySecondaryPanelFactory.createFieldPropertyPanel(((Field) entity).getType());
 			} else if (entity instanceof Constraint) {
-				// TODO
+				typePropertyPanel = EntitySecondaryPanelFactory.createConstraintPropertyPanel((Constraint) entity);
 			}
 
 			boolean noTypeProperty = typePropertyPanel == null;

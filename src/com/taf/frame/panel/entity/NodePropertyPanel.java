@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import com.taf.logic.field.Node;
 import com.taf.manager.ConstantManager;
 
-public class NodePropertyPanel extends EntityPropertyPanel {
+public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8423915116760040223L;
 

@@ -9,15 +9,9 @@ import com.taf.logic.type.Type;
 import com.taf.manager.ConstantManager;
 
 public class Node extends Field {
-
+	
 	private static final String NODE_STRING_FORMAT = """
 			<node %s>
-			%s
-			%s</node>""";
-
-	private static final String NODE_CONSTRAINT_STRING_FORMAT = """
-			<node %s>
-			%s
 			%s
 			%s</node>""";
 
@@ -71,8 +65,13 @@ public class Node extends Field {
 		return strConstraints;
 	}
 	
+	// TODO change lists to arrays
 	public List<Field> getFieldList() {
 		return fieldList;
+	}
+	
+	public List<Constraint> getConstraintList() {
+		return constraintList;
 	}
 
 	@Override
@@ -87,15 +86,16 @@ public class Node extends Field {
 	
 	@Override
 	public String toString() {
-		String nodeStr;
-		if (!constraintList.isEmpty()) {
-			nodeStr = NODE_CONSTRAINT_STRING_FORMAT.formatted(super.toString(), insideFieldsToString(),
-					constraintsToString(), getIndentation());
-		} else {
-			nodeStr = NODE_STRING_FORMAT.formatted(super.toString(), insideFieldsToString(), getIndentation());
+		String nodeStr = "";		
+		if (!fieldList.isEmpty()) {
+			nodeStr += insideFieldsToString() + ConstantManager.LINE_JUMP;
 		}
 		
-		return nodeStr;
+		if (!constraintList.isEmpty()) {
+			nodeStr += constraintsToString();
+		}
+
+		return NODE_STRING_FORMAT.formatted(super.toString(), nodeStr, getIndentation());
 	}
 
 }

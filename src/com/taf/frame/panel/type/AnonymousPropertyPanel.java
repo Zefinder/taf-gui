@@ -21,7 +21,7 @@ import com.taf.logic.type.AnonymousType;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
-public class AnonymousPropertyPanel extends TypePropertyPanel implements PropertyChangeListener {
+public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 293578359212546065L;
 

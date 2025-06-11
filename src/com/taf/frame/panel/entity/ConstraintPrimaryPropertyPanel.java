@@ -8,11 +8,11 @@ import javax.swing.JLabel;
 import com.taf.logic.constraint.Constraint;
 import com.taf.manager.ConstantManager;
 
-public class ConstraintPropertyPanel extends EntityPropertyPanel {
+public class ConstraintPrimaryPropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 1744588782255512565L;
 
-	public ConstraintPropertyPanel(Constraint constraint) {
+	public ConstraintPrimaryPropertyPanel(Constraint constraint) {
 		super(constraint);
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();

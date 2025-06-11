@@ -11,14 +11,14 @@ import com.taf.logic.Entity;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
-public abstract class EntityPropertyPanel extends JPanel {
+public abstract class EntityPrimaryPropertyPanel extends JPanel {
 
 	private static final long serialVersionUID = -202000016437797783L;
 
 	protected final JTextField entityName;
 	private String name;
 	
-	public EntityPropertyPanel(Entity entity) {
+	public EntityPrimaryPropertyPanel(Entity entity) {
 		this.setLayout(new GridBagLayout());
 
 		this.name = entity.getName();

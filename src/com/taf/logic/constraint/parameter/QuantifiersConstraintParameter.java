@@ -1,21 +1,52 @@
 package com.taf.logic.constraint.parameter;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import com.taf.manager.ConstantManager;
+
 public class QuantifiersConstraintParameter extends ConstraintParameter {
 
-	// We assume that there can only be one quantifier... 
-	
-	private static final String CONSTRAINT_PARAMETER_NAME = "quantifiers";
-	
-	private char quantifier; 
-	
-	public QuantifiersConstraintParameter(char quantifier) {
+	// We assume that there can only be one quantifier...
+
+	static final String CONSTRAINT_PARAMETER_NAME = "quantifiers";
+
+	private List<String> quantifiers;
+
+	public QuantifiersConstraintParameter() {
 		super(CONSTRAINT_PARAMETER_NAME);
-		this.quantifier = quantifier;
+		quantifiers = new ArrayList<String>();
 	}
 
+	public void addQuantifier(String quantifier) {
+		quantifiers.add(quantifier);
+	}
+	
+	public void removeQuantifier(int index) {
+		quantifiers.remove(index);
+	}
+	
+	public void editQuantifier(int index, String quantifier) {
+		quantifiers.set(index, quantifier);
+	}
+	
+	public List<String> getQuantifiers() {
+		return quantifiers;
+	}
+	
 	@Override
 	public String valueToString() {
-		return String.valueOf(quantifier);
+		if (quantifiers.isEmpty()) {
+			return "";
+		}
+
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		String res = quantifiers.get(0);
+		for (int i = 1; i < quantifiers.size(); i++) {
+			res += quantifiers.get(i) + separator;
+		}
+		
+		return res;
 	}
 
 }
