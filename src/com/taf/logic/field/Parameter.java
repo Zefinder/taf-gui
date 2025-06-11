@@ -9,6 +9,11 @@ public class Parameter extends Field {
 	public Parameter(String name, Type type) {
 		super(name, type);
 	}
+	
+	@Override
+	public String getEntityTypeName() {
+		return getType().getName();
+	}
 
 	@Override
 	public String toString() {

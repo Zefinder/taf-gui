@@ -1,4 +1,4 @@
-package com.taf.frame.panel.field;
+package com.taf.frame.panel.entity;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
@@ -15,7 +15,7 @@ import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.TypeManager;
 
-public class ParameterPropertyPanel extends FieldPropertyPanel {
+public class ParameterPropertyPanel extends EntityPropertyPanel {
 
 	private static final long serialVersionUID = 8925850604078710611L;
 
@@ -32,13 +32,13 @@ public class ParameterPropertyPanel extends FieldPropertyPanel {
 		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
 		c.weightx = 0;
 		c.weighty = 0;
-		JLabel fieldLabel = new JLabel(ConstantManager.PARAMETER_NAME_LABEL_TEXT);
-		this.add(fieldLabel, c);
+		JLabel parameterLabel = new JLabel(ConstantManager.PARAMETER_NAME_LABEL_TEXT);
+		this.add(parameterLabel, c);
 
 		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
-		this.add(fieldName, c);
+		this.add(entityName, c);
 
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.weighty = 1;

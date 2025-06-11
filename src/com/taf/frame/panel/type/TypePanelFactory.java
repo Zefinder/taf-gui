@@ -12,11 +12,16 @@ public class TypePanelFactory {
 	private TypePanelFactory() {
 	}
 
-	public static TypePropertyPanel createTypePropertyPanel(Type type) {
+	public static TypePropertyPanel createRootPropertyPanel() {
+		// TODO
+		return null;
+	}
+	
+	public static TypePropertyPanel createFieldPropertyPanel(Type type) {
 		if (type instanceof AnonymousType) {
 			return new AnonymousPropertyPanel((AnonymousType) type);
 		}
-
+		
 		if (type instanceof BooleanType) {
 			return new BooleanPropertyPanel((BooleanType) type);
 		}
@@ -33,6 +38,11 @@ public class TypePanelFactory {
 			return new StringPropertyPanel((StringType) type);
 		}
 
+		return null;
+	}
+	
+	public static TypePropertyPanel createConstraintPropertyPanel() {
+		// TODO
 		return null;
 	}
 

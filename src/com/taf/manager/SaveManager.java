@@ -378,7 +378,6 @@ public class SaveManager extends Manager {
 		}
 
 		this.projectRoot = root;
-		System.out.println(root.getType().toString());
 		return root;
 	}
 

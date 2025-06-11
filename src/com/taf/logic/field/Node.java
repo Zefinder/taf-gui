@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.taf.logic.constraint.Constraint;
+import com.taf.logic.type.AnonymousType;
 import com.taf.logic.type.Type;
 import com.taf.manager.ConstantManager;
 
@@ -74,6 +75,16 @@ public class Node extends Field {
 		return fieldList;
 	}
 
+	@Override
+	public String getEntityTypeName() {
+		Type type = getType();
+		if (type instanceof AnonymousType) {
+			return ConstantManager.NODE_ENTITY_NAME;
+		}
+		
+		return type.getName();
+	}
+	
 	@Override
 	public String toString() {
 		String nodeStr;

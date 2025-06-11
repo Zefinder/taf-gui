@@ -14,20 +14,20 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.taf.event.ConstraintCreatedEvent;
+import com.taf.event.EntitySelectedEvent;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
-import com.taf.event.FieldNameChangedEvent;
-import com.taf.event.FieldSelectedEvent;
+import com.taf.event.EntityNameChangedEvent;
 import com.taf.event.FieldTypeChangedEvent;
 import com.taf.frame.dialog.NodeCreationDialog;
 import com.taf.frame.dialog.ParameterCreationDialog;
+import com.taf.logic.Entity;
+import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
-import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Root;
-import com.taf.logic.type.AnonymousType;
-import com.taf.logic.type.Type;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
@@ -87,11 +87,11 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			}
 
 			NodeObject nodeInfo = (NodeObject) node.getUserObject();
-			Event event = new FieldSelectedEvent(nodeInfo.getField());
+			Event event = new EntitySelectedEvent(nodeInfo.getEntity());
 			EventManager.getInstance().fireEvent(event);
 
 			if (nodeInfo.isRoot) {
-				System.out.println(nodeInfo.getField());
+				System.out.println(nodeInfo.getEntity());
 			}
 		});
 		JScrollPane treeView = new JScrollPane(tree);
@@ -117,12 +117,12 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Field field = nodeInfo.getField();
+		Entity entity = nodeInfo.getEntity();
 		/*
 		 * Check if the node is not a parameter. If it is a parameter, then take the
 		 * parent.
 		 */
-		if (field instanceof Parameter) {
+		if (!(entity instanceof Node)) {
 			node = (DefaultMutableTreeNode) node.getParent();
 		}
 
@@ -137,7 +137,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	private void addParameter() {
 		DefaultMutableTreeNode node = getNearestNodeField();
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Node parent = (Node) nodeInfo.getField();
+		Node parent = (Node) nodeInfo.getEntity(); // Sure that it is a node
 
 		// Call the dialog to create a parameter
 		ParameterCreationDialog dialog = new ParameterCreationDialog();
@@ -161,7 +161,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	private void addNode() {
 		DefaultMutableTreeNode node = getNearestNodeField();
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Node parent = (Node) nodeInfo.getField();
+		Node parent = (Node) nodeInfo.getEntity(); // Sure that it is a node
 
 		// Call the dialog to create a parameter
 		NodeCreationDialog dialog = new NodeCreationDialog();
@@ -175,19 +175,37 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		parent.addField(field);
 
 		// Add to the tree node
-		DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(new NodeObject(field), true);
-		treeModel.insertNodeInto(parameterNode, node, node.getChildCount());
+		DefaultMutableTreeNode nodeNode = new DefaultMutableTreeNode(new NodeObject(field), true);
+		treeModel.insertNodeInto(nodeNode, node, node.getChildCount());
 
 		// If the node is the root and had no children, expand
 		tree.expandRow(getNodeRow(node));
 	}
 
-	// TODO Add Constraint
+	public void addConstraint(DefaultMutableTreeNode node, Constraint constraint) {
+		DefaultMutableTreeNode constraintNode = new DefaultMutableTreeNode(new NodeObject(constraint), false);
+		treeModel.insertNodeInto(constraintNode, node, node.getChildCount());
+		tree.expandRow(getNodeRow(node));
+	}
 
 	// TODO Add remove field
 
 	@EventMethod
-	public void onFieldNameChanged(FieldNameChangedEvent event) {
+	public void onConstraintCreated(ConstraintCreatedEvent event) {
+		Constraint constraint = event.getConstraint();
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		
+		// TODO Find somewhere else to put the constraint in the node? 
+		NodeObject nodeObject = (NodeObject) node.getUserObject();
+		Node a = (Node) nodeObject.getEntity();
+		a.addConstraint(constraint);
+		
+		addConstraint(node, constraint);
+		treeModel.nodeChanged(node);
+	}
+	
+	@EventMethod
+	public void onEntityNameChanged(EntityNameChangedEvent event) {
 		// Editable node is the selected one
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		NodeObject nodeObject = (NodeObject) node.getUserObject();
@@ -203,49 +221,38 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		nodeObject.refresh();
 		treeModel.nodeChanged(node);
 	}
-
+	
 	private static class NodeObject {
 
 		private static final String DISPLAY_FORMAT = "%s: %s";
 
-		private Field field;
-		private String fieldName;
+		private Entity entity;
+		private String entityName;
 		private String typeName;
 		private boolean isRoot;
 
-		public NodeObject(Field field) {
-			this.field = field;
+		public NodeObject(Entity entity) {
+			this.entity = entity;
 			refresh();
 		}
 
 		public void refresh() {
-			this.fieldName = field.getName();
-			Type type = field.getType();
-
-			if (field instanceof Root) {
-				isRoot = true;
-			} else {
-				isRoot = false;
-			}
-
-			if (type instanceof AnonymousType) {
-				typeName = ConstantManager.NODE_ENTITY_NAME;
-			} else {
-				typeName = type.getName();
-			}
+			entityName = entity.getName();
+			typeName = entity.getEntityTypeName();
+			isRoot = entity instanceof Root;
 		}
 
-		public Field getField() {
-			return field;
+		public Entity getEntity() {
+			return entity;
 		}
 
 		@Override
 		public String toString() {
 			if (isRoot) {
-				return fieldName;
+				return entityName;
 			}
 
-			return DISPLAY_FORMAT.formatted(fieldName, typeName);
+			return DISPLAY_FORMAT.formatted(entityName, typeName);
 		}
 
 	}

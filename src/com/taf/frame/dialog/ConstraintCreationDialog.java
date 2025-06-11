@@ -6,25 +6,22 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import com.taf.logic.field.Field;
-import com.taf.logic.field.Node;
-import com.taf.logic.type.AnonymousType;
+import com.taf.logic.constraint.Constraint;
 import com.taf.manager.ConstantManager;
 
-public class NodeCreationDialog extends InputInformationDialog {
+public class ConstraintCreationDialog extends InputInformationDialog {
 
-	private static final long serialVersionUID = 8094717940445682259L;
+	private static final long serialVersionUID = 1054772104893408576L;
 
-	private static final String DIALOG_TITLE = "Create a new node";
+	private static final String DIALOG_TITLE = "Create a new constraint";
 
-	private final JTextField fieldName;
+	private final JTextField constraintName;
 
-	private Field createdField;
+	private Constraint createdConstraint;
 
-	public NodeCreationDialog() {
+	public ConstraintCreationDialog() {
 		this.setTitle(DIALOG_TITLE);
 
-		// TODO Put in InputInformationDialog as they all use it? 
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.LARGE_INSET_GAP,
@@ -34,33 +31,33 @@ public class NodeCreationDialog extends InputInformationDialog {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel fieldLabel = new JLabel(ConstantManager.NODE_NAME_LABEL_TEXT);
-		addComponent(fieldLabel, c);
+		JLabel constraintLabel = new JLabel(ConstantManager.CONSTRAINT_NAME_LABEL_TEXT);
+		addComponent(constraintLabel, c);
 
 		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.SMALL_INSET_GAP,
 				ConstantManager.SMALL_INSET_GAP, ConstantManager.LARGE_INSET_GAP);
 		c.gridx = 1;
-		fieldName = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		addComponent(fieldName, c);
+		constraintName = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		addComponent(constraintName, c);
 	}
 
 	@Override
 	protected void performAction() {
-		String name = fieldName.getText();
+		String name = constraintName.getText();
 		if (!name.isBlank()) {
-			com.taf.logic.type.Type type = new AnonymousType();
-			createdField = new Node(name, type);
+			createdConstraint = new Constraint(name.strip());
 			dispose();
 		}
 	}
 
-	public Field getField() {
-		return createdField;
+	// TODO Replace by optional
+	public Constraint getConstraint() {
+		return createdConstraint;
 	}
 
 	@Override
 	public void initDialog() {
-		createdField = null;
+		createdConstraint = null;
 		super.initDialog();
 	}
 
