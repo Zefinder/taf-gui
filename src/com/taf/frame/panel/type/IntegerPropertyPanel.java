@@ -28,33 +28,33 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 
 	public IntegerPropertyPanel(IntegerType type) {
 		this.type = type;
-		
+
 		boolean hasMin = type.hasMinParameter();
 		boolean hasMax = type.hasMaxParameter();
 		if (hasMin) {
-			minValue = type.getMinParameter();			
+			minValue = type.getMinParameter();
 		} else {
 			minValue = ConstantManager.DEFAULT_MIN_VALUE;
 		}
-		
+
 		if (hasMax) {
 			maxValue = type.getMaxParameter();
-		} else {			
+		} else {
 			maxValue = ConstantManager.DEFAULT_MAX_VALUE;
 		}
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(0, 0, 5, 5);
+		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
 		c.weightx = 0;
 		c.weighty = 0;
 		minBox = new JCheckBox(ConstantManager.MIN_TEXT);
 		minBox.setSelected(hasMin);
 		minBox.addActionListener(e -> activateMin());
 		addComponent(minBox, c);
-		
-		c.insets = new Insets(0, 5, 5, 0);
+
+		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		minField = new JFormattedTextField(minValue);
@@ -63,7 +63,7 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		minField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(minField, c);
 
-		c.insets = new Insets(5, 0, 0, 5);
+		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.weighty = 1;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -73,7 +73,7 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 		maxBox.addActionListener(e -> activateMax());
 		addComponent(maxBox, c);
 
-		c.insets = new Insets(5, 5, 0, 0);
+		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
@@ -87,11 +87,11 @@ public class IntegerPropertyPanel extends TypePropertyPanel implements PropertyC
 	private void updateMin() {
 		type.editMinParameter(minValue);
 	}
-	
+
 	private void updateMax() {
 		type.editMaxParameter(maxValue);
 	}
-	
+
 	private void activateMin() {
 		if (minBox.isSelected()) {
 			type.addMinParameter(minValue);

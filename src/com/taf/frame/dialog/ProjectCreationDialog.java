@@ -26,7 +26,7 @@ public class ProjectCreationDialog extends InputInformationDialog {
 		// TODO Replace with ConstantManager
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(20, 15, 5, 5);
+		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.LARGE_INSET_GAP, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
 		c.fill = GridBagConstraints.BOTH;
 		c.gridheight = 1;
 		c.gridwidth = 1;
@@ -35,7 +35,7 @@ public class ProjectCreationDialog extends InputInformationDialog {
 		JLabel projectLabel = new JLabel(PROJECT_LABEL_TEXT);
 		addComponent(projectLabel, c);
 
-		c.insets = new Insets(20, 5, 5, 15);
+		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, ConstantManager.LARGE_INSET_GAP);
 		c.gridx = 1;
 		projectField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addComponent(projectField, c);

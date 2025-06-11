@@ -22,16 +22,16 @@ import com.taf.util.IntegerEditor;
 public class StringPropertyPanel extends TypePropertyPanel {
 
 	private static final long serialVersionUID = -6799435160247338364L;
-	
+
 	private static final String ELEMENT_NAME_COLUMN_NAME = "Element name";
 	private static final String WEIGHT_COLUMN_NAME = "Weight";
 	private static final int ELEMENT_NAME_COLUMN_INDEX = 0;
 	private static final int WEIGHT_COLUMN_INDEX = 1;
 	private static final String[] COLUMN_IDENTIFIERS = new String[] { ELEMENT_NAME_COLUMN_NAME, WEIGHT_COLUMN_NAME };
-	
+
 	private static final String ADD_ELEMENT_BUTTON_TEXT = "+ Add Element";
 	private static final String REMOVE_ELEMENT_BUTTON_TEXT = "- Remove Element";
-	
+
 	private static final String INPUT_DIALOG_TITLE = "Element name";
 	private static final String INPUT_DIALOG_MESSAGE = "Enter the elemnt's name";
 	private static final String ERROR_MESSAGE = "Element name already exists";
@@ -76,7 +76,7 @@ public class StringPropertyPanel extends TypePropertyPanel {
 		for (Entry<String, Integer> entry : type.getValues()) {
 			tableModel.addRow(new Object[] { entry.getKey(), entry.getValue() });
 		}
-		
+
 		// Create table
 		elementsTable = new JTable(tableModel);
 		elementsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -92,7 +92,8 @@ public class StringPropertyPanel extends TypePropertyPanel {
 		buttonPanel.setLayout(new GridBagLayout());
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(10, 5, 0, 5);
+		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0,
+				ConstantManager.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;

@@ -28,14 +28,14 @@ public class ProjectChooserPanel extends JPanel {
 	private static final String PROJECT_COLUMN_NAME = "Projects";
 	private static final int PROJECT_COLUMN_INDEX = 0;
 	private static final String[] COLUMN_IDENTIFIERS = new String[] { PROJECT_COLUMN_NAME };
-	
+
 	private static final String CREATE_PROJECT_BUTTON_TEXT = "Create new project";
 	private static final String OPEN_PROJECT_BUTTON_TEXT = "Open project";
-	
 
 	public ProjectChooserPanel() {
 		this.setLayout(new GridBagLayout());
-		this.setBorder(BorderFactory.createEmptyBorder(10, 50, 10, 50));
+		this.setBorder(BorderFactory.createEmptyBorder(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.XXL_INSET_GAP,
+				ConstantManager.MEDIUM_INSET_GAP, ConstantManager.XXL_INSET_GAP));
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.fill = GridBagConstraints.BOTH;
@@ -61,7 +61,7 @@ public class ProjectChooserPanel extends JPanel {
 		this.add(scrollPane, c);
 
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(10, 0, 0, 5);
+		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -85,7 +85,7 @@ public class ProjectChooserPanel extends JPanel {
 		});
 		this.add(createButton, c);
 
-		c.insets = new Insets(10, 5, 0, 0);
+		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridx = 1;
 		// TODO Disable button when nothing is selected
 		JButton openButton = new JButton(OPEN_PROJECT_BUTTON_TEXT);
@@ -104,7 +104,7 @@ public class ProjectChooserPanel extends JPanel {
 			}
 		});
 		this.add(openButton, c);
-		
+
 		// TODO Add pop-up menu to remove saves on right click
 	}
 

@@ -51,7 +51,7 @@ public class RealPropertyPanel extends TypePropertyPanel implements PropertyChan
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(0, 0, 5, 5);
+		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
 		c.weightx = 0;
 		c.weighty = 0;
 		minBox = new JCheckBox(ConstantManager.MIN_TEXT);
@@ -59,7 +59,7 @@ public class RealPropertyPanel extends TypePropertyPanel implements PropertyChan
 		minBox.addActionListener(e -> activateMin());
 		addComponent(minBox, c);
 
-		c.insets = new Insets(0, 5, 5, 0);
+		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		minField = new JFormattedTextField(format);
@@ -69,7 +69,7 @@ public class RealPropertyPanel extends TypePropertyPanel implements PropertyChan
 		minField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(minField, c);
 
-		c.insets = new Insets(5, 0, 0, 5);
+		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.weighty = 1;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -79,7 +79,7 @@ public class RealPropertyPanel extends TypePropertyPanel implements PropertyChan
 		maxBox.addActionListener(e -> activateMax());
 		addComponent(maxBox, c);
 
-		c.insets = new Insets(5, 5, 0, 0);
+		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 1;

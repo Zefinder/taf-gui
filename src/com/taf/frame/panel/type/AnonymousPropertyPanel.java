@@ -87,7 +87,7 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, 10, 10);
+		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -96,7 +96,7 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		panel.add(instanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, 15, 0);
+		c.insets = new Insets(0, 0, ConstantManager.LARGE_INSET_GAP, 0);
 		instanceField = new JFormattedTextField(ConstantManager.DEFAULT_INSTANCE_NUMBER);
 		instanceField.setEnabled(!hasMinMax);
 		instanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
@@ -113,7 +113,7 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, 5, 10);
+		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -122,21 +122,21 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		panel.add(minInstanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, 5, 0);
+		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, 0);
 		minInstanceField = new JFormattedTextField(minInstanceNumber);
 		minInstanceField.setColumns(MAX_COLUMN_NUMBER);
 		minInstanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		minInstanceField.setEnabled(hasMinMax);
 		panel.add(minInstanceField, c);
 
-		c.insets = new Insets(0, 0, 10, 10);
+		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
 		c.gridx = 0;
 		c.gridy = 1;
 		JLabel maxInstanceLabel = new JLabel(MAX_INSTANCE_LABEL_TEXT);
 		panel.add(maxInstanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, 10, 0);
+		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
 		maxInstanceField = new JFormattedTextField(maxInstanceNumber);
 		maxInstanceField.setColumns(MAX_COLUMN_NUMBER);
 		maxInstanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);

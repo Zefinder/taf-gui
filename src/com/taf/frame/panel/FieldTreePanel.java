@@ -46,7 +46,8 @@ public class FieldTreePanel extends JPanel implements EventListener {
 
 	public FieldTreePanel(Root root) {
 		this.setLayout(new GridBagLayout());
-		this.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+		this.setBorder(BorderFactory.createEmptyBorder(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP,
+				ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP));
 		EventManager.getInstance().registerEventListener(this);
 
 		GridBagConstraints c = new GridBagConstraints();
@@ -63,13 +64,13 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		addParameterButton.addActionListener(e -> addParameter());
 		this.add(addParameterButton, c);
 
-		c.insets = new Insets(0, 5, 0, 0);
+		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridx = 1;
 		addNodeButton = new JButton(ADD_NODE_BUTTON_TEXT);
 		addNodeButton.addActionListener(e -> addNode());
 		this.add(addNodeButton, c);
 
-		c.insets = new Insets(5, 0, 0, 0);
+		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, 0);
 		c.gridwidth = 2;
 		c.gridx = 0;
 		c.gridy = 1;

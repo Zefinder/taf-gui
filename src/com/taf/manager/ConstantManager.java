@@ -50,6 +50,12 @@ public class ConstantManager extends Manager {
 	public static final int DEFAULT_MIN_INSTANCE_NUMBER = 1;
 	public static final int DEFAULT_MAX_INSTANCE_NUMBER = 1;
 	
+	public static final int SMALL_INSET_GAP = 5;
+	public static final int MEDIUM_INSET_GAP = 10;
+	public static final int LARGE_INSET_GAP = 15;
+	public static final int HUGE_INSET_GAP = 20;
+	public static final int XXL_INSET_GAP = 50;
+	
 	public static final String MIN_TEXT = "min";
 	public static final String MAX_TEXT = "max";
 
