@@ -235,23 +235,22 @@ public class SaveManager extends Manager {
 				}
 
 				// Get entity type
-				// TODO Remove throw parse exception in the try catch
 				Optional<String> entityTypeOp = getArgument(line, ENTITY_ARGUMENT);
 				if (entityTypeOp.isEmpty()) {
-					throwParseException(ENTITY_MISSING_ERROR_MESSAGE, lineNumber);
+					new ParseException(ENTITY_MISSING_ERROR_MESSAGE);
 				}
 				String entityType = entityTypeOp.get();
 
 				// Get parent id
 				Optional<String> parentIdOp = getArgument(line, PARENT_ARGUMENT);
 				if (parentIdOp.isEmpty()) {
-					throwParseException(PARENT_MISSING_ERROR_MESSAGE, lineNumber);
+					new ParseException(PARENT_MISSING_ERROR_MESSAGE);
 				}
 				int parentId = Integer.valueOf(parentIdOp.get());
 
 				// Check if parent exists
 				if (parentId < -1 || parentId >= nodes.size()) {
-					throwParseException(PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId), lineNumber);
+					new ParseException(PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
 				}
 
 				// TODO Check if multiple roots
@@ -259,7 +258,7 @@ public class SaveManager extends Manager {
 				// Search for the name
 				Optional<String> entityNameOp = getArgument(line, NAME_ARGUMENT);
 				if (entityNameOp.isEmpty()) {
-					throwParseException(NAME_MISSING_ERROR_MESSAGE, lineNumber);
+					new ParseException(NAME_MISSING_ERROR_MESSAGE);
 				}
 				String entityName = entityNameOp.get();
 
@@ -305,7 +304,7 @@ public class SaveManager extends Manager {
 					// Get parameter type
 					Optional<String> typeNameOp = getArgument(line, TYPE_ARGUMENT);
 					if (typeNameOp.isEmpty()) {
-						throwParseException(PARAMETER_TYPE_ERROR_MESSAGE, lineNumber);
+						new ParseException(PARAMETER_TYPE_ERROR_MESSAGE);
 					}
 					String typeName = typeNameOp.get();
 					TypeParameterFactory.MinMaxTypeParameterType maxTypeParameterType;
