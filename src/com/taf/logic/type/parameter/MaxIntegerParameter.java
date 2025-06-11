@@ -4,6 +4,8 @@ import com.taf.exception.ParseException;
 
 public class MaxIntegerParameter extends MaxParameter {
 
+	private static final String ERROR_MESSAGE = "Max integer number must be an integer!";
+	
 	public static final String PARAMETER_NAME = "max";
 	
 	MaxIntegerParameter() {
@@ -19,7 +21,7 @@ public class MaxIntegerParameter extends MaxParameter {
 		try {			
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Max integer number must be an integer!");
+			throw new ParseException(ERROR_MESSAGE);
 		}
 	}
 }

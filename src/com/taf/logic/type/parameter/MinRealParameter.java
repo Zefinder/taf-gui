@@ -4,6 +4,8 @@ import com.taf.exception.ParseException;
 
 public class MinRealParameter extends MinParameter {
 	
+	private static final String ERROR_MESSAGE = "Min real number must be an integer or a real!";
+	
 	public static final String PARAMETER_NAME = "min";
 	
 	MinRealParameter() {
@@ -19,7 +21,7 @@ public class MinRealParameter extends MinParameter {
 		try {			
 			this.value = Double.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Min real number must be an integer or a real!");
+			throw new ParseException(ERROR_MESSAGE);
 		}
 	}
 }

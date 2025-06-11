@@ -4,6 +4,8 @@ import com.taf.exception.ParseException;
 
 public class MaxInstanceParameter extends MaxParameter {
 
+	private static final String ERROR_MESSAGE = "Max instance number must be an integer!";
+	
 	public static final String PARAMETER_NAME = "max";
 	
 	MaxInstanceParameter() {
@@ -19,7 +21,7 @@ public class MaxInstanceParameter extends MaxParameter {
 		try {			
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Max instance number must be an integer!");
+			throw new ParseException(ERROR_MESSAGE);
 		}
 	}
 

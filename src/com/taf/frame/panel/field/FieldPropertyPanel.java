@@ -8,6 +8,7 @@ import javax.swing.JTextField;
 import com.taf.event.Event;
 import com.taf.event.FieldNameChangedEvent;
 import com.taf.logic.field.Field;
+import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
 public abstract class FieldPropertyPanel extends JPanel {
@@ -22,7 +23,7 @@ public abstract class FieldPropertyPanel extends JPanel {
 
 		this.name = field.getName();
 
-		fieldName = new JTextField(20);
+		fieldName = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		fieldName.setText(name);
 		fieldName.addActionListener(e -> {
 			String text = fieldName.getText();

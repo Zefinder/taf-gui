@@ -9,19 +9,22 @@ import javax.swing.JTextField;
 
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Parameter;
+import com.taf.manager.ConstantManager;
 import com.taf.manager.TypeManager;
 
 public class ParameterCreationDialog extends InputInformationDialog {
 
 	private static final long serialVersionUID = 33492308978388388L;
-
+	
+	private static final String DIALOG_TITLE = "Create a new parameter";
+	
 	private final JTextField fieldName;
 	private final JComboBox<String> typeNames;
 
 	private Field createdField;
 
 	public ParameterCreationDialog() {
-		this.setTitle("Create a new parameter");
+		this.setTitle(DIALOG_TITLE);
 
 		// TODO Replace with ConstantManager
 		GridBagConstraints c = new GridBagConstraints();
@@ -32,18 +35,18 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel fieldLabel = new JLabel("Parameter name");
+		JLabel fieldLabel = new JLabel(ConstantManager.PARAMETER_NAME_LABEL_TEXT);
 		addComponent(fieldLabel, c);
 
 		c.insets = new Insets(20, 5, 5, 15);
 		c.gridx = 1;
-		fieldName = new JTextField(20);
+		fieldName = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addComponent(fieldName, c);
 
 		c.insets = new Insets(5, 15, 5, 5);
 		c.gridx = 0;
 		c.gridy = 1;
-		JLabel typeNameLabel = new JLabel("Parameter type");
+		JLabel typeNameLabel = new JLabel(ConstantManager.PARAMETER_TYPE_LABEL_TEXT);
 		addComponent(typeNameLabel, c);
 
 		c.insets = new Insets(5, 5, 5, 15);

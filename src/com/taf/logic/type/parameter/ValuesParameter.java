@@ -46,7 +46,7 @@ public class ValuesParameter extends TypeParameter {
 	 * @return true if the value was added (if value was not already present)
 	 */
 	public boolean addValue(String value) {
-		return addValue(value, 1);
+		return addValue(value, ConstantManager.DEFAULT_WEIGHT_VALUE);
 	}
 
 	/**

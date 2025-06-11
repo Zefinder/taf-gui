@@ -5,6 +5,8 @@ import com.taf.manager.ConstantManager;
 
 public class WeightParameter extends TypeParameter {
 
+	private static final String ERROR_MESSAGE = "Weight value must be an integer!";
+
 	public static final String PARAMETER_NAME = "weights";
 
 	private int[] weights;
@@ -36,7 +38,7 @@ public class WeightParameter extends TypeParameter {
 				weights[i] = value < 0 ? 0 : value;
 			}
 		} catch (NumberFormatException e) {
-			throw new ParseException("Weight value must be an integer!");
+			throw new ParseException(ERROR_MESSAGE);
 		}
 	}
 

@@ -107,7 +107,35 @@ public class SaveManager extends Manager {
 	private static final String separator = ConstantManager.PARAMETER_SEPARATOR;
 	private static final String newLine = ConstantManager.LINE_JUMP;
 	private static final String format = ConstantManager.PARAMETER_STRING_FORMAT + separator;
-	
+
+	private static final String WINDOWS_USER_BASE_MAIN_DIR = System.getenv("APPDATA");
+	private static final String UNIX_MAC_USER_BASE_MAIN_DIR = System.getProperty("user.home");
+	private static final String OTHER_USER_BASE_MAIN_DIR = ".";
+
+	private static final String TAF_DIRECTORY_NAME = "tafgui";
+
+	private static final String SAVE_ARGUMENT_FORMAT = "%s=\"([^\"]+)\"";
+	private static final String ENTITY_ARGUMENT = "entity";
+	private static final String PARENT_ARGUMENT = "parent";
+	private static final String NAME_ARGUMENT = "name";
+	private static final String INSTANCE_ARGUMENT = "nb_instances";
+	private static final String MIN_INSTANCE_ARGUMENT = "min";
+	private static final String MAX_INSTANCE_ARGUMENT = "max";
+	private static final String TYPE_ARGUMENT = "type";
+
+	private static final int ROOT_PARENT = -1;
+
+	private static final String ENTITY_MISSING_ERROR_MESSAGE = "The entity must have a type!";
+	private static final String PARENT_MISSING_ERROR_MESSAGE = "The entity must have a parent!";
+	private static final String PARENT_UNKNWON_FORMAT_ERROR_MESSAGE = "The parent %d does not exist!";
+	private static final String NAME_MISSING_ERROR_MESSAGE = "Entity must have a name!";
+	private static final String INSTANCE_MISSING_ERROR_MESSAGE = "Node must have either an instance number or a minimum and a maximum number";
+	private static final String PARAMETER_TYPE_ERROR_MESSAGE = "Parameter must have a type";
+	private static final String PARAMETER_UNEXPECTED_ERROR_MESSAGE = "Unexpected parameter type value: ";
+	private static final String PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE = "Type %s must have the \"%s\" argument";
+	private static final String NUMBER_FORMAT_EXCEPTION_ERROR_MESSAGE = "An argument value was not a number (no more information)";
+	private static final String PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE = "%s (line %d)";
+
 	private static final SaveManager instance = new SaveManager();
 
 	private final Set<File> projectNames;
@@ -130,23 +158,23 @@ public class SaveManager extends Manager {
 		switch (OS) {
 		case WINDOWS:
 			// Create in appdata
-			mainDirectory = System.getenv("APPDATA");
+			mainDirectory = WINDOWS_USER_BASE_MAIN_DIR;
 			break;
 
 		case MAC:
 		case UNIX:
 			// Create in home
-			mainDirectory = System.getProperty("user.home");
+			mainDirectory = UNIX_MAC_USER_BASE_MAIN_DIR;
 			break;
 
 		default:
 			// Use the current directory
-			mainDirectory = ".";
+			mainDirectory = OTHER_USER_BASE_MAIN_DIR;
 			break;
 		}
 
 		// TODO Tell the user that a directory will be created
-		mainDirectory += File.separator + "tafgui";
+		mainDirectory += File.separator + TAF_DIRECTORY_NAME;
 		mainDirectoryFile = new File(mainDirectory);
 
 		// Create all directories if do not exist
@@ -163,14 +191,14 @@ public class SaveManager extends Manager {
 	}
 
 	private void initProjectFiles() {
-		File[] tafFiles = mainDirectoryFile.listFiles((dir, name) -> name.endsWith(".taf"));
+		File[] tafFiles = mainDirectoryFile.listFiles((dir, name) -> name.endsWith(ConstantManager.TAF_FILE_EXTENSION));
 		for (File tafFile : tafFiles) {
 			projectNames.add(tafFile);
 		}
 	}
 
 	private Optional<String> getArgument(String line, String argumentName) {
-		Pattern argumentPattern = Pattern.compile("%s=\"([^\"]+)\"".formatted(argumentName));
+		Pattern argumentPattern = Pattern.compile(SAVE_ARGUMENT_FORMAT.formatted(argumentName));
 		Matcher m = argumentPattern.matcher(line);
 		if (m.find()) {
 			return Optional.of(m.group(1));
@@ -205,32 +233,32 @@ public class SaveManager extends Manager {
 				if (line.isBlank()) {
 					continue;
 				}
-				
+
 				// Get entity type
-				Optional<String> entityTypeOp = getArgument(line, "entity");
+				Optional<String> entityTypeOp = getArgument(line, ENTITY_ARGUMENT);
 				if (entityTypeOp.isEmpty()) {
-					throwParseException("The entity must have a type", lineNumber);
+					new ParseException(ENTITY_MISSING_ERROR_MESSAGE);
 				}
 				String entityType = entityTypeOp.get();
 
 				// Get parent id
-				Optional<String> parentIdOp = getArgument(line, "parent");
+				Optional<String> parentIdOp = getArgument(line, PARENT_ARGUMENT);
 				if (parentIdOp.isEmpty()) {
-					throwParseException("The entity must have a parent", lineNumber);
+					new ParseException(PARENT_MISSING_ERROR_MESSAGE);
 				}
 				int parentId = Integer.valueOf(parentIdOp.get());
 
 				// Check if parent exists
 				if (parentId < -1 || parentId >= nodes.size()) {
-					throwParseException("The parent %d does not exist!".formatted(parentId), lineNumber);
+					new ParseException(PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
 				}
 
 				// TODO Check if multiple roots
 
 				// Search for the name
-				Optional<String> entityNameOp = getArgument(line, "name");
+				Optional<String> entityNameOp = getArgument(line, NAME_ARGUMENT);
 				if (entityNameOp.isEmpty()) {
-					throw new ParseException("Entity must have a name! (line %d)".formatted(lineNumber));
+					new ParseException(NAME_MISSING_ERROR_MESSAGE);
 				}
 				String entityName = entityNameOp.get();
 
@@ -247,14 +275,13 @@ public class SaveManager extends Manager {
 						AnonymousType type = new AnonymousType();
 
 						// Check if number of instances or min-max, else throw
-						Optional<String> instanceNumberOp = getArgument(line, "nb_instances");
+						Optional<String> instanceNumberOp = getArgument(line, INSTANCE_ARGUMENT);
 						if (instanceNumberOp.isEmpty()) {
-							Optional<String> minNumberOp = getArgument(line, "min");
-							Optional<String> maxNumberOp = getArgument(line, "max");
+							Optional<String> minNumberOp = getArgument(line, MIN_INSTANCE_ARGUMENT);
+							Optional<String> maxNumberOp = getArgument(line, MAX_INSTANCE_ARGUMENT);
 
 							if (minNumberOp.isEmpty() || maxNumberOp.isEmpty()) {
-								throw new ParseException(
-										"Node must have either an instance number or a minimum and a maximum number");
+								throw new ParseException(INSTANCE_MISSING_ERROR_MESSAGE);
 							}
 
 							int minNumber = Integer.valueOf(minNumberOp.get());
@@ -275,9 +302,9 @@ public class SaveManager extends Manager {
 
 				case "parameter":
 					// Get parameter type
-					Optional<String> typeNameOp = getArgument(line, "type");
+					Optional<String> typeNameOp = getArgument(line, TYPE_ARGUMENT);
 					if (typeNameOp.isEmpty()) {
-						throwParseException("Parameter must have a type", lineNumber);
+						new ParseException(PARAMETER_TYPE_ERROR_MESSAGE);
 					}
 					String typeName = typeNameOp.get();
 					TypeParameterFactory.MinMaxTypeParameterType maxTypeParameterType;
@@ -303,14 +330,14 @@ public class SaveManager extends Manager {
 					}
 
 					default:
-						throw new ParseException("Unexpected parameter type value: " + typeName);
+						throw new ParseException(PARAMETER_UNEXPECTED_ERROR_MESSAGE + typeName);
 					};
 
 					for (String mandatoryTypeName : type.getMandatoryParametersName()) {
 						Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
 						if (mandatoryTypeOp.isEmpty()) {
 							throw new ParseException(
-									"Type %s must have the \"%s\" argument".formatted(typeName, mandatoryTypeName));
+									PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE.formatted(typeName, mandatoryTypeName));
 						}
 						String typeParameterValue = mandatoryTypeOp.get();
 
@@ -345,7 +372,7 @@ public class SaveManager extends Manager {
 				lineNumber++;
 			}
 		} catch (NumberFormatException e) {
-			throwParseException("An argument value was not a number (no more information)", lineNumber);
+			throwParseException(NUMBER_FORMAT_EXCEPTION_ERROR_MESSAGE, lineNumber);
 		} catch (ParseException e1) {
 			throwParseException(e1.getMessage(), lineNumber);
 		}
@@ -355,16 +382,15 @@ public class SaveManager extends Manager {
 		return root;
 	}
 
-	private void writeEntityArguments(BufferedWriter writer, String entityString, int nodeId,
-			String name) throws IOException {
-		writer.write(format.formatted("entity", entityString));
-		writer.write(format.formatted("parent", nodeId));
-		writer.write(format.formatted("name", name));
+	private void writeEntityArguments(BufferedWriter writer, String entityString, int nodeId, String name)
+			throws IOException {
+		writer.write(format.formatted(ENTITY_ARGUMENT, entityString));
+		writer.write(format.formatted(PARENT_ARGUMENT, nodeId));
+		writer.write(format.formatted(NAME_ARGUMENT, name));
 	}
 
-	
 	private void writeRoot(BufferedWriter writer, String name) throws IOException {
-		writeEntityArguments(writer, "node", -1, name);
+		writeEntityArguments(writer, ConstantManager.NODE_ENTITY_NAME, ROOT_PARENT, name);
 		writer.write(newLine);
 	}
 
@@ -377,11 +403,11 @@ public class SaveManager extends Manager {
 	private void writeNode(BufferedWriter writer, Node node, int nodeId) throws IOException {
 		for (Field field : node.getFieldList()) {
 			boolean isNode = field instanceof Node;
-			String entityString = "node";
+			String entityString = ConstantManager.NODE_ENTITY_NAME;
 			if (!isNode) {
-				entityString = "parameter";
+				entityString = ConstantManager.PARAMETER_ENTITY_NAME;
 			}
-			
+
 			writeField(writer, field, entityString, nodeId);
 
 			if (isNode) {
@@ -395,16 +421,16 @@ public class SaveManager extends Manager {
 			// Write root node
 			writeRoot(writer, projectRoot.getName());
 			writer.write(newLine);
-			writeNode(writer, projectRoot, 0);
+			writeNode(writer, projectRoot, ROOT_PARENT + 1);
 		}
 	}
 
 	public boolean createProject(String projectName) throws IOException {
 		// Name must finish by .taf
-		if (!projectName.endsWith(".taf")) {
+		if (!projectName.endsWith(ConstantManager.TAF_FILE_EXTENSION)) {
 			return false;
 		}
-		
+
 		File newProjectFile = getProjectFileFromName(projectName);
 		if (newProjectFile.exists()) {
 			return false;
@@ -412,14 +438,14 @@ public class SaveManager extends Manager {
 
 		newProjectFile.createNewFile();
 		BufferedWriter writer = new BufferedWriter(new FileWriter(newProjectFile));
-		writeRoot(writer, projectName.substring(0, projectName.length() - 4));
+		writeRoot(writer, projectName.substring(0, projectName.length() - ConstantManager.TAF_FILE_EXTENSION.length()));
 		writer.close();
 
 		return true;
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
-		throw new ParseException("%s (line %d)".formatted(message, lineNumber));
+		throw new ParseException(PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE.formatted(message, lineNumber));
 	}
 
 	public String[] getProjectNames() {

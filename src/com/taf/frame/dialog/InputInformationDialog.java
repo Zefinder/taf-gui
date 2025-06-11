@@ -15,6 +15,8 @@ import javax.swing.JDialog;
 public abstract class InputInformationDialog extends JDialog implements KeyListener, ActionListener {
 
 	private static final long serialVersionUID = -2718172025186345523L;
+	
+	private static final String OK_BUTTON_TEXT = "Add";
 
 	private JButton okButton;
 	private int lastRow;
@@ -24,7 +26,7 @@ public abstract class InputInformationDialog extends JDialog implements KeyListe
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setLayout(new GridBagLayout());
 		this.addKeyListener(this);
-		okButton = new JButton("Add");
+		okButton = new JButton(OK_BUTTON_TEXT);
 		okButton.addActionListener(this);
 		lastRow = 0;
 		lastColumn = 0;

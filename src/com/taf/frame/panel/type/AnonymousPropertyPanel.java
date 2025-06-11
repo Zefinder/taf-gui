@@ -19,6 +19,14 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 
 	private static final long serialVersionUID = 293578359212546065L;
 
+	private static final String INSTANCE_NUMBER_BUTTON_NAME = "Fixed instance number";
+	private static final String MIN_MAX_INSTANCE_BUTTON_NAME = "Min-max instance number";
+	private static final String INSTANCE_LABEL_TEXT = "Instance number";
+	private static final String MIN_INSTANCE_LABEL_TEXT = "Min instance number";
+	private static final String MAX_INSTANCE_LABEL_TEXT = "Max instance number";
+
+	private static final int MAX_COLUMN_NUMBER = 4;
+
 	private AnonymousType type;
 
 	private JFormattedTextField instanceField;
@@ -34,8 +42,8 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 
 		boolean hasMinMax = type.hasMinMaxInstance();
 		instanceNumber = type.getInstanceNumberParameter();
-		minInstanceNumber = 1;
-		maxInstanceNumber = 1;
+		minInstanceNumber = ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER;
+		maxInstanceNumber = ConstantManager.DEFAULT_MAX_INSTANCE_NUMBER;
 		if (type.hasMinMaxInstance()) {
 			minInstanceNumber = type.getMinInstanceParameter();
 			maxInstanceNumber = type.getMaxInstanceParameter();
@@ -47,7 +55,7 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
-		JRadioButton instanceButton = new JRadioButton("Fixed instance number");
+		JRadioButton instanceButton = new JRadioButton(INSTANCE_NUMBER_BUTTON_NAME);
 		instanceButton.setSelected(!hasMinMax);
 		instanceButton.addActionListener(e -> activateFixedInstanceNumber(true));
 		this.add(instanceButton, c);
@@ -58,7 +66,7 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 
 		c.gridx = 0;
 		c.gridy = 2;
-		JRadioButton minMaxButton = new JRadioButton("Min-max instance number");
+		JRadioButton minMaxButton = new JRadioButton(MIN_MAX_INSTANCE_BUTTON_NAME);
 		minMaxButton.setSelected(hasMinMax);
 		minMaxButton.addActionListener(e -> activateFixedInstanceNumber(false));
 		this.add(minMaxButton, c);
@@ -79,20 +87,20 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, 10, 10);
+		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel instanceLabel = new JLabel("Instance number");
+		JLabel instanceLabel = new JLabel(INSTANCE_LABEL_TEXT);
 		panel.add(instanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, 15, 0);
-		instanceField = new JFormattedTextField(1);
+		c.insets = new Insets(0, 0, ConstantManager.LARGE_INSET_GAP, 0);
+		instanceField = new JFormattedTextField(ConstantManager.DEFAULT_INSTANCE_NUMBER);
 		instanceField.setEnabled(!hasMinMax);
-		instanceField.addPropertyChangeListener("value", this);
-		instanceField.setColumns(4);
+		instanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		instanceField.setColumns(MAX_COLUMN_NUMBER);
 		panel.add(instanceField, c);
 
 		return panel;
@@ -105,33 +113,33 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, 5, 10);
+		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel minInstanceLabel = new JLabel("Min instance number");
+		JLabel minInstanceLabel = new JLabel(MIN_INSTANCE_LABEL_TEXT);
 		panel.add(minInstanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, 5, 0);
+		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, 0);
 		minInstanceField = new JFormattedTextField(minInstanceNumber);
-		minInstanceField.setColumns(4);
-		minInstanceField.addPropertyChangeListener("value", this);
+		minInstanceField.setColumns(MAX_COLUMN_NUMBER);
+		minInstanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		minInstanceField.setEnabled(hasMinMax);
 		panel.add(minInstanceField, c);
 
-		c.insets = new Insets(0, 0, 10, 10);
+		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
 		c.gridx = 0;
 		c.gridy = 1;
-		JLabel maxInstanceLabel = new JLabel("Max instance number");
+		JLabel maxInstanceLabel = new JLabel(MAX_INSTANCE_LABEL_TEXT);
 		panel.add(maxInstanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, 10, 0);
+		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
 		maxInstanceField = new JFormattedTextField(maxInstanceNumber);
-		maxInstanceField.setColumns(4);
-		maxInstanceField.addPropertyChangeListener("value", this);
+		maxInstanceField.setColumns(MAX_COLUMN_NUMBER);
+		maxInstanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		maxInstanceField.setEnabled(hasMinMax);
 		panel.add(maxInstanceField, c);
 

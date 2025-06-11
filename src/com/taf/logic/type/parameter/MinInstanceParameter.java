@@ -4,6 +4,8 @@ import com.taf.exception.ParseException;
 
 public class MinInstanceParameter extends MinParameter {
 
+	private static final String ERROR_MESSAGE = "Min instance number must be an integer!";
+	
 	public static final String PARAMETER_NAME = "min";
 	
 	MinInstanceParameter() {
@@ -19,7 +21,7 @@ public class MinInstanceParameter extends MinParameter {
 		try {
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException("Min instance number must be an integer!");
+			throw new ParseException(ERROR_MESSAGE);
 		}
 	}
 }
