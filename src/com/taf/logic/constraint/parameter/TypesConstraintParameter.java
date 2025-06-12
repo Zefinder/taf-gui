@@ -41,7 +41,7 @@ public class TypesConstraintParameter extends ConstraintParameter {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String res = types.get(0).getValue();
 		for (int i = 1; i < types.size(); i++) {
-			res += types.get(i).getValue() + separator;
+			res += separator + types.get(i).getValue();
 		}
 		
 		return res;

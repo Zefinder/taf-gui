@@ -45,13 +45,13 @@ public class RangesConstraintParameter extends ConstraintParameter {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String res = ranges.get(0).toString();
 		for (int i = 1; i < ranges.size(); i++) {
-			res += ranges.get(i).toString() + separator;
+			res += separator + ranges.get(i).toString();
 		}
 
 		return res;
 	}
 
-	private static class Range {
+	public static class Range {
 
 		private static final String RANGE_STRING_FORMAT = "[%s, %s]";
 
@@ -63,10 +63,18 @@ public class RangesConstraintParameter extends ConstraintParameter {
 			this.right = right;
 		}
 
+		public String getLeft() {
+			return left;
+		}
+		
 		public void setLeft(String left) {
 			this.left = left;
 		}
 
+		public String getRight() {
+			return right;
+		}
+		
 		public void setRight(String right) {
 			this.right = right;
 		}

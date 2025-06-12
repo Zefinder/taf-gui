@@ -43,7 +43,7 @@ public class QuantifiersConstraintParameter extends ConstraintParameter {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String res = quantifiers.get(0);
 		for (int i = 1; i < quantifiers.size(); i++) {
-			res += quantifiers.get(i) + separator;
+			res += separator + quantifiers.get(i);
 		}
 		
 		return res;

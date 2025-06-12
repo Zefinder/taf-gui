@@ -424,6 +424,7 @@ public class SaveManager extends Manager {
 
 	private void writeConstraint(BufferedWriter writer, Constraint constraint, int nodeId) throws IOException {
 		writeEntityArguments(writer, ConstantManager.CONSTRAINT_ENTITY_NAME, nodeId, constraint.getName());
+		writer.write(constraint.parametersToString().strip());
 		writer.write(newLine);
 	}
 

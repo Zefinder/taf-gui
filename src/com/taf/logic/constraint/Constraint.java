@@ -3,6 +3,7 @@ package com.taf.logic.constraint;
 import java.util.List;
 
 import com.taf.logic.Entity;
+import com.taf.logic.constraint.parameter.ConstraintParameter;
 import com.taf.logic.constraint.parameter.ExpressionConstraintParameter;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.QuantifiersConstraintParameter;
@@ -30,6 +31,23 @@ public class Constraint implements Entity {
 		typesConstraintParameter = new TypesConstraintParameter();
 	}
 
+	public void addConstraintParameter(ConstraintParameter parameter) {
+		if (parameter instanceof ExpressionConstraintParameter) {
+			for (String expression : ((ExpressionConstraintParameter) parameter).getExpressions()) {
+				expressionsConstraintParameter.addExpression(expression);
+			}
+		} else if (parameter instanceof QuantifiersConstraintParameter) {
+			for (String expression : ((QuantifiersConstraintParameter) parameter).getQuantifiers()) {
+				quantifiersConstraintParameter.addQuantifier(expression);
+			}
+
+		} else if (parameter instanceof RangesConstraintParameter) {
+
+		} else if (parameter instanceof TypesConstraintParameter) {
+
+		}
+	}
+
 	public void addExpression(String expression) {
 		expressionsConstraintParameter.addExpression(expression);
 	}
@@ -40,10 +58,6 @@ public class Constraint implements Entity {
 
 	public void editExpression(int index, String expression) {
 		expressionsConstraintParameter.editExpression(index, expression);
-	}
-
-	public List<String> getExpressions() {
-		return expressionsConstraintParameter.getExpressionList();
 	}
 
 	public void addQuantifier(String quantifier, String leftRange, String rightRange, QuantifierType type) {
@@ -74,6 +88,44 @@ public class Constraint implements Entity {
 		typesConstraintParameter.editType(index, type);
 	}
 
+	public List<String> getExpressions() {
+		return expressionsConstraintParameter.getExpressions();
+	}
+
+	public List<String> getQuantifiers() {
+		return quantifiersConstraintParameter.getQuantifiers();
+	}
+
+	public List<RangesConstraintParameter.Range> getRanges() {
+		return rangesConstraintParameter.getRanges();
+	}
+
+	public List<QuantifierType> getTypes() {
+		return typesConstraintParameter.getTypes();
+	}
+
+	public String parametersToString() {
+		final String separator = ConstantManager.PARAMETER_SEPARATOR;
+		String paramStr = "";
+		if (!expressionsConstraintParameter.getExpressions().isEmpty()) {
+			paramStr += separator + expressionsConstraintParameter.toString();
+		}
+
+		if (!quantifiersConstraintParameter.getQuantifiers().isEmpty()) {
+			paramStr += separator + quantifiersConstraintParameter.toString();
+		}
+
+		if (!rangesConstraintParameter.getRanges().isEmpty()) {
+			paramStr += separator + rangesConstraintParameter.toString();
+		}
+
+		if (!typesConstraintParameter.getTypes().isEmpty()) {
+			paramStr += separator + typesConstraintParameter.toString();
+		}
+
+		return paramStr;
+	}
+
 	@Override
 	public String getName() {
 		return name;
@@ -91,24 +143,7 @@ public class Constraint implements Entity {
 
 	@Override
 	public String toString() {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
-		String paramStr = "";
-		if (!expressionsConstraintParameter.getExpressionList().isEmpty()) {
-			paramStr += separator + expressionsConstraintParameter.toString();
-		}
-
-		if (!quantifiersConstraintParameter.getQuantifiers().isEmpty()) {
-			paramStr += separator + quantifiersConstraintParameter.toString();
-		}
-
-		if (!rangesConstraintParameter.getRanges().isEmpty()) {
-			paramStr += separator + rangesConstraintParameter.toString();
-		}
-
-		if (!typesConstraintParameter.getTypes().isEmpty()) {
-			paramStr += separator + typesConstraintParameter.toString();
-		}
-
+		String paramStr = parametersToString();
 		return CONSTRAINT_STRING_FORMAT
 				.formatted(ConstantManager.FIELD_STRING_FORMAT.formatted(name, paramStr.strip()).stripTrailing());
 	}

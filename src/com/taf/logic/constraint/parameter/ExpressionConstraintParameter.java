@@ -28,7 +28,7 @@ public class ExpressionConstraintParameter extends ConstraintParameter {
 		expressions.set(index, expression);
 	}
 	
-	public List<String> getExpressionList() {
+	public List<String> getExpressions() {
 		return expressions;
 	}
 	
