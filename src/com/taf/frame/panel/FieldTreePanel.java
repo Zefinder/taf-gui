@@ -3,26 +3,33 @@ package com.taf.frame.panel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 import com.taf.event.ConstraintCreatedEvent;
+import com.taf.event.EntityDeletedEvent;
+import com.taf.event.EntityNameChangedEvent;
 import com.taf.event.EntitySelectedEvent;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
-import com.taf.event.EntityNameChangedEvent;
 import com.taf.event.FieldTypeChangedEvent;
 import com.taf.frame.dialog.NodeCreationDialog;
 import com.taf.frame.dialog.ParameterCreationDialog;
+import com.taf.frame.popup.TreeEntityPopupMenu;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Field;
@@ -94,6 +101,33 @@ public class FieldTreePanel extends JPanel implements EventListener {
 				System.out.println(nodeInfo.getEntity());
 			}
 		});
+		MouseListener rightClickListener = new MouseAdapter() {
+			
+			public void mouseReleased(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
+				
+				if (SwingUtilities.isRightMouseButton(e)) {
+					int selRow = tree.getRowForLocation(x, y);
+					
+					if (selRow != -1) {
+						tree.setSelectionRow(selRow);
+						DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+						
+						NodeObject nodeObject = (NodeObject) node.getUserObject();
+						Entity entity = nodeObject.getEntity();
+						
+						// Show popup if not root
+						if (!(entity instanceof Root)) {
+							JPopupMenu menu = new TreeEntityPopupMenu(entity);
+							menu.show(tree, x, y);
+						}
+					}
+				}
+			}
+		};
+		tree.addMouseListener(rightClickListener);
+
 		JScrollPane treeView = new JScrollPane(tree);
 		this.add(treeView, c);
 	}
@@ -199,16 +233,16 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	public void onConstraintCreated(ConstraintCreatedEvent event) {
 		Constraint constraint = event.getConstraint();
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		
-		// TODO Find somewhere else to put the constraint in the node? 
+
+		// TODO Find somewhere else to put the constraint in the node?
 		NodeObject nodeObject = (NodeObject) node.getUserObject();
 		Node a = (Node) nodeObject.getEntity();
 		a.addConstraint(constraint);
-		
+
 		addConstraint(node, constraint);
 		treeModel.nodeChanged(node);
 	}
-	
+
 	@EventMethod
 	public void onEntityNameChanged(EntityNameChangedEvent event) {
 		// Editable node is the selected one
@@ -225,6 +259,12 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		NodeObject nodeObject = (NodeObject) node.getUserObject();
 		nodeObject.refresh();
 		treeModel.nodeChanged(node);
+	}
+
+	@EventMethod
+	public void onEntityDeleted(EntityDeletedEvent event) {
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		treeModel.removeNodeFromParent(node);
 	}
 	
 	private static class NodeObject {

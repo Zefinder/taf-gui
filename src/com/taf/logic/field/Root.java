@@ -12,7 +12,13 @@ public class Root extends Node {
 	public Root(String name) {
 		super(name, new AnonymousType());
 	}
-	
+
+	@Override
+	public Node getParent() {
+		// Root has no parent
+		return null;
+	}
+
 	@Override
 	public String toString() {
 		return ROOT_STRING_FORMAT.formatted(super.getName(), super.insideFieldsToString());

@@ -8,6 +8,7 @@ public abstract class Field implements Entity {
 
 	private String name;
 	private Type type;
+	private Node parent;
 
 	protected int indentationLevel;
 
@@ -32,7 +33,7 @@ public abstract class Field implements Entity {
 	public void setType(Type type) {
 		this.type = type;
 	}
-	
+
 	/**
 	 * Sets the indentation level of the field, this is just for nice output. This
 	 * is package level since it will be modified by either the root or a node.
@@ -54,8 +55,28 @@ public abstract class Field implements Entity {
 	}
 
 	@Override
+	public Node getParent() {
+		return this.parent;
+	}
+
+	@Override
+	public void setParent(Node parent) {
+		this.parent = parent;
+	}
+
+	@Override
 	public String toString() {
 		return ConstantManager.FIELD_STRING_FORMAT.formatted(name, type.toString());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Field)) {
+			return false;
+		}
+
+		Field other = (Field) obj;
+		return this.name.equals(other.name) && this.type.equals(other.type);
 	}
 
 }
