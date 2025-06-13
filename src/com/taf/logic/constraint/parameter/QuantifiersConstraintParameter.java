@@ -48,5 +48,17 @@ public class QuantifiersConstraintParameter extends ConstraintParameter {
 		
 		return res;
 	}
+	
+	@Override
+	void stringToValue(String stringValue) {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		String[] values = stringValue.split(separator);
+
+		for (String value : values) {
+			if (!value.isBlank()) {
+				addQuantifier(value);
+			}
+		}
+	}
 
 }

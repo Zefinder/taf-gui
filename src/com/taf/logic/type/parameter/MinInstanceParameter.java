@@ -17,7 +17,7 @@ public class MinInstanceParameter extends MinParameter {
 	}
 
 	@Override
-	public void valuefromString(String stringValue) throws ParseException {
+	void stringToValue(String stringValue) throws ParseException {
 		try {
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

@@ -2,11 +2,16 @@ package com.taf.logic.constraint.parameter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.taf.manager.ConstantManager;
 
 public class RangesConstraintParameter extends ConstraintParameter {
 
+	private static final String RANGE_PATTERN_STRING = "\\[[\s]*([^\"]+),[\s]*([^\"]+)\\]";
+	private static final Pattern RANGE_PATTERN = Pattern.compile(RANGE_PATTERN_STRING); 
+	
 	static final String CONSTRAINT_PARAMETER_NAME = "ranges";
 
 	private List<Range> ranges;
@@ -51,6 +56,23 @@ public class RangesConstraintParameter extends ConstraintParameter {
 		return res;
 	}
 
+	@Override
+	void stringToValue(String stringValue) {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		String[] values = stringValue.split(separator);
+
+		for (String value : values) {
+			if (!value.isBlank()) {
+				Matcher m = RANGE_PATTERN.matcher(value);
+				if (m.find()) {
+					String left = m.group(1).stripLeading();
+					String right = m.group(2).stripLeading();
+					addRange(left, right);
+				}
+			}
+		}
+	}
+	
 	public static class Range {
 
 		private static final String RANGE_STRING_FORMAT = "[%s, %s]";

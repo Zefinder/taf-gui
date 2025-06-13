@@ -17,7 +17,7 @@ public abstract class TypeParameter {
 
 	public abstract String valueToString();
 
-	public abstract void valuefromString(String stringValue) throws ParseException;
+	abstract void stringToValue(String stringValue) throws ParseException;
 
 	@Override
 	public String toString() {

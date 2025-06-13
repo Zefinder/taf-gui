@@ -8,6 +8,7 @@ import com.taf.logic.constraint.parameter.ExpressionConstraintParameter;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.QuantifiersConstraintParameter;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter;
+import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
 import com.taf.logic.constraint.parameter.TypesConstraintParameter;
 import com.taf.manager.ConstantManager;
 
@@ -32,19 +33,34 @@ public class Constraint implements Entity {
 	}
 
 	public void addConstraintParameter(ConstraintParameter parameter) {
+		// We assume that the parameters arrive in that order
 		if (parameter instanceof ExpressionConstraintParameter) {
 			for (String expression : ((ExpressionConstraintParameter) parameter).getExpressions()) {
 				expressionsConstraintParameter.addExpression(expression);
 			}
+			
 		} else if (parameter instanceof QuantifiersConstraintParameter) {
 			for (String expression : ((QuantifiersConstraintParameter) parameter).getQuantifiers()) {
 				quantifiersConstraintParameter.addQuantifier(expression);
 			}
 
 		} else if (parameter instanceof RangesConstraintParameter) {
-
+			List<Range> ranges = ((RangesConstraintParameter) parameter).getRanges();
+			int quantifierNumber = quantifiersConstraintParameter.getQuantifiers().size();
+			int rangesNumber = ranges.size();
+			for (int i = 0; i < Math.min(quantifierNumber, rangesNumber); i++) {
+				Range range = ranges.get(i);
+				rangesConstraintParameter.addRange(range.getLeft(), range.getRight());
+			}
+			
 		} else if (parameter instanceof TypesConstraintParameter) {
-
+			List<QuantifierType> types = ((TypesConstraintParameter) parameter).getTypes();
+			int quantifierNumber = quantifiersConstraintParameter.getQuantifiers().size();
+			int rangesNumber = types.size();
+			for (int i = 0; i < Math.min(quantifierNumber, rangesNumber); i++) {
+				QuantifierType type = types.get(i);
+				typesConstraintParameter.addType(type);
+			}
 		}
 	}
 

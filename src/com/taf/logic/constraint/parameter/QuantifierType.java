@@ -20,7 +20,7 @@ public enum QuantifierType {
 	 * @param value
 	 * @return
 	 */
-	public static QuantifierType enumFromString(String value) {
+	public static QuantifierType fromString(String value) {
 		if (value.equals(EXISTS.getValue())) {
 			return EXISTS;
 		}

@@ -22,6 +22,8 @@ public abstract class ConstraintParameter {
 
 	public abstract String valueToString();
 	
+	abstract void stringToValue(String stringValue);
+	
 	public static HashSet<String> getConstraintParameterNames() {
 		return CONSTRAINT_PARAMETER_NAMES;
 	}

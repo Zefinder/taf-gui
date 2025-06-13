@@ -17,6 +17,8 @@ import java.util.regex.Pattern;
 
 import com.taf.exception.ParseException;
 import com.taf.logic.constraint.Constraint;
+import com.taf.logic.constraint.parameter.ConstraintParameter;
+import com.taf.logic.constraint.parameter.ConstraintParameterFactory;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
@@ -343,8 +345,7 @@ public class SaveManager extends Manager {
 						String typeParameterValue = mandatoryTypeOp.get();
 
 						TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
-								maxTypeParameterType);
-						typeParameter.valuefromString(typeParameterValue);
+								typeParameterValue, maxTypeParameterType);
 						type.addTypeParameter(typeParameter);
 					}
 
@@ -355,8 +356,7 @@ public class SaveManager extends Manager {
 							String typeParameterValue = optionalTypeOp.get();
 
 							TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
-									maxTypeParameterType);
-							typeParameter.valuefromString(typeParameterValue);
+									typeParameterValue, maxTypeParameterType);
 							type.addTypeParameter(typeParameter);
 						}
 					}
@@ -367,6 +367,16 @@ public class SaveManager extends Manager {
 
 				case ConstantManager.CONSTRAINT_ENTITY_NAME:
 					Constraint constraint = new Constraint(entityName);
+					for (String constraintParameterName : ConstraintParameter.getConstraintParameterNames()) {
+						Optional<String> optionalConstraintParameterOp = getArgument(line, constraintParameterName);
+						if (!optionalConstraintParameterOp.isEmpty()) {
+							String constraintParameterValue = optionalConstraintParameterOp.get();
+							ConstraintParameter constraintParameter = ConstraintParameterFactory
+									.createConstraintParameter(constraintParameterName, constraintParameterValue);
+							constraint.addConstraintParameter(constraintParameter);
+						}
+					}
+
 					nodes.get(parentId).addConstraint(constraint);
 					break;
 				}

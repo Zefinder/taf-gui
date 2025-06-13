@@ -15,11 +15,11 @@ public class TypeParameterFactory {
 	private TypeParameterFactory() {
 	}
 
-	public static TypeParameter createTypeParameter(String typeName) throws ParseException {
-		return createTypeParameter(typeName, MinMaxTypeParameterType.NONE);
+	public static TypeParameter createTypeParameter(String typeName, String stringValue) throws ParseException {
+		return createTypeParameter(typeName, stringValue, MinMaxTypeParameterType.NONE);
 	}
 
-	public static TypeParameter createTypeParameter(String typeName, MinMaxTypeParameterType minMaxTypeParameter)
+	public static TypeParameter createTypeParameter(String typeName, String stringValue, MinMaxTypeParameterType minMaxTypeParameter)
 			throws ParseException {
 		TypeParameter type = switch (typeName) {
 
@@ -74,6 +74,8 @@ public class TypeParameterFactory {
 		default:
 			throw new ParseException(UNEXPECTED_VALUE_ERROR_MESSAGE + typeName);
 		};
+		
+		type.stringToValue(stringValue);
 
 		return type;
 	}
