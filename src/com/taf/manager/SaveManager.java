@@ -15,6 +15,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileSystemView;
+
 import com.taf.exception.ParseException;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.constraint.parameter.ConstraintParameter;
@@ -106,6 +109,8 @@ import com.taf.util.OSValidator;
  * </p>
  */
 public class SaveManager extends Manager {
+
+	private static final String XML_HEADER = "<?xml version=\"1.0\"?>\n\n\n";
 
 	private static final String separator = ConstantManager.PARAMETER_SEPARATOR;
 	private static final String newLine = ConstantManager.LINE_JUMP;
@@ -411,7 +416,8 @@ public class SaveManager extends Manager {
 		writer.write(newLine);
 	}
 
-	private void writeNode(BufferedWriter writer, Node node, int nodeId) throws IOException {
+	private int writeNode(BufferedWriter writer, Node node, int nodeId) throws IOException {
+		int numberNodes = nodeId;
 		for (Field field : node.getFieldList()) {
 			boolean isNode = field instanceof Node;
 			String entityString = ConstantManager.NODE_ENTITY_NAME;
@@ -423,13 +429,15 @@ public class SaveManager extends Manager {
 
 			if (isNode) {
 				Node innerNode = (Node) field;
-				int innerNodeId = nodeId + 1;
-				writeNode(writer, innerNode, innerNodeId);
+				int innerNodeId = numberNodes + 1;
+				numberNodes = writeNode(writer, innerNode, innerNodeId);
 				for (Constraint constraint : innerNode.getConstraintList()) {
 					writeConstraint(writer, constraint, innerNodeId);
 				}
 			}
 		}
+		
+		return numberNodes;
 	}
 
 	private void writeConstraint(BufferedWriter writer, Constraint constraint, int nodeId) throws IOException {
@@ -439,6 +447,7 @@ public class SaveManager extends Manager {
 	}
 
 	public void saveProject() throws IOException {
+		// TODO Keep track of the parent and not the depth
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
 			// Write root node
 			writeRoot(writer, projectRoot.getName());
@@ -464,6 +473,35 @@ public class SaveManager extends Manager {
 		writer.close();
 
 		return true;
+	}
+
+	public void exportToXML() throws IOException {
+		if (projectRoot == null || projectFile == null) {
+			return;
+		}
+
+		String projectFileName = projectFile.getName();
+		String xmlFileName = projectFileName.substring(0,
+				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length())
+				+ ConstantManager.XML_FILE_EXTENSION;
+
+		File homeFile = FileSystemView.getFileSystemView().getHomeDirectory();
+		File predictedFile = new File(homeFile.getAbsolutePath() + File.separator + xmlFileName);
+
+		// Show file chooser in save mode
+		JFileChooser chooser = new JFileChooser();
+		chooser.setSelectedFile(predictedFile);
+		int returnVal = chooser.showSaveDialog(null);
+
+		if (returnVal == JFileChooser.APPROVE_OPTION) {
+			// TODO Verify if file exists
+			File xmlFile = chooser.getSelectedFile();
+			try (BufferedWriter writer = new BufferedWriter(new FileWriter(xmlFile))) {
+				writer.write(XML_HEADER);
+				writer.write(projectRoot.toString());
+				writer.write(newLine);
+			}
+		}
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {

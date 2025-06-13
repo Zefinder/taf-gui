@@ -19,18 +19,21 @@ public class TafProjectMenuBar extends JMenuBar {
 
 	private static final String PROJECT_MENU_TEXT = "Project";
 	private static final String SAVE_ITEM_TEXT = "Save project";
+	private static final String EXPORT_ITEM_TEXT = "Export project";
 	private static final String RUN_ITEM_TEXT = "Run TAF";
 	private static final String QUIT_ITEM_TEXT = "Quit";
 	private static final String SETTINGS_MENU_TEXT = "Settings";
 	private static final String PATH_ITEM_TEXT = "Path settings";
 
-	private static final String ERROR_DIALOG_TEXT = "An error occured when trying to save...\n";
-	private static final String ERROR_INPUT_DIALOG_TITLE = "Error!";
-	private static final String ERROR_INPUT_DIALOG_TEXT = "An error occured when trying to save... Do you want to quit anyways?\n";
+	private static final String ERROR_SAVE_DIALOG_TEXT = "An error occured when trying to save...\n";
+	private static final String ERROR_SAVE_INPUT_DIALOG_TITLE = "Error!";
+	private static final String ERROR_SAVE_INPUT_DIALOG_TEXT = "An error occured when trying to save... Do you want to continue anyways?\n";
+	private static final String ERROR_EXPORT_DIALOG_TEXT = "An error occured when trying to export...\n";
 
 	public TafProjectMenuBar() {
 		JMenu projectMenu = new JMenu(PROJECT_MENU_TEXT);
 		JMenuItem saveItem = new JMenuItem(SAVE_ITEM_TEXT);
+		JMenuItem exportItem = new JMenuItem(EXPORT_ITEM_TEXT);
 		JMenuItem runItem = new JMenuItem(RUN_ITEM_TEXT);
 		JMenuItem quitItem = new JMenuItem(QUIT_ITEM_TEXT);
 
@@ -38,9 +41,11 @@ public class TafProjectMenuBar extends JMenuBar {
 		JMenuItem pathItem = new JMenuItem(PATH_ITEM_TEXT);
 
 		saveItem.addActionListener(e -> save());
+		exportItem.addActionListener(e -> export());
 		quitItem.addActionListener(e -> quit());
 
 		projectMenu.add(saveItem);
+		projectMenu.add(exportItem);
 		projectMenu.add(runItem);
 		projectMenu.add(quitItem);
 
@@ -54,22 +59,39 @@ public class TafProjectMenuBar extends JMenuBar {
 		try {
 			SaveManager.getInstance().saveProject();
 		} catch (IOException e) {
-			ConstantManager.showError(ERROR_DIALOG_TEXT + e.getMessage());
+			ConstantManager.showError(ERROR_SAVE_DIALOG_TEXT + e.getMessage());
+		}
+	}
+
+	private boolean saveAnd() {
+		try {
+			SaveManager.getInstance().saveProject();
+		} catch (IOException e) {
+			int answer = JOptionPane.showConfirmDialog(null, ERROR_SAVE_INPUT_DIALOG_TEXT + e.getMessage(),
+					ERROR_SAVE_INPUT_DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
+			if (answer != JOptionPane.YES_OPTION) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+	
+	private void export() {
+		// TODO Ask if wants to save
+		saveAnd();
+		
+		try {
+			SaveManager.getInstance().exportToXML();
+		} catch (IOException e) {
+			ConstantManager.showError(ERROR_EXPORT_DIALOG_TEXT + e.getMessage());
 		}
 	}
 
 	private void quit() {
-		try {
-			SaveManager.getInstance().saveProject();
-		} catch (IOException e) {
-			int answer = JOptionPane.showConfirmDialog(null, ERROR_INPUT_DIALOG_TEXT + e.getMessage(),
-					ERROR_INPUT_DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-			if (answer != JOptionPane.YES_OPTION) {
-				return;
-			}
-		}
+		// TODO Ask if want to save
+		saveAnd();
 
-		// TODO Quit project and change frame
 		MainMenuFrame frame = new MainMenuFrame();
 		frame.initFrame();
 		EventManager.getInstance().fireEvent(new ProjectClosedEvent());
