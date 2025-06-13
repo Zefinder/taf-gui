@@ -7,15 +7,21 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
+import com.taf.event.ConstraintCreatedEvent;
+import com.taf.event.Event;
+import com.taf.frame.dialog.ConstraintCreationDialog;
+import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.AnonymousType;
 import com.taf.manager.ConstantManager;
+import com.taf.manager.EventManager;
 
-public class AnonymousPropertyPanel extends TypePropertyPanel implements PropertyChangeListener {
+public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 293578359212546065L;
 
@@ -24,6 +30,7 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 	private static final String INSTANCE_LABEL_TEXT = "Instance number";
 	private static final String MIN_INSTANCE_LABEL_TEXT = "Min instance number";
 	private static final String MAX_INSTANCE_LABEL_TEXT = "Max instance number";
+	private static final String ADD_CONSTRAINT_BUTTON_TEXT = "+ Add constraint";
 
 	private static final int MAX_COLUMN_NUMBER = 4;
 
@@ -71,9 +78,26 @@ public class AnonymousPropertyPanel extends TypePropertyPanel implements Propert
 		minMaxButton.addActionListener(e -> activateFixedInstanceNumber(false));
 		this.add(minMaxButton, c);
 
-		c.weighty = 1;
 		c.gridy = 3;
 		this.add(createMinMaxInstancePanel(hasMinMax), c);
+
+		c.fill = GridBagConstraints.NONE;
+		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, 0, 0, 0);
+		c.weightx = 0;
+		c.weighty = 1;
+		c.gridx = 0;
+		c.gridy = 4;
+		JButton addConstraintButton = new JButton(ADD_CONSTRAINT_BUTTON_TEXT);
+		addConstraintButton.addActionListener(e -> {
+			ConstraintCreationDialog dialog = new ConstraintCreationDialog();
+			dialog.initDialog();
+			Constraint constraint = dialog.getConstraint();
+			if (constraint != null) {
+				Event event = new ConstraintCreatedEvent(constraint);
+				EventManager.getInstance().fireEvent(event);
+			}
+		});
+		this.add(addConstraintButton, c);
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(instanceButton);

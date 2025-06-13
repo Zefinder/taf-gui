@@ -1,11 +1,11 @@
 package com.taf.event;
 
-public class FieldNameChangedEvent implements Event {
+public class EntityNameChangedEvent implements Event {
 
 	private String oldName;
 	private String newName;
 	
-	public FieldNameChangedEvent(String oldName, String newName) {
+	public EntityNameChangedEvent(String oldName, String newName) {
 		this.oldName = oldName;
 		this.newName = newName;
 	}

@@ -16,6 +16,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taf.exception.ParseException;
+import com.taf.logic.constraint.Constraint;
+import com.taf.logic.constraint.parameter.ConstraintParameter;
+import com.taf.logic.constraint.parameter.ConstraintParameterFactory;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
@@ -263,7 +266,7 @@ public class SaveManager extends Manager {
 				String entityName = entityNameOp.get();
 
 				switch (entityType) {
-				case "node":
+				case ConstantManager.NODE_ENTITY_NAME:
 					Node node;
 
 					if (parentId == -1) {
@@ -300,7 +303,7 @@ public class SaveManager extends Manager {
 					nodes.add(node);
 					break;
 
-				case "parameter":
+				case ConstantManager.PARAMETER_ENTITY_NAME:
 					// Get parameter type
 					Optional<String> typeNameOp = getArgument(line, TYPE_ARGUMENT);
 					if (typeNameOp.isEmpty()) {
@@ -342,8 +345,7 @@ public class SaveManager extends Manager {
 						String typeParameterValue = mandatoryTypeOp.get();
 
 						TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
-								maxTypeParameterType);
-						typeParameter.valuefromString(typeParameterValue);
+								typeParameterValue, maxTypeParameterType);
 						type.addTypeParameter(typeParameter);
 					}
 
@@ -354,8 +356,7 @@ public class SaveManager extends Manager {
 							String typeParameterValue = optionalTypeOp.get();
 
 							TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
-									maxTypeParameterType);
-							typeParameter.valuefromString(typeParameterValue);
+									typeParameterValue, maxTypeParameterType);
 							type.addTypeParameter(typeParameter);
 						}
 					}
@@ -364,8 +365,19 @@ public class SaveManager extends Manager {
 					nodes.get(parentId).addField(parameter);
 					break;
 
-				case "constraint":
-					// TODO
+				case ConstantManager.CONSTRAINT_ENTITY_NAME:
+					Constraint constraint = new Constraint(entityName);
+					for (String constraintParameterName : ConstraintParameter.getConstraintParameterNames()) {
+						Optional<String> optionalConstraintParameterOp = getArgument(line, constraintParameterName);
+						if (!optionalConstraintParameterOp.isEmpty()) {
+							String constraintParameterValue = optionalConstraintParameterOp.get();
+							ConstraintParameter constraintParameter = ConstraintParameterFactory
+									.createConstraintParameter(constraintParameterName, constraintParameterValue);
+							constraint.addConstraintParameter(constraintParameter);
+						}
+					}
+
+					nodes.get(parentId).addConstraint(constraint);
 					break;
 				}
 
@@ -378,7 +390,6 @@ public class SaveManager extends Manager {
 		}
 
 		this.projectRoot = root;
-		System.out.println(root.getType().toString());
 		return root;
 	}
 
@@ -411,9 +422,20 @@ public class SaveManager extends Manager {
 			writeField(writer, field, entityString, nodeId);
 
 			if (isNode) {
-				writeNode(writer, (Node) field, nodeId + 1);
+				Node innerNode = (Node) field;
+				int innerNodeId = nodeId + 1;
+				writeNode(writer, innerNode, innerNodeId);
+				for (Constraint constraint : innerNode.getConstraintList()) {
+					writeConstraint(writer, constraint, innerNodeId);
+				}
 			}
 		}
+	}
+
+	private void writeConstraint(BufferedWriter writer, Constraint constraint, int nodeId) throws IOException {
+		writeEntityArguments(writer, ConstantManager.CONSTRAINT_ENTITY_NAME, nodeId, constraint.getName());
+		writer.write(constraint.parametersToString().strip());
+		writer.write(newLine);
 	}
 
 	public void saveProject() throws IOException {

@@ -22,7 +22,7 @@ public class TypeNameParameter extends TypeParameter {
 	}
 	
 	@Override
-	public void valuefromString(String stringValue) throws ParseException {
+	void stringToValue(String stringValue) throws ParseException {
 		this.typeName = stringValue;
 	}
 

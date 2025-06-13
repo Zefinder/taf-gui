@@ -19,7 +19,7 @@ import com.taf.logic.type.StringType;
 import com.taf.manager.ConstantManager;
 import com.taf.util.IntegerEditor;
 
-public class StringPropertyPanel extends TypePropertyPanel {
+public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = -6799435160247338364L;
 

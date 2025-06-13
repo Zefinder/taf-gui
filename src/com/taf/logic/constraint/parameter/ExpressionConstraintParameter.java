@@ -7,33 +7,56 @@ import com.taf.manager.ConstantManager;
 
 public class ExpressionConstraintParameter extends ConstraintParameter {
 
-	private static final String CONSTRAINT_PARAMETER_NAME = "expressions";
+	static final String CONSTRAINT_PARAMETER_NAME = "expressions";
 	
-	private List<String> expressionList;
+	private List<String> expressions;
 	
 	public ExpressionConstraintParameter() {
 		super(CONSTRAINT_PARAMETER_NAME);
-		expressionList = new ArrayList<String>();
+		expressions = new ArrayList<String>();
 	}
 	
 	public void addExpression(String expression) {
-		expressionList.add(expression);
+		expressions.add(expression);
 	}
 
+	public void removeExpression(int index) {
+		expressions.remove(index);
+	}
+	
+	public void editExpression(int index, String expression) {
+		expressions.set(index, expression);
+	}
+	
+	public List<String> getExpressions() {
+		return expressions;
+	}
+	
 	@Override
 	public String valueToString() {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
-		String expressionStr = "";
-		
-		for (int i = 0; i < expressionList.size(); i++) {
-			expressionStr += expressionList.get(i);
-			
-			if (i != expressionList.size() - 1) {
-				expressionStr += separator;
-			}
+		if (expressions.isEmpty()) {
+			return "";
 		}
 		
-		return expressionStr;
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		String res = expressions.get(0);
+		for (int i = 1; i < expressions.size(); i++) {
+			res += separator + expressions.get(i);
+		}
+		
+		return res;
+	}
+	
+	@Override
+	void stringToValue(String stringValue) {
+		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		String[] values = stringValue.split(separator);
+
+		for (String value : values) {
+			if (!value.isBlank()) {
+				addExpression(value);
+			}
+		}
 	}
 
 }

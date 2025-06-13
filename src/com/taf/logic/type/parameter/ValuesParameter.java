@@ -120,7 +120,7 @@ public class ValuesParameter extends TypeParameter {
 	}
 
 	@Override
-	public void valuefromString(String stringValue) throws ParseException {
+	void stringToValue(String stringValue) throws ParseException {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 

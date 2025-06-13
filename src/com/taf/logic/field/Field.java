@@ -1,9 +1,10 @@
 package com.taf.logic.field;
 
+import com.taf.logic.Entity;
 import com.taf.logic.type.Type;
 import com.taf.manager.ConstantManager;
 
-public abstract class Field {
+public abstract class Field implements Entity {
 
 	private String name;
 	private Type type;
