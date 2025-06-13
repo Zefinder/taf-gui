@@ -3,6 +3,9 @@ package com.taf.frame.panel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
@@ -11,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.taf.event.ProjectOpenedEvent;
@@ -57,6 +61,53 @@ public class ProjectChooserPanel extends JPanel {
 		}
 		JTable projectTable = new JTable(tableModel);
 		projectTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		MouseAdapter rightClickListener = new MouseAdapter() {
+			private int selectRow(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					int row = projectTable.rowAtPoint(e.getPoint());
+
+					if (row != -1) {
+						projectTable.setRowSelectionInterval(row, row);
+						return row;
+					}
+				}
+
+				return -1;
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				selectRow(e);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				selectRow(e);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				int row = selectRow(e);
+
+				if (row != -1) {
+					projectTable.setRowSelectionInterval(row, row);
+//						tree.setSelectionRow(selRow);
+//						DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+//						
+//						NodeObject nodeObject = (NodeObject) node.getUserObject();
+//						Entity entity = nodeObject.getEntity();
+//						
+//						// Show popup if not root
+//						if (!(entity instanceof Root)) {
+//							JPopupMenu menu = new TreeEntityPopupMenu(entity);
+//							menu.show(tree, x, y);
+//						}
+
+				}
+			}
+		};
+		projectTable.addMouseListener(rightClickListener);
+		projectTable.addMouseMotionListener(rightClickListener);
+
 		JScrollPane scrollPane = new JScrollPane(projectTable);
 		this.add(scrollPane, c);
 
