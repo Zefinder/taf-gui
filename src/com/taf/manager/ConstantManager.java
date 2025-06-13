@@ -15,6 +15,7 @@ public class ConstantManager extends Manager {
 			DecimalFormatSymbols.getInstance(Locale.US));
 
 	public static final String TAF_FILE_EXTENSION = ".taf";
+	public static final String XML_FILE_EXTENSION = ".xml";
 	
 	public static final String PARAMETER_ENTITY_NAME = "parameter";
 	public static final String NODE_ENTITY_NAME = "node";
