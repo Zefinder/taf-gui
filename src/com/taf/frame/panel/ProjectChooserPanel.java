@@ -3,26 +3,35 @@ package com.taf.frame.panel;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import com.taf.event.EventListener;
+import com.taf.event.EventMethod;
+import com.taf.event.PopupProjectDeletedEvent;
+import com.taf.event.PopupProjectOpenedEvent;
 import com.taf.event.ProjectOpenedEvent;
 import com.taf.exception.ParseException;
 import com.taf.frame.ProjectFrame;
 import com.taf.frame.dialog.ProjectCreationDialog;
+import com.taf.frame.popup.ProjectPopupMenu;
 import com.taf.logic.field.Root;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.SaveManager;
 
-public class ProjectChooserPanel extends JPanel {
+public class ProjectChooserPanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = 6815040547237393654L;
 	private static final String PROJECT_COLUMN_NAME = "Projects";
@@ -32,6 +41,9 @@ public class ProjectChooserPanel extends JPanel {
 	private static final String CREATE_PROJECT_BUTTON_TEXT = "Create new project";
 	private static final String OPEN_PROJECT_BUTTON_TEXT = "Open project";
 
+	private DefaultTableModel tableModel;
+	private JTable projectTable;
+
 	public ProjectChooserPanel() {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.XXL_INSET_GAP,
@@ -40,7 +52,7 @@ public class ProjectChooserPanel extends JPanel {
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = 2;
-		DefaultTableModel tableModel = new DefaultTableModel() {
+		tableModel = new DefaultTableModel() {
 			private static final long serialVersionUID = 6314398563329275218L;
 
 			@Override
@@ -55,8 +67,49 @@ public class ProjectChooserPanel extends JPanel {
 		for (String projectName : SaveManager.getInstance().getProjectNames()) {
 			tableModel.addRow(new String[] { projectName });
 		}
-		JTable projectTable = new JTable(tableModel);
+		projectTable = new JTable(tableModel);
 		projectTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		MouseAdapter rightClickListener = new MouseAdapter() {
+			private int selectRow(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					int row = projectTable.rowAtPoint(e.getPoint());
+
+					if (row != -1) {
+						projectTable.setRowSelectionInterval(row, row);
+						return row;
+					}
+				}
+
+				return -1;
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				selectRow(e);
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				selectRow(e);
+				
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+					openProject();
+				}
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				int row = selectRow(e);
+
+				if (row != -1) {
+					projectTable.setRowSelectionInterval(row, row);
+					JPopupMenu menu = new ProjectPopupMenu();
+					menu.show(projectTable, e.getX(), e.getY());
+				}
+			}
+		};
+		projectTable.addMouseListener(rightClickListener);
+		projectTable.addMouseMotionListener(rightClickListener);
+
 		JScrollPane scrollPane = new JScrollPane(projectTable);
 		this.add(scrollPane, c);
 
@@ -89,23 +142,55 @@ public class ProjectChooserPanel extends JPanel {
 		c.gridx = 1;
 		// TODO Disable button when nothing is selected
 		JButton openButton = new JButton(OPEN_PROJECT_BUTTON_TEXT);
-		openButton.addActionListener(e -> {
-			int row = projectTable.getSelectedRow();
-			if (row != -1) {
-				String projectName = (String) tableModel.getValueAt(row, PROJECT_COLUMN_INDEX);
-				try {
-					Root root = SaveManager.getInstance().openProject(projectName);
-					ProjectFrame frame = new ProjectFrame(root);
-					frame.initFrame();
-					EventManager.getInstance().fireEvent(new ProjectOpenedEvent());
-				} catch (IOException | ParseException e1) {
-					e1.printStackTrace();
-				}
-			}
-		});
+		openButton.addActionListener(e -> openProject());
 		this.add(openButton, c);
 
-		// TODO Add pop-up menu to remove saves on right click
+		EventManager.getInstance().registerEventListener(this);
+	}
+
+	private String getSelectedProjectName() {
+		int row = projectTable.getSelectedRow();
+		if (row != -1) {
+			return (String) tableModel.getValueAt(row, PROJECT_COLUMN_INDEX);
+		}
+
+		return null;
+	}
+
+	private void openProject() {
+		String projectName = getSelectedProjectName();
+		if (projectName == null) {
+			return;
+		}
+
+		try {
+			Root root = SaveManager.getInstance().openProject(projectName);
+			ProjectFrame frame = new ProjectFrame(root);
+			frame.initFrame();
+			EventManager.getInstance().fireEvent(new ProjectOpenedEvent());
+		} catch (IOException | ParseException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	private void deleteProject() {
+		String projectName = getSelectedProjectName();
+		if (projectName == null) {
+			return;
+		}
+
+		SaveManager.getInstance().deleteProject(projectName);
+		tableModel.removeRow(projectTable.getSelectedRow());
+	}
+
+	@EventMethod
+	public void onPopupOpenProject(PopupProjectOpenedEvent event) {
+		openProject();
+	}
+
+	@EventMethod
+	public void onPopupDeleteProject(PopupProjectDeletedEvent event) {
+		deleteProject();
 	}
 
 }
