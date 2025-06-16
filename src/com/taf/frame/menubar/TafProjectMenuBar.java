@@ -21,7 +21,7 @@ public class TafProjectMenuBar extends JMenuBar {
 	private static final String SAVE_ITEM_TEXT = "Save project";
 	private static final String EXPORT_ITEM_TEXT = "Export project";
 	private static final String RUN_ITEM_TEXT = "Run TAF";
-	private static final String QUIT_ITEM_TEXT = "Quit";
+	private static final String QUIT_ITEM_TEXT = "Close project";
 	private static final String SETTINGS_MENU_TEXT = "Settings";
 	private static final String PATH_ITEM_TEXT = "Path settings";
 

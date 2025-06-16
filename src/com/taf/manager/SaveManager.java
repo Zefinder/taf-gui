@@ -447,7 +447,6 @@ public class SaveManager extends Manager {
 	}
 
 	public void saveProject() throws IOException {
-		// TODO Keep track of the parent and not the depth
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
 			// Write root node
 			writeRoot(writer, projectRoot.getName());
@@ -502,6 +501,17 @@ public class SaveManager extends Manager {
 				writer.write(newLine);
 			}
 		}
+	}
+	
+	public void deleteProject(String projectName) {
+		File fileToDelete = getProjectFileFromName(projectName);
+		if (!projectNames.contains(fileToDelete)) {
+			return;
+		}
+		
+		// Remove from the set of names and delete file
+		projectNames.remove(fileToDelete);
+		fileToDelete.delete();
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
