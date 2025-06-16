@@ -91,6 +91,10 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				selectRow(e);
+				
+				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+					openProject();
+				}
 			}
 
 			public void mouseReleased(MouseEvent e) {
