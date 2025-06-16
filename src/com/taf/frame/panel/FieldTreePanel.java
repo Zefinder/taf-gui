@@ -5,7 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -101,32 +100,62 @@ public class FieldTreePanel extends JPanel implements EventListener {
 				System.out.println(nodeInfo.getEntity());
 			}
 		});
-		MouseListener rightClickListener = new MouseAdapter() {
-			
-			public void mouseReleased(MouseEvent e) {
-				int x = e.getX();
-				int y = e.getY();
-				
+		MouseAdapter rightClickListener = new MouseAdapter() {
+
+			private int selectRow(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
+					int x = e.getX();
+					int y = e.getY();
+
 					int selRow = tree.getRowForLocation(x, y);
-					
+
 					if (selRow != -1) {
 						tree.setSelectionRow(selRow);
-						DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-						
-						NodeObject nodeObject = (NodeObject) node.getUserObject();
-						Entity entity = nodeObject.getEntity();
-						
-						// Show popup if not root
-						if (!(entity instanceof Root)) {
-							JPopupMenu menu = new TreeEntityPopupMenu(entity);
-							menu.show(tree, x, y);
-						}
+						return selRow;
+					}
+				}
+
+				return -1;
+			}
+
+			@Override
+			public void mouseDragged(MouseEvent e) {
+				int x = e.getX();
+				int y = e.getY();
+
+				int selRow = tree.getRowForLocation(x, y);
+
+				if (selRow != -1) {
+					tree.setSelectionRow(selRow);
+				}
+			}
+			
+			@Override
+			public void mousePressed(MouseEvent e) {
+				selectRow(e);
+			}
+
+			public void mouseReleased(MouseEvent e) {
+				int selRow = selectRow(e);
+
+				if (selRow != -1) {
+					int x = e.getX();
+					int y = e.getY();
+					DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+
+					NodeObject nodeObject = (NodeObject) node.getUserObject();
+					Entity entity = nodeObject.getEntity();
+
+					// Show popup if not root
+					if (!(entity instanceof Root)) {
+						JPopupMenu menu = new TreeEntityPopupMenu(entity);
+						menu.show(tree, x, y);
 					}
 				}
 			}
 		};
 		tree.addMouseListener(rightClickListener);
+		tree.addMouseMotionListener(rightClickListener);
 
 		JScrollPane treeView = new JScrollPane(tree);
 		this.add(treeView, c);
@@ -266,7 +295,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		treeModel.removeNodeFromParent(node);
 	}
-	
+
 	private static class NodeObject {
 
 		private static final String DISPLAY_FORMAT = "%s: %s";
