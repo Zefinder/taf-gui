@@ -9,7 +9,6 @@ import com.taf.event.EventMethod;
 import com.taf.event.ProjectOpenedEvent;
 import com.taf.frame.panel.ProjectChooserPanel;
 import com.taf.manager.EventManager;
-import com.taf.manager.Manager;
 
 
 public class MainMenuFrame extends JFrame implements EventListener {
@@ -40,11 +39,6 @@ public class MainMenuFrame extends JFrame implements EventListener {
 	@EventMethod
 	public void onProjectOpened(ProjectOpenedEvent event) {
 		this.dispose();
-	}
-	
-	public static void main(String[] args) {
-		Manager.initAllManagers();
-		new MainMenuFrame().initFrame();
 	}
 	
 }

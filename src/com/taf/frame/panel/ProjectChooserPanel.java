@@ -22,6 +22,7 @@ import com.taf.event.EventMethod;
 import com.taf.event.PopupProjectDeletedEvent;
 import com.taf.event.PopupProjectOpenedEvent;
 import com.taf.event.ProjectOpenedEvent;
+import com.taf.event.ProjectToImportEvent;
 import com.taf.exception.ParseException;
 import com.taf.frame.ProjectFrame;
 import com.taf.frame.dialog.ProjectCreationDialog;
@@ -99,9 +100,8 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 			public void mouseReleased(MouseEvent e) {
 				int row = selectRow(e);
-
-				if (row != -1) {
-					projectTable.setRowSelectionInterval(row, row);
+				
+				if (row != -1) {					
 					JPopupMenu menu = new ProjectPopupMenu();
 					menu.show(projectTable, e.getX(), e.getY());
 				}
@@ -193,4 +193,9 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		deleteProject();
 	}
 
+	@EventMethod
+	public void onProjectToImport(ProjectToImportEvent event) {
+		System.out.println("AAA");
+	}
+	
 }

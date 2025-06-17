@@ -513,6 +513,10 @@ public class SaveManager extends Manager {
 		projectNames.remove(fileToDelete);
 		fileToDelete.delete();
 	}
+	
+	public void importProject(File xmlTafFile) {
+		
+	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
 		throw new ParseException(PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE.formatted(message, lineNumber));
