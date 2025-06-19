@@ -18,6 +18,7 @@ public class ProjectFrame extends JFrame implements EventListener {
 
 	private static final String FRAME_NAME = "TAF GUI";
 	
+	private final TafPanel tafPanel;
 	// TODO Add verification to check if saved before quit !
 	
 	public ProjectFrame(Root root) {
@@ -28,8 +29,9 @@ public class ProjectFrame extends JFrame implements EventListener {
 		this.setResizable(true);
 		this.setJMenuBar(new TafProjectMenuBar());
 		
+		tafPanel = new TafPanel(root);
 		this.setLayout(new BorderLayout());
-		this.add(new TafPanel(root));
+		this.add(tafPanel);
 		
 		EventManager.getInstance().registerEventListener(this);
 		
@@ -40,8 +42,14 @@ public class ProjectFrame extends JFrame implements EventListener {
 		this.setVisible(true);
 	}
 	
+	@Override
+	public void unregisterComponents() {
+		EventManager.getInstance().unregisterEventListener(tafPanel);
+	}
+	
 	@EventMethod
 	public void onProjectClosed(ProjectClosedEvent event) {
+		EventManager.getInstance().unregisterEventListener(this);		
 		this.dispose();
 	}
 

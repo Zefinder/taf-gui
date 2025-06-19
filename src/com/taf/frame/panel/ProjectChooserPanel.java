@@ -190,6 +190,11 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		SaveManager.getInstance().deleteProject(projectName);
 		tableModel.removeRow(projectTable.getSelectedRow());
 	}
+	
+	@Override
+	public void unregisterComponents() {
+		// No inner listeners
+	}
 
 	@EventMethod
 	public void onPopupOpenProject(PopupProjectOpenedEvent event) {

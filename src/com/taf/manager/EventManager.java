@@ -49,21 +49,28 @@ public class EventManager extends Manager {
 			for (ListenerObject object : listenerSet) {
 				EventListener listener = object.getListener();
 				Method method = object.getMethod();
-				
+
 				try {
 					method.invoke(listener, event);
 				} catch (IllegalAccessException | InvocationTargetException e) {
-					// TODO It should never go here
+					// It should never go here
 					e.printStackTrace();
 				}
 			}
 		}
 	}
 
+	public void unregisterEventListener(EventListener listener) {
+		// TODO remove from map
+
+		// Remove also components
+		listener.unregisterComponents();
+	}
+
 	public static EventManager getInstance() {
 		return instance;
 	}
-	
+
 	@Override
 	public void initManager() {
 		// Nothing to do here
@@ -85,6 +92,23 @@ public class EventManager extends Manager {
 
 		public Method getMethod() {
 			return method;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof ListenerObject)) {
+				return false;
+			}
+
+			ListenerObject other = (ListenerObject) obj;
+			return listener.equals(other.listener) && method.equals(other.method);
+		}
+
+		@Override
+		public int hashCode() {
+			String listenerHash = String.valueOf(listener.hashCode());
+			String methodHash = String.valueOf(method.hashCode());
+			return (listenerHash + methodHash).hashCode();
 		}
 
 	}

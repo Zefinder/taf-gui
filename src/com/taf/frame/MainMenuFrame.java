@@ -16,6 +16,7 @@ public class MainMenuFrame extends JFrame implements EventListener {
 	private static final long serialVersionUID = 1313545451015862976L;
 	private static final String FRAME_NAME = "TAF project explorer";
 
+	private ProjectChooserPanel chooserPanel;
 	
 	public MainMenuFrame() {
 		this.setTitle(FRAME_NAME);
@@ -25,7 +26,9 @@ public class MainMenuFrame extends JFrame implements EventListener {
 		this.setResizable(false);
 		
 		this.setLayout(new BorderLayout());
-		this.add(new ProjectChooserPanel());
+		
+		chooserPanel = new ProjectChooserPanel();
+		this.add(chooserPanel);
 		
 		EventManager.getInstance().registerEventListener(this);
 		
@@ -36,8 +39,14 @@ public class MainMenuFrame extends JFrame implements EventListener {
 		this.setVisible(true);
 	}
 	
+	@Override
+	public void unregisterComponents() {
+		EventManager.getInstance().unregisterEventListener(chooserPanel);
+	}
+	
 	@EventMethod
 	public void onProjectOpened(ProjectOpenedEvent event) {
+		EventManager.getInstance().unregisterEventListener(this);
 		this.dispose();
 	}
 	

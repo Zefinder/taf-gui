@@ -87,6 +87,11 @@ public class PropertyPanel extends JPanel implements EventListener {
 		// removeAll method invalidates
 		this.validate();
 	}
+	
+	@Override
+	public void unregisterComponents() {
+		// No inner listeners
+	}
 
 	@EventMethod
 	public void onEntitySelected(EntitySelectedEvent event) {

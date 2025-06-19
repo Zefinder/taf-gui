@@ -129,7 +129,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 					tree.setSelectionRow(selRow);
 				}
 			}
-			
+
 			@Override
 			public void mousePressed(MouseEvent e) {
 				selectRow(e);
@@ -256,7 +256,10 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		tree.expandRow(getNodeRow(node));
 	}
 
-	// TODO Add remove field
+	@Override
+	public void unregisterComponents() {
+		// No inner listeners
+	}
 
 	@EventMethod
 	public void onConstraintCreated(ConstraintCreatedEvent event) {
