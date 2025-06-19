@@ -22,7 +22,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 	}
 
 	public void addRange(String left, String right) {
-		ranges.add(new Range(left, right));
+		ranges.add(new Range(left.strip(), right.strip()));
 	}
 
 	public void removeRange(int index) {
@@ -30,11 +30,11 @@ public class RangesConstraintParameter extends ConstraintParameter {
 	}
 
 	public void editLeftRange(int index, String left) {
-		ranges.get(index).setLeft(left);
+		ranges.get(index).setLeft(left.strip());
 	}
 
 	public void editRightRange(int index, String right) {
-		ranges.get(index).setRight(right);
+		ranges.get(index).setRight(right.strip());
 	}
 	
 	public List<Range> getRanges() {
