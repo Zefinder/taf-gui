@@ -5,16 +5,19 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
 import com.taf.event.EventListener;
@@ -23,6 +26,7 @@ import com.taf.event.PopupProjectDeletedEvent;
 import com.taf.event.PopupProjectOpenedEvent;
 import com.taf.event.ProjectOpenedEvent;
 import com.taf.event.ProjectToImportEvent;
+import com.taf.exception.ImportException;
 import com.taf.exception.ParseException;
 import com.taf.frame.ProjectFrame;
 import com.taf.frame.dialog.ProjectCreationDialog;
@@ -41,6 +45,9 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 	private static final String CREATE_PROJECT_BUTTON_TEXT = "Create new project";
 	private static final String OPEN_PROJECT_BUTTON_TEXT = "Open project";
+	private static final String IMPORT_FILE_CHOOSER_BUTTON = "Import";
+	
+	private static final String OPEN_PROJECT_ERROR_MESSAGE = "An error occured when opening the project: ";
 
 	private DefaultTableModel tableModel;
 	private JTable projectTable;
@@ -92,7 +99,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				selectRow(e);
-				
+
 				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
 					openProject();
 				}
@@ -100,8 +107,8 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 			public void mouseReleased(MouseEvent e) {
 				int row = selectRow(e);
-				
-				if (row != -1) {					
+
+				if (row != -1) {
 					JPopupMenu menu = new ProjectPopupMenu();
 					menu.show(projectTable, e.getX(), e.getY());
 				}
@@ -169,6 +176,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 			frame.initFrame();
 			EventManager.getInstance().fireEvent(new ProjectOpenedEvent());
 		} catch (IOException | ParseException e1) {
+			ConstantManager.showError(OPEN_PROJECT_ERROR_MESSAGE + e1.getMessage());
 			e1.printStackTrace();
 		}
 	}
@@ -195,7 +203,30 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 	@EventMethod
 	public void onProjectToImport(ProjectToImportEvent event) {
-		System.out.println("AAA");
+		JFileChooser chooser = new JFileChooser();
+		chooser.setFileFilter(new FileFilter() {
+
+			@Override
+			public String getDescription() {
+				return ConstantManager.XML_FILE_EXTENSION;
+			}
+
+			@Override
+			public boolean accept(File f) {
+				return f.isDirectory() || f.getName().endsWith(ConstantManager.XML_FILE_EXTENSION);
+			}
+		});
+		int answer = chooser.showDialog(null, IMPORT_FILE_CHOOSER_BUTTON);
+
+		if (answer == JFileChooser.APPROVE_OPTION) {
+			try {
+				String fileName = SaveManager.getInstance().importProject(chooser.getSelectedFile());
+				tableModel.addRow(new String[] { fileName });
+			} catch (ImportException e) {
+				ConstantManager.showError(e.getMessage());
+				e.printStackTrace();
+			}
+		}
 	}
-	
+
 }

@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 
+import com.taf.exception.ImportException;
 import com.taf.exception.ParseException;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.constraint.parameter.ConstraintParameter;
@@ -36,6 +37,7 @@ import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.TypeParameterFactory;
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
 import com.taf.util.OSValidator;
+import com.taf.util.XMLTafReader;
 
 /**
  * <p>
@@ -126,9 +128,9 @@ public class SaveManager extends Manager {
 	private static final String ENTITY_ARGUMENT = "entity";
 	private static final String PARENT_ARGUMENT = "parent";
 	private static final String NAME_ARGUMENT = "name";
-	private static final String INSTANCE_ARGUMENT = "nb_instances";
-	private static final String MIN_INSTANCE_ARGUMENT = "min";
-	private static final String MAX_INSTANCE_ARGUMENT = "max";
+	private static final String INSTANCE_ARGUMENT = "nb_instances"; // TODO Move to node
+	private static final String MIN_INSTANCE_ARGUMENT = "min"; // TODO Move to node
+	private static final String MAX_INSTANCE_ARGUMENT = "max"; // TODO Move to node
 	private static final String TYPE_ARGUMENT = "type";
 
 	private static final int ROOT_PARENT = -1;
@@ -143,6 +145,7 @@ public class SaveManager extends Manager {
 	private static final String PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE = "Type %s must have the \"%s\" argument";
 	private static final String NUMBER_FORMAT_EXCEPTION_ERROR_MESSAGE = "An argument value was not a number (no more information)";
 	private static final String PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE = "%s (line %d)";
+	private static final String IMPORT_EXCEPTION_ERROR_MESSAGE = "An error occured when importing the file: ";
 
 	private static final SaveManager instance = new SaveManager();
 
@@ -245,20 +248,20 @@ public class SaveManager extends Manager {
 				// Get entity type
 				Optional<String> entityTypeOp = getArgument(line, ENTITY_ARGUMENT);
 				if (entityTypeOp.isEmpty()) {
-					new ParseException(ENTITY_MISSING_ERROR_MESSAGE);
+					throw new ParseException(ENTITY_MISSING_ERROR_MESSAGE);
 				}
 				String entityType = entityTypeOp.get();
 
 				// Get parent id
 				Optional<String> parentIdOp = getArgument(line, PARENT_ARGUMENT);
 				if (parentIdOp.isEmpty()) {
-					new ParseException(PARENT_MISSING_ERROR_MESSAGE);
+					throw new ParseException(PARENT_MISSING_ERROR_MESSAGE);
 				}
 				int parentId = Integer.valueOf(parentIdOp.get());
 
 				// Check if parent exists
 				if (parentId < -1 || parentId >= nodes.size()) {
-					new ParseException(PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
+					throw new ParseException(PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
 				}
 
 				// TODO Check if multiple roots
@@ -266,7 +269,7 @@ public class SaveManager extends Manager {
 				// Search for the name
 				Optional<String> entityNameOp = getArgument(line, NAME_ARGUMENT);
 				if (entityNameOp.isEmpty()) {
-					new ParseException(NAME_MISSING_ERROR_MESSAGE);
+					throw new ParseException(NAME_MISSING_ERROR_MESSAGE);
 				}
 				String entityName = entityNameOp.get();
 
@@ -312,7 +315,7 @@ public class SaveManager extends Manager {
 					// Get parameter type
 					Optional<String> typeNameOp = getArgument(line, TYPE_ARGUMENT);
 					if (typeNameOp.isEmpty()) {
-						new ParseException(PARAMETER_TYPE_ERROR_MESSAGE);
+						throw new ParseException(PARAMETER_TYPE_ERROR_MESSAGE);
 					}
 					String typeName = typeNameOp.get();
 					TypeParameterFactory.MinMaxTypeParameterType maxTypeParameterType;
@@ -436,7 +439,7 @@ public class SaveManager extends Manager {
 				}
 			}
 		}
-		
+
 		return numberNodes;
 	}
 
@@ -456,6 +459,8 @@ public class SaveManager extends Manager {
 	}
 
 	public boolean createProject(String projectName) throws IOException {
+		projectName = projectName.strip();
+		
 		// Name must finish by .taf
 		if (!projectName.endsWith(ConstantManager.TAF_FILE_EXTENSION)) {
 			return false;
@@ -471,6 +476,9 @@ public class SaveManager extends Manager {
 		writeRoot(writer, projectName.substring(0, projectName.length() - ConstantManager.TAF_FILE_EXTENSION.length()));
 		writer.close();
 
+		// Add to created project
+		projectNames.add(newProjectFile);
+		
 		return true;
 	}
 
@@ -502,20 +510,46 @@ public class SaveManager extends Manager {
 			}
 		}
 	}
-	
+
 	public void deleteProject(String projectName) {
 		File fileToDelete = getProjectFileFromName(projectName);
 		if (!projectNames.contains(fileToDelete)) {
 			return;
 		}
-		
+
 		// Remove from the set of names and delete file
 		projectNames.remove(fileToDelete);
 		fileToDelete.delete();
 	}
-	
-	public void importProject(File xmlTafFile) {
-		
+
+	public String importProject(File xmlTafFile) throws ImportException {
+		// TODO Check if associated taf file exist
+		String newTafFileName = xmlTafFile.getName().replace(ConstantManager.XML_FILE_EXTENSION,
+				ConstantManager.TAF_FILE_EXTENSION);
+		File newTafFile = getProjectFileFromName(newTafFileName);
+
+		XMLTafReader xmlReader = new XMLTafReader(xmlTafFile);
+		try {
+			// Get the lines from the XML file and write them
+			String convertedLines = xmlReader.readFile();
+			try (BufferedWriter writer = new BufferedWriter(new FileWriter(newTafFile))) {
+				writer.write(convertedLines);
+			}
+
+			// Open the project to verify that everything is parsable
+			openProject(newTafFileName);
+			
+			// Add to files
+			projectNames.add(newTafFile);
+		} catch (ImportException | IOException | ParseException e) {
+			if (newTafFile.exists()) {
+				newTafFile.delete();
+			}
+			throw new ImportException(IMPORT_EXCEPTION_ERROR_MESSAGE + e.getMessage());
+		}
+
+		// Return the new file name
+		return newTafFileName;
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
