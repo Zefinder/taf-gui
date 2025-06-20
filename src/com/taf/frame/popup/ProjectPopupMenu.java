@@ -3,9 +3,9 @@ package com.taf.frame.popup;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
-import com.taf.event.PopupProjectDeletedEvent;
-import com.taf.event.PopupProjectOpenedEvent;
+import com.taf.event.ProjectToDeleteEvent;
 import com.taf.event.ProjectToImportEvent;
+import com.taf.event.ProjectToOpenEvent;
 import com.taf.manager.EventManager;
 
 public class ProjectPopupMenu extends JPopupMenu {
@@ -35,11 +35,11 @@ public class ProjectPopupMenu extends JPopupMenu {
 	}
 
 	private void open() {
-		EventManager.getInstance().fireEvent(new PopupProjectOpenedEvent());
+		EventManager.getInstance().fireEvent(new ProjectToOpenEvent());
 	}
 
 	private void delete() {
-		EventManager.getInstance().fireEvent(new PopupProjectDeletedEvent());
+		EventManager.getInstance().fireEvent(new ProjectToDeleteEvent());
 	}
 
 }

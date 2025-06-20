@@ -22,14 +22,15 @@ import javax.swing.table.DefaultTableModel;
 
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
-import com.taf.event.PopupProjectDeletedEvent;
-import com.taf.event.PopupProjectOpenedEvent;
 import com.taf.event.ProjectOpenedEvent;
+import com.taf.event.ProjectToDeleteEvent;
 import com.taf.event.ProjectToImportEvent;
+import com.taf.event.ProjectToOpenEvent;
 import com.taf.exception.ImportException;
 import com.taf.exception.ParseException;
 import com.taf.frame.ProjectFrame;
 import com.taf.frame.dialog.ProjectCreationDialog;
+import com.taf.frame.popup.ProjectImportPopupMenu;
 import com.taf.frame.popup.ProjectPopupMenu;
 import com.taf.logic.field.Root;
 import com.taf.manager.ConstantManager;
@@ -118,6 +119,15 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		projectTable.addMouseMotionListener(rightClickListener);
 
 		JScrollPane scrollPane = new JScrollPane(projectTable);
+		scrollPane.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if (SwingUtilities.isRightMouseButton(e)) {
+					JPopupMenu menu = new ProjectImportPopupMenu();
+					menu.show(scrollPane, e.getX(), e.getY());
+				}
+			}
+		});
 		this.add(scrollPane, c);
 
 		c.fill = GridBagConstraints.NONE;
@@ -197,12 +207,12 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 	}
 
 	@EventMethod
-	public void onPopupOpenProject(PopupProjectOpenedEvent event) {
+	public void onProjectToOpen(ProjectToOpenEvent event) {
 		openProject();
 	}
 
 	@EventMethod
-	public void onPopupDeleteProject(PopupProjectDeletedEvent event) {
+	public void onProjectToDelete(ProjectToDeleteEvent event) {
 		deleteProject();
 	}
 

@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 import com.taf.event.ProjectOpenedEvent;
+import com.taf.frame.menubar.MainMenuBar;
 import com.taf.frame.panel.ProjectChooserPanel;
 import com.taf.manager.EventManager;
 
@@ -26,6 +27,7 @@ public class MainMenuFrame extends JFrame implements EventListener {
 		this.setResizable(false);
 		
 		this.setLayout(new BorderLayout());
+		this.setJMenuBar(new MainMenuBar());
 		
 		chooserPanel = new ProjectChooserPanel();
 		this.add(chooserPanel);
