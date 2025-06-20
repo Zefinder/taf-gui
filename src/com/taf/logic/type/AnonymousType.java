@@ -20,7 +20,7 @@ public class AnonymousType extends Type {
 	private MaxInstanceParameter max;
 
 	public AnonymousType() {
-		instanceNumber = new InstanceNumberParameter(1);
+		instanceNumber = new InstanceNumberParameter(ConstantManager.DEFAULT_INSTANCE_NUMBER);
 	}
 
 	public void addMinMaxInstanceParameter(int minValue, int maxValue) {

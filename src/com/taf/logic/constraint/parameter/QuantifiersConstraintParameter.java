@@ -19,7 +19,7 @@ public class QuantifiersConstraintParameter extends ConstraintParameter {
 	}
 
 	public void addQuantifier(String quantifier) {
-		quantifiers.add(quantifier);
+		quantifiers.add(quantifier.strip());
 	}
 	
 	public void removeQuantifier(int index) {
@@ -27,7 +27,7 @@ public class QuantifiersConstraintParameter extends ConstraintParameter {
 	}
 	
 	public void editQuantifier(int index, String quantifier) {
-		quantifiers.set(index, quantifier);
+		quantifiers.set(index, quantifier.strip());
 	}
 	
 	public List<String> getQuantifiers() {

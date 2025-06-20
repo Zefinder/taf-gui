@@ -17,7 +17,7 @@ public class ExpressionConstraintParameter extends ConstraintParameter {
 	}
 	
 	public void addExpression(String expression) {
-		expressions.add(expression);
+		expressions.add(expression.strip());
 	}
 
 	public void removeExpression(int index) {
@@ -25,7 +25,7 @@ public class ExpressionConstraintParameter extends ConstraintParameter {
 	}
 	
 	public void editExpression(int index, String expression) {
-		expressions.set(index, expression);
+		expressions.set(index, expression.strip());
 	}
 	
 	public List<String> getExpressions() {

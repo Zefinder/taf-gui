@@ -121,7 +121,7 @@ public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel impleme
 
 		c.gridx = 1;
 		c.insets = new Insets(0, 0, ConstantManager.LARGE_INSET_GAP, 0);
-		instanceField = new JFormattedTextField(ConstantManager.DEFAULT_INSTANCE_NUMBER);
+		instanceField = new JFormattedTextField(instanceNumber);
 		instanceField.setEnabled(!hasMinMax);
 		instanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		instanceField.setColumns(MAX_COLUMN_NUMBER);

@@ -7,9 +7,9 @@ import javax.swing.JFrame;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 import com.taf.event.ProjectOpenedEvent;
+import com.taf.frame.menubar.MainMenuBar;
 import com.taf.frame.panel.ProjectChooserPanel;
 import com.taf.manager.EventManager;
-import com.taf.manager.Manager;
 
 
 public class MainMenuFrame extends JFrame implements EventListener {
@@ -17,6 +17,7 @@ public class MainMenuFrame extends JFrame implements EventListener {
 	private static final long serialVersionUID = 1313545451015862976L;
 	private static final String FRAME_NAME = "TAF project explorer";
 
+	private ProjectChooserPanel chooserPanel;
 	
 	public MainMenuFrame() {
 		this.setTitle(FRAME_NAME);
@@ -26,7 +27,10 @@ public class MainMenuFrame extends JFrame implements EventListener {
 		this.setResizable(false);
 		
 		this.setLayout(new BorderLayout());
-		this.add(new ProjectChooserPanel());
+		this.setJMenuBar(new MainMenuBar());
+		
+		chooserPanel = new ProjectChooserPanel();
+		this.add(chooserPanel);
 		
 		EventManager.getInstance().registerEventListener(this);
 		
@@ -37,14 +41,15 @@ public class MainMenuFrame extends JFrame implements EventListener {
 		this.setVisible(true);
 	}
 	
-	@EventMethod
-	public void onProjectOpened(ProjectOpenedEvent event) {
-		this.dispose();
+	@Override
+	public void unregisterComponents() {
+		EventManager.getInstance().unregisterEventListener(chooserPanel);
 	}
 	
-	public static void main(String[] args) {
-		Manager.initAllManagers();
-		new MainMenuFrame().initFrame();
+	@EventMethod
+	public void onProjectOpened(ProjectOpenedEvent event) {
+		EventManager.getInstance().unregisterEventListener(this);
+		this.dispose();
 	}
 	
 }
