@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import com.taf.event.Event;
@@ -14,10 +15,12 @@ public class EventManager extends Manager {
 
 	private static final EventManager instance = new EventManager();
 
-	private final HashMap<Class<? extends Event>, Set<ListenerObject>> eventListenerMap;
+	private final Map<Class<? extends Event>, Set<ListenerObject>> eventListenerMap;
+	private final Map<EventListener, Set<ListenerObject>> listenerToObjectMap;
 
 	private EventManager() {
 		eventListenerMap = new HashMap<Class<? extends Event>, Set<ListenerObject>>();
+		listenerToObjectMap = new HashMap<EventListener, Set<ListenerObject>>();
 	}
 
 	public void registerEventListener(EventListener listener) {
@@ -34,9 +37,10 @@ public class EventManager extends Manager {
 						// Checked in the condition
 						@SuppressWarnings("unchecked")
 						Class<? extends Event> parameterEvent = (Class<? extends Event>) parameterType;
-						ListenerObject object = new ListenerObject(listener, method);
+						ListenerObject object = new ListenerObject(listener, parameterEvent, method);
 						eventListenerMap.computeIfAbsent(parameterEvent, t -> new HashSet<ListenerObject>())
 								.add(object);
+						listenerToObjectMap.computeIfAbsent(listener, t -> new HashSet<ListenerObject>()).add(object);
 					}
 				}
 			}
@@ -61,10 +65,20 @@ public class EventManager extends Manager {
 	}
 
 	public void unregisterEventListener(EventListener listener) {
-		// TODO remove from map
+		// Verify if EventListener has events. A listener can have no event if it is
+		// just an intermediate
+		if (listenerToObjectMap.containsKey(listener)) {
+			// Get listener objects from the listener and remove from event listener map
+			// Don't forget to also remove from the listener to object map
+			Set<ListenerObject> listenerObjects = listenerToObjectMap.get(listener);
+			for (ListenerObject listenerObject : listenerObjects) {
+				eventListenerMap.get(listenerObject.getEvent()).remove(listenerObject);
+			}
+			listenerToObjectMap.remove(listener);
 
-		// Remove also components
-		listener.unregisterComponents();
+			// Remove also components
+			listener.unregisterComponents();
+		}
 	}
 
 	public static EventManager getInstance() {
@@ -79,15 +93,21 @@ public class EventManager extends Manager {
 	private static class ListenerObject {
 
 		private EventListener listener;
+		private Class<? extends Event> event;
 		private Method method;
 
-		public ListenerObject(EventListener listener, Method method) {
+		public ListenerObject(EventListener listener, Class<? extends Event> event, Method method) {
 			this.listener = listener;
+			this.event = event;
 			this.method = method;
 		}
 
 		public EventListener getListener() {
 			return listener;
+		}
+
+		public Class<? extends Event> getEvent() {
+			return event;
 		}
 
 		public Method getMethod() {
@@ -101,14 +121,15 @@ public class EventManager extends Manager {
 			}
 
 			ListenerObject other = (ListenerObject) obj;
-			return listener.equals(other.listener) && method.equals(other.method);
+			return listener.equals(other.listener) && event.equals(other.event) && method.equals(other.method);
 		}
 
 		@Override
 		public int hashCode() {
 			String listenerHash = String.valueOf(listener.hashCode());
+			String eventHash = String.valueOf(event.hashCode());
 			String methodHash = String.valueOf(method.hashCode());
-			return (listenerHash + methodHash).hashCode();
+			return (listenerHash + eventHash + methodHash).hashCode();
 		}
 
 	}
