@@ -112,7 +112,7 @@ public class ValuesParameter extends TypeParameter {
 	}
 
 	public TypeParameter createWeightParameter() {
-		return new WeightParameter(valueMap.values().stream().mapToInt(Integer::intValue).toArray());
+		return new WeightsParameter(valueMap.values().stream().mapToInt(Integer::intValue).toArray());
 	}
 
 	public Set<Entry<String, Integer>> getValues() {

@@ -67,8 +67,8 @@ public class TypeParameterFactory {
 			yield new ValuesParameter();
 		}
 
-		case WeightParameter.PARAMETER_NAME: {
-			yield new WeightParameter();
+		case WeightsParameter.PARAMETER_NAME: {
+			yield new WeightsParameter();
 		}
 
 		default:

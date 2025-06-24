@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -60,6 +61,12 @@ public class ConstantManager extends Manager {
 	
 	public static final String MIN_TEXT = "min";
 	public static final String MAX_TEXT = "max";
+	
+	public static final String FALSE_VALUE = "False";
+	public static final String TRUE_VALUE = "True";
+	
+	private static final String RANGE_PATTERN_STRING = "\\[[\s]*([^\"]+),[\s]*([^\"]+)\\]";
+	public static final Pattern RANGE_PATTERN = Pattern.compile(RANGE_PATTERN_STRING); 
 
 	public static final GridBagConstraints getDefaultConstraint() {
 		GridBagConstraints c = new GridBagConstraints();
