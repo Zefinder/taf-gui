@@ -344,6 +344,7 @@ public class SaveManager extends Manager {
 						throw new ParseException(PARAMETER_UNEXPECTED_ERROR_MESSAGE + typeName);
 					};
 
+					// Add mandatory parameters
 					for (String mandatoryTypeName : type.getMandatoryParametersName()) {
 						Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
 						if (mandatoryTypeOp.isEmpty()) {
@@ -357,7 +358,7 @@ public class SaveManager extends Manager {
 						type.addTypeParameter(typeParameter);
 					}
 
-					// TODO Create function to add to type
+					// Add optional parameters
 					for (String optionalTypeName : type.getOptionalParametersName()) {
 						Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
 						if (!optionalTypeOp.isEmpty()) {

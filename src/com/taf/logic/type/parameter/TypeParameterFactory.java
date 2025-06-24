@@ -70,6 +70,22 @@ public class TypeParameterFactory {
 		case WeightsParameter.PARAMETER_NAME: {
 			yield new WeightsParameter();
 		}
+		
+		case DistributionParameter.PARAMETER_NAME: {
+			yield new DistributionParameter();
+		}
+		
+		case MeanParameter.PARAMETER_NAME: {
+			yield new MeanParameter();
+		}
+		
+		case VarianceParameter.PARAMETER_NAME: {
+			yield new VarianceParameter();
+		}
+		
+		case RangesParameter.PARAMETER_NAME: {
+			yield new RangesParameter();
+		}
 
 		default:
 			throw new ParseException(UNEXPECTED_VALUE_ERROR_MESSAGE + typeName);

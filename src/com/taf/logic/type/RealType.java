@@ -3,10 +3,17 @@ package com.taf.logic.type;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.taf.logic.type.parameter.DistributionParameter;
+import com.taf.logic.type.parameter.DistributionType;
 import com.taf.logic.type.parameter.MaxRealParameter;
+import com.taf.logic.type.parameter.MeanParameter;
 import com.taf.logic.type.parameter.MinRealParameter;
+import com.taf.logic.type.parameter.RangesParameter;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
+import com.taf.logic.type.parameter.VarianceParameter;
+import com.taf.logic.type.parameter.WeightsParameter;
+import com.taf.logic.type.parameter.RangesParameter.Range;
 import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
@@ -18,17 +25,24 @@ public class RealType extends Type {
 			.add(MinRealParameter.class)
 			.build();
 	
-	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+	private static final HashSet<String> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<String>()
 			.add(MaxRealParameter.PARAMETER_NAME)
 			.add(MinRealParameter.PARAMETER_NAME)
 			.build();
 
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(DistributionParameter.PARAMETER_NAME).add(MeanParameter.PARAMETER_NAME)
+			.add(VarianceParameter.PARAMETER_NAME).add(RangesParameter.PARAMETER_NAME)
+			.add(WeightsParameter.PARAMETER_NAME).build();
+	
 	private TypeParameter typeName;
 	private MinRealParameter min;
 	private MaxRealParameter max;
+	private DistributionParameter distribution;
 
 	public RealType() {
 		typeName = new TypeNameParameter(TYPE_NAME);
+		distribution = new DistributionParameter(DistributionType.UNIFORM);
 	}
 
 	public void addMinParameter(double minValue) {
@@ -90,6 +104,46 @@ public class RealType extends Type {
 	public boolean hasMaxParameter() {
 		return max != null;
 	}
+	
+	public void setDistribution(DistributionType distributionType) {
+		distribution.setDistributionType(distributionType);
+	}
+
+	public DistributionType getDistribution() {
+		return distribution.getDistributionType();
+	}
+
+	public void editMean(double mean) {
+		distribution.editMean(mean);
+	}
+
+	public double getMean() {
+		return distribution.getMean();
+	}
+
+	public void editVariance(double variance) {
+		distribution.editVariance(variance);
+	}
+
+	public double getVariance() {
+		return distribution.getVariance();
+	}
+
+	public void addInterval(int lowerBound, int upperBound, int weight) {
+		distribution.addInterval(lowerBound, upperBound, weight);
+	}
+
+	public void editLowerBound(int index, int lowerBound) {
+		distribution.editLowerBound(index, lowerBound);
+	}
+
+	public void editUpperBound(int index, int upperBound) {
+		distribution.editUpperBound(index, upperBound);
+	}
+
+	public void editWeight(int index, int weight) {
+		distribution.editWeight(index, weight);
+	}
 
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
@@ -97,12 +151,28 @@ public class RealType extends Type {
 			addMinParameter(((MinRealParameter) typeParameter).getValue().doubleValue());
 		} else if (typeParameter instanceof MaxRealParameter) {
 			addMaxParameter(((MaxRealParameter) typeParameter).getValue().doubleValue());
+		} else if (typeParameter instanceof DistributionParameter) {
+			setDistribution(((DistributionParameter) typeParameter).getDistributionType());
+		} else if (typeParameter instanceof MeanParameter) {
+			editMean(((MeanParameter) typeParameter).getMean());
+		} else if (typeParameter instanceof VarianceParameter) {
+			editVariance(((VarianceParameter) typeParameter).getVariance());
+		} else if (typeParameter instanceof RangesParameter) {
+			for (Range range : ((RangesParameter) typeParameter).getRanges()) {
+				addInterval(range.getLowerBound(), range.getUpperBound(), ConstantManager.DEFAULT_WEIGHT_VALUE);
+			}
+		} else if (typeParameter instanceof WeightsParameter) {
+			int[] weights = ((WeightsParameter) typeParameter).getWeights();
+			int rangeSize = ((RangesParameter) distribution.getRangesParameter()).size();
+			for (int i = 0; i < Math.min(rangeSize, weights.length); i++) {
+				editWeight(i, weights[i]);
+			}
 		}
 	}
 	
 	@Override
 	public Set<String> getMandatoryParametersName() {
-		return new HashSet<String>();
+		return MANDATORY_TYPE_PARAMETERS;
 	}
 	
 	@Override
@@ -131,6 +201,22 @@ public class RealType extends Type {
 
 		if (max != null) {
 			typeStr += separator + max.toString();
+		}
+		
+		typeStr += separator + distribution.toString();
+		switch (distribution.getDistributionType()) {
+		case NORMAL:
+			typeStr += separator + distribution.getMeanParameter().toString();
+			typeStr += separator + distribution.getVarianceParameter().toString();
+			break;
+			
+		case INTERVAL:
+			typeStr += separator + distribution.getRangesParameter().toString();
+			typeStr += separator + distribution.getWeightsParameter().toString();
+			break;
+
+		default:
+			break;
 		}
 
 		return typeStr;

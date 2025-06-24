@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import com.taf.exception.ParseException;
-import com.taf.logic.type.IntegerType;
 import com.taf.manager.ConstantManager;
 
 public class RangesParameter extends TypeParameter {
@@ -26,7 +25,15 @@ public class RangesParameter extends TypeParameter {
 	public Range getRange(int index) {
 		return ranges.get(index);
 	}
+	
+	public List<Range> getRanges() {
+		return ranges;
+	}
 
+	public int size() {
+		return ranges.size();
+	}
+	
 	public void editLowerBound(int index, int lowerBound) {
 		ranges.get(index).lowerBound = lowerBound;
 	}

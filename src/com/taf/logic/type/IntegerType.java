@@ -9,6 +9,7 @@ import com.taf.logic.type.parameter.MaxIntegerParameter;
 import com.taf.logic.type.parameter.MeanParameter;
 import com.taf.logic.type.parameter.MinIntegerParameter;
 import com.taf.logic.type.parameter.RangesParameter;
+import com.taf.logic.type.parameter.RangesParameter.Range;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.VarianceParameter;
@@ -37,67 +38,25 @@ public class IntegerType extends Type {
 
 	public IntegerType() {
 		typeName = new TypeNameParameter(TYPE_NAME);
+		min = new MinIntegerParameter(ConstantManager.DEFAULT_MIN_VALUE);
+		max = new MaxIntegerParameter(ConstantManager.DEFAULT_MAX_VALUE);
 		distribution = new DistributionParameter(DistributionType.UNIFORM);
 	}
 
-	public void addMinParameter(long minValue) {
-		if (min == null) {
-			min = new MinIntegerParameter(minValue);
-		} else {
-			min.setValue(minValue);
-		}
+	public void editMin(long minValue) {
+		min.setValue(minValue);
 	}
 
-	public void editMinParameter(long minValue) {
-		if (min != null) {
-			min.setValue(minValue);
-		}
-	}
-
-	public long getMinParameter() {
-		if (min == null) {
-			return 0;
-		}
-
+	public long getMin() {
 		return min.getValue().longValue();
 	}
 
-	public void removeMinParameter() {
-		min = null;
+	public void editMax(long maxValue) {
+		max.setValue(maxValue);
 	}
 
-	public boolean hasMinParameter() {
-		return min != null;
-	}
-
-	public void addMaxParameter(long maxValue) {
-		if (max == null) {
-			max = new MaxIntegerParameter(maxValue);
-		} else {
-			max.setValue(maxValue);
-		}
-	}
-
-	public void editMaxParameter(long maxValue) {
-		if (max != null) {
-			max.setValue(maxValue);
-		}
-	}
-
-	public long getMaxParameter() {
-		if (max == null) {
-			return 0;
-		}
-
+	public long getMax() {
 		return max.getValue().longValue();
-	}
-
-	public void removeMaxParameter() {
-		max = null;
-	}
-
-	public boolean hasMaxParameter() {
-		return max != null;
 	}
 
 	public void setDistribution(DistributionType distributionType) {
@@ -143,9 +102,25 @@ public class IntegerType extends Type {
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
 		if (typeParameter instanceof MinIntegerParameter) {
-			addMinParameter(((MinIntegerParameter) typeParameter).getValue().longValue());
+			editMin(((MinIntegerParameter) typeParameter).getValue().longValue());
 		} else if (typeParameter instanceof MaxIntegerParameter) {
-			addMaxParameter(((MaxIntegerParameter) typeParameter).getValue().longValue());
+			editMax(((MaxIntegerParameter) typeParameter).getValue().longValue());
+		} else if (typeParameter instanceof DistributionParameter) {
+			setDistribution(((DistributionParameter) typeParameter).getDistributionType());
+		} else if (typeParameter instanceof MeanParameter) {
+			editMean(((MeanParameter) typeParameter).getMean());
+		} else if (typeParameter instanceof VarianceParameter) {
+			editVariance(((VarianceParameter) typeParameter).getVariance());
+		} else if (typeParameter instanceof RangesParameter) {
+			for (Range range : ((RangesParameter) typeParameter).getRanges()) {
+				addInterval(range.getLowerBound(), range.getUpperBound(), ConstantManager.DEFAULT_WEIGHT_VALUE);
+			}
+		} else if (typeParameter instanceof WeightsParameter) {
+			int[] weights = ((WeightsParameter) typeParameter).getWeights();
+			int rangeSize = ((RangesParameter) distribution.getRangesParameter()).size();
+			for (int i = 0; i < Math.min(rangeSize, weights.length); i++) {
+				editWeight(i, weights[i]);
+			}
 		}
 	}
 
@@ -188,7 +163,7 @@ public class IntegerType extends Type {
 			typeStr += separator + distribution.getMeanParameter().toString();
 			typeStr += separator + distribution.getVarianceParameter().toString();
 			break;
-			
+
 		case INTERVAL:
 			typeStr += separator + distribution.getRangesParameter().toString();
 			typeStr += separator + distribution.getWeightsParameter().toString();
