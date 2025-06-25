@@ -59,8 +59,8 @@ public class ConstantManager extends Manager {
 	public static final int HUGE_INSET_GAP = 20;
 	public static final int XXL_INSET_GAP = 50;
 	
-	public static final String MIN_TEXT = "min";
-	public static final String MAX_TEXT = "max";
+	public static final String MIN_TEXT = "Min";
+	public static final String MAX_TEXT = "Max";
 	
 	public static final String FALSE_VALUE = "False";
 	public static final String TRUE_VALUE = "True";

@@ -101,6 +101,19 @@ public class ValuesParameter extends TypeParameter {
 	}
 
 	/**
+	 * Returns the weight associated to the value. If the value does not exist, then
+	 * returns -1. Because the weight must be a positive integer, a value of -1
+	 * ensures that the value is not present.
+	 * 
+	 * @param value the value to get the weight
+	 * @return the associated weight, or -1 if the value is unknown
+	 */
+	public int getWeight(String value) {
+		Integer weight = valueMap.get(value);
+		return weight == null ? -1 : weight;
+	}
+
+	/**
 	 * Removes a value. If the value does not exist, this returns false.
 	 * 
 	 * @param value the value to remove
