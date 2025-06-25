@@ -51,21 +51,26 @@ public class DistributionParameter extends TypeParameter {
 		return varianceParameter.getVariance();
 	}
 	
-	public void addInterval(int lowerBound, int upperBound, int weight) {
+	public void addInterval(Number lowerBound, Number upperBound, int weight) {
 		rangesParameter.addRange(lowerBound, upperBound);
 		weightsParameter.addWeight(weight);
 	}
 	
-	public void editLowerBound(int index, int lowerBound) {
+	public void editLowerBound(int index, Number lowerBound) {
 		rangesParameter.editLowerBound(index, lowerBound);
 	}
 	
-	public void editUpperBound(int index, int upperBound) {
+	public void editUpperBound(int index, Number upperBound) {
 		rangesParameter.editUpperBound(index, upperBound);
 	}
 	
 	public void editWeight(int index, int weight) {
 		weightsParameter.editWeight(index, weight);
+	}
+	
+	public void removeInterval(int index) {
+		rangesParameter.removeRange(index);
+		weightsParameter.removeWeight(index);
 	}
 	
 	public TypeParameter getMeanParameter() {

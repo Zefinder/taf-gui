@@ -12,7 +12,7 @@ public class ConstantManager extends Manager {
 
 	private static final ConstantManager instance = new ConstantManager();
 
-	public static final DecimalFormat REAL_FORMATTER = new DecimalFormat("0.0##",
+	public static final DecimalFormat REAL_FORMATTER = new DecimalFormat("0.###",
 			DecimalFormatSymbols.getInstance(Locale.US));
 
 	public static final String TAF_FILE_EXTENSION = ".taf";

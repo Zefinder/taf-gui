@@ -1,5 +1,6 @@
 package com.taf.logic.type.parameter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,7 +19,7 @@ public class RangesParameter extends TypeParameter {
 		ranges = new ArrayList<Range>();
 	}
 
-	public void addRange(int lowerBound, int upperBound) {
+	public void addRange(Number lowerBound, Number upperBound) {
 		ranges.add(new Range(lowerBound, upperBound));
 	}
 
@@ -34,12 +35,16 @@ public class RangesParameter extends TypeParameter {
 		return ranges.size();
 	}
 	
-	public void editLowerBound(int index, int lowerBound) {
+	public void editLowerBound(int index, Number lowerBound) {
 		ranges.get(index).lowerBound = lowerBound;
 	}
 
-	public void editUpperBound(int index, int upperBound) {
+	public void editUpperBound(int index, Number upperBound) {
 		ranges.get(index).upperBound = upperBound;
+	}
+	
+	public void removeRange(int index) {
+		ranges.remove(index);
 	}
 
 	@Override
@@ -66,8 +71,8 @@ public class RangesParameter extends TypeParameter {
 			if (!value.isBlank()) {
 				Matcher m = ConstantManager.RANGE_PATTERN.matcher(value);
 				if (m.find()) {
-					int lowerBound = Integer.valueOf(m.group(1).stripLeading());
-					int upperBound = Integer.valueOf(m.group(2).stripLeading());
+					double lowerBound = Double.valueOf(m.group(1).stripLeading());
+					double upperBound = Double.valueOf(m.group(2).stripLeading());
 					addRange(lowerBound, upperBound);
 				}
 			}
@@ -76,27 +81,28 @@ public class RangesParameter extends TypeParameter {
 
 	public static class Range {
 		
-		private static final String RANGE_STRING_FORMAT = "[%d, %d]";
+		private static final String RANGE_STRING_FORMAT = "[%s, %s]";
+		private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
 
-		private int lowerBound;
-		private int upperBound;
+		private Number lowerBound;
+		private Number upperBound;
 
-		public Range(int lowerBound, int upperBound) {
+		public Range(Number lowerBound, Number upperBound) {
 			this.lowerBound = lowerBound;
 			this.upperBound = upperBound;
 		}
 
-		public int getLowerBound() {
+		public Number getLowerBound() {
 			return lowerBound;
 		}
 
-		public int getUpperBound() {
+		public Number getUpperBound() {
 			return upperBound;
 		}
 		
 		@Override
 		public String toString() {
-			return RANGE_STRING_FORMAT.formatted(lowerBound, upperBound);
+			return RANGE_STRING_FORMAT.formatted(realFormatter.format(lowerBound), realFormatter.format(upperBound));
 		}
 	}
 

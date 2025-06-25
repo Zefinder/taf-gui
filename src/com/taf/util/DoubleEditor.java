@@ -3,8 +3,10 @@ package com.taf.util;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Locale;
 
 import javax.swing.AbstractAction;
 import javax.swing.DefaultCellEditor;
@@ -50,33 +52,33 @@ import javax.swing.text.NumberFormatter;
  * This is a modified version of the IntegerEditor of the Java tutorial of JTables
  */
 
-public class IntegerEditor extends DefaultCellEditor {
+public class DoubleEditor extends DefaultCellEditor {
 
 	private static final long serialVersionUID = -6290272775924941609L;
 	
 	private static final String CHECK_ACTION = "check";
 	private static final String UNKNWON_VALUE_ERROR_MESSAGE = "getCellEditorValue: can't parse o: ";
 
-	private JFormattedTextField integerField;
-	private NumberFormat integerFormat;
+	private JFormattedTextField doubleField;
+	private NumberFormat doubleFormat;
 
-	public IntegerEditor() {
+	public DoubleEditor() {
 		super(new JFormattedTextField());
-		integerField = (JFormattedTextField) getComponent();
+		doubleField = (JFormattedTextField) getComponent();
 
 		// Set up the editor for the integer cells.
-		integerFormat = NumberFormat.getIntegerInstance();
-		NumberFormatter intFormatter = new NumberFormatter(integerFormat);
-		intFormatter.setFormat(integerFormat);
-		integerField.setFormatterFactory(new DefaultFormatterFactory(intFormatter));
+		doubleFormat = DecimalFormat.getInstance(Locale.US);
+		NumberFormatter doubleFormatter = new NumberFormatter(doubleFormat);
+		doubleFormatter.setFormat(doubleFormat);
+		doubleField.setFormatterFactory(new DefaultFormatterFactory(doubleFormatter));
 
 		// Text at the beginning when editing and set persistent (react to tabs too)
-		integerField.setHorizontalAlignment(JTextField.LEADING);
-		integerField.setFocusLostBehavior(JFormattedTextField.PERSIST);
+		doubleField.setHorizontalAlignment(JTextField.LEADING);
+		doubleField.setFocusLostBehavior(JFormattedTextField.PERSIST);
 
 		// Set action when enter (and focus lost in general)
-		integerField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), CHECK_ACTION);
-		integerField.getActionMap().put(CHECK_ACTION, new AbstractAction() {
+		doubleField.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), CHECK_ACTION);
+		doubleField.getActionMap().put(CHECK_ACTION, new AbstractAction() {
 			private static final long serialVersionUID = -7031956174719188660L;
 
 			public void actionPerformed(ActionEvent e) {
@@ -89,22 +91,22 @@ public class IntegerEditor extends DefaultCellEditor {
 	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
 //		JFormattedTextField ftf = (JFormattedTextField) super.getTableCellEditorComponent(table, value, isSelected, row,
 //				column);
-		integerField.setValue(value);
-		return integerField;
+		doubleField.setValue(value);
+		return doubleField;
 	}
 
 	@Override
 	public Object getCellEditorValue() {
 //		JFormattedTextField ftf = (JFormattedTextField) getComponent();
-		Object o = integerField.getValue();
+		Object o = doubleField.getValue();
 //		System.out.println(o);
 		if (o instanceof Integer) {
 			return o;
 		} else if (o instanceof Number) {
-			return ((Number) o).intValue();
+			return ((Number) o).doubleValue();
 		} else {
 			try {
-				return integerFormat.parseObject(o.toString());
+				return doubleFormat.parseObject(o.toString());
 			} catch (ParseException exc) {
 				// Should never go here if initialized correctly...
 				System.err.println(UNKNWON_VALUE_ERROR_MESSAGE + o);
@@ -114,13 +116,13 @@ public class IntegerEditor extends DefaultCellEditor {
 	}
 
 	private boolean checkFormatedField() {
-		if (!integerField.isEditValid()) {
+		if (!doubleField.isEditValid()) {
 			// TODO JOptionPane message to say invalid input
-			integerField.setValue(integerField.getValue());
+			doubleField.setValue(doubleField.getValue());
 
 		} else {
 			try {
-				integerField.commitEdit();
+				doubleField.commitEdit();
 			} catch (ParseException exc) {
 				// Should never go here
 			}

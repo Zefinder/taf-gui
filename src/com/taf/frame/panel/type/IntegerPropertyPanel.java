@@ -50,6 +50,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		addComponent(minLabel, c);
 
 		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
@@ -59,6 +60,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		addComponent(minField, c);
 
 		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -67,6 +69,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		addComponent(maxLabel, c);
 
 		c.anchor = GridBagConstraints.LINE_START;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = 1;
@@ -77,6 +80,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		addComponent(maxField, c);
 
 		c.anchor = GridBagConstraints.LINE_END;
+		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.gridwidth = 1;
 		c.gridheight = 1;
@@ -92,7 +96,8 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		c.gridx = 1;
 		distributionBox = new JComboBox<DistributionType>(DistributionType.values());
 		distributionBox.addActionListener(e -> {
-			switch ((DistributionType) distributionBox.getSelectedItem()) {
+			DistributionType distributionType = (DistributionType) distributionBox.getSelectedItem();
+			switch (distributionType) {
 			case UNIFORM:
 				distributionPanel.showUniformPanel();
 				break;
@@ -105,12 +110,14 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 				distributionPanel.showIntervalPanel();
 				break;
 			}
+			type.setDistribution(distributionType);
 		});
 		addComponent(distributionBox, c);
 
 		c.anchor = GridBagConstraints.NORTH;
-		c.fill = GridBagConstraints.NONE;
+		c.fill = GridBagConstraints.BOTH;
 		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.weightx = 1;
 		c.weighty = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
