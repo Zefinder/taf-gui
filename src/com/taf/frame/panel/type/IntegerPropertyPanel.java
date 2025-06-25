@@ -18,7 +18,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 	private static final long serialVersionUID = -9035183700723112945L;
 
 	private static final String DISTRIBUTION_LABEL_TEXT = "Distribution";
-	
+
 	private IntegerType type;
 
 	private long minValue;
@@ -29,11 +29,11 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 
 	private JLabel maxLabel;
 	private JFormattedTextField maxField;
-	
+
 	private JLabel distributionLabel;
 	private JComboBox<DistributionType> distributionBox;
-	
-	private DistributionPanel distributionPanel; 
+
+	private DistributionPanel distributionPanel;
 
 	public IntegerPropertyPanel(IntegerType type) {
 		this.type = type;
@@ -41,7 +41,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		maxValue = type.getMax();
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
-		c.anchor = GridBagConstraints.NORTH;
+		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
 		c.weightx = 0;
@@ -49,6 +49,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		minLabel = new JLabel(ConstantManager.MIN_TEXT);
 		addComponent(minLabel, c);
 
+		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
@@ -57,6 +58,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		minField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(minField, c);
 
+		c.anchor = GridBagConstraints.LINE_END;
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -64,6 +66,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		maxLabel = new JLabel(ConstantManager.MAX_TEXT);
 		addComponent(maxLabel, c);
 
+		c.anchor = GridBagConstraints.LINE_START;
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = 1;
@@ -73,6 +76,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		maxField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(maxField, c);
 
+		c.anchor = GridBagConstraints.LINE_END;
 		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.gridwidth = 1;
 		c.gridheight = 1;
@@ -80,24 +84,40 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		c.gridy = 2;
 		distributionLabel = new JLabel(DISTRIBUTION_LABEL_TEXT);
 		addComponent(distributionLabel, c);
-		
+
+		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		distributionBox = new JComboBox<DistributionType>(DistributionType.values());
-		distributionBox.setSelectedItem(type.getDistribution());
-		distributionBox.addActionListener(e -> System.out.println(distributionBox.getSelectedItem()));
+		distributionBox.addActionListener(e -> {
+			switch ((DistributionType) distributionBox.getSelectedItem()) {
+			case UNIFORM:
+				distributionPanel.showUniformPanel();
+				break;
+
+			case NORMAL:
+				distributionPanel.showNormalPanel();
+				break;
+
+			case INTERVAL:
+				distributionPanel.showIntervalPanel();
+				break;
+			}
+		});
 		addComponent(distributionBox, c);
-		
+
+		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
 		c.weighty = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 0;
 		c.gridy = 3;
-		distributionPanel = new DistributionPanel(type.getDistribution());
+		distributionPanel = new DistributionPanel(type);
+		distributionBox.setSelectedItem(type.getDistribution());
 		addComponent(distributionPanel, c);
 	}
 
