@@ -7,7 +7,7 @@ import java.util.Set;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
-import com.taf.logic.type.parameter.WeightParameter;
+import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
@@ -16,7 +16,7 @@ public class StringType extends Type {
 	public static final String TYPE_NAME = "string";
 
 	private static final HashSet<String> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<String>()
-			.add(ValuesParameter.PARAMETER_NAME).add(WeightParameter.PARAMETER_NAME).build();
+			.add(ValuesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
 
 	private TypeParameter typeName;
 	private ValuesParameter values;
@@ -58,8 +58,8 @@ public class StringType extends Type {
 			for (Entry<String, Integer> value : ((ValuesParameter) typeParameter).getValues()) {
 				values.addValue(value.getKey());
 			}
-		} else if (typeParameter instanceof WeightParameter) {
-			values.setWeights(((WeightParameter) typeParameter).getWeights());
+		} else if (typeParameter instanceof WeightsParameter) {
+			values.setWeights(((WeightsParameter) typeParameter).getWeights());
 		}
 	}
 

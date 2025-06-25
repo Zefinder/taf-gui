@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -11,7 +12,7 @@ public class ConstantManager extends Manager {
 
 	private static final ConstantManager instance = new ConstantManager();
 
-	public static final DecimalFormat REAL_FORMATTER = new DecimalFormat("0.0##",
+	public static final DecimalFormat REAL_FORMATTER = new DecimalFormat("0.###",
 			DecimalFormatSymbols.getInstance(Locale.US));
 
 	public static final String TAF_FILE_EXTENSION = ".taf";
@@ -58,8 +59,14 @@ public class ConstantManager extends Manager {
 	public static final int HUGE_INSET_GAP = 20;
 	public static final int XXL_INSET_GAP = 50;
 	
-	public static final String MIN_TEXT = "min";
-	public static final String MAX_TEXT = "max";
+	public static final String MIN_TEXT = "Min";
+	public static final String MAX_TEXT = "Max";
+	
+	public static final String FALSE_VALUE = "False";
+	public static final String TRUE_VALUE = "True";
+	
+	private static final String RANGE_PATTERN_STRING = "\\[[\s]*([^\"]+),[\s]*([^\"]+)\\]";
+	public static final Pattern RANGE_PATTERN = Pattern.compile(RANGE_PATTERN_STRING); 
 
 	public static final GridBagConstraints getDefaultConstraint() {
 		GridBagConstraints c = new GridBagConstraints();

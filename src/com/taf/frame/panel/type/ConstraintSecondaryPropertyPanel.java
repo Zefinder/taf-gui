@@ -179,8 +179,6 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 			}
 		});
 
-		// TODO Add elements to the model
-
 		List<String> quantifiers = constraint.getQuantifiers();
 		List<Range> ranges = constraint.getRanges();
 		List<QuantifierType> types = constraint.getTypes();

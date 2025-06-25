@@ -16,6 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 
 import com.taf.exception.ImportException;
@@ -344,6 +345,7 @@ public class SaveManager extends Manager {
 						throw new ParseException(PARAMETER_UNEXPECTED_ERROR_MESSAGE + typeName);
 					};
 
+					// Add mandatory parameters
 					for (String mandatoryTypeName : type.getMandatoryParametersName()) {
 						Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
 						if (mandatoryTypeOp.isEmpty()) {
@@ -357,7 +359,7 @@ public class SaveManager extends Manager {
 						type.addTypeParameter(typeParameter);
 					}
 
-					// TODO Create function to add to type
+					// Add optional parameters
 					for (String optionalTypeName : type.getOptionalParametersName()) {
 						Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
 						if (!optionalTypeOp.isEmpty()) {
@@ -460,7 +462,7 @@ public class SaveManager extends Manager {
 
 	public boolean createProject(String projectName) throws IOException {
 		projectName = projectName.strip();
-		
+
 		// Name must finish by .taf
 		if (!projectName.endsWith(ConstantManager.TAF_FILE_EXTENSION)) {
 			return false;
@@ -478,7 +480,7 @@ public class SaveManager extends Manager {
 
 		// Add to created project
 		projectNames.add(newProjectFile);
-		
+
 		return true;
 	}
 
@@ -501,8 +503,14 @@ public class SaveManager extends Manager {
 		int returnVal = chooser.showSaveDialog(null);
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			// TODO Verify if file exists
 			File xmlFile = chooser.getSelectedFile();
+			if (xmlFile.exists()) {
+				int answer = JOptionPane.showConfirmDialog(null, "This file already exist, do you want to replace it?",
+						"File already exist", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+				if (answer != JOptionPane.YES_OPTION) {
+					return;
+				}
+			}
 			try (BufferedWriter writer = new BufferedWriter(new FileWriter(xmlFile))) {
 				writer.write(XML_HEADER);
 				writer.write(projectRoot.toString());
@@ -538,7 +546,7 @@ public class SaveManager extends Manager {
 
 			// Open the project to verify that everything is parsable
 			openProject(newTafFileName);
-			
+
 			// Add to files
 			projectNames.add(newTafFile);
 		} catch (ImportException | IOException | ParseException e) {

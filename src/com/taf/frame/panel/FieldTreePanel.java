@@ -93,12 +93,12 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			}
 
 			NodeObject nodeInfo = (NodeObject) node.getUserObject();
+			if (nodeInfo.isRoot) {
+				System.out.println(nodeInfo.entity.toString());
+			}
+			
 			Event event = new EntitySelectedEvent(nodeInfo.getEntity());
 			EventManager.getInstance().fireEvent(event);
-
-			if (nodeInfo.isRoot) {
-				System.out.println(nodeInfo.getEntity());
-			}
 		});
 		MouseAdapter rightClickListener = new MouseAdapter() {
 

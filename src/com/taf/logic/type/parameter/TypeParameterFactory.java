@@ -67,8 +67,24 @@ public class TypeParameterFactory {
 			yield new ValuesParameter();
 		}
 
-		case WeightParameter.PARAMETER_NAME: {
-			yield new WeightParameter();
+		case WeightsParameter.PARAMETER_NAME: {
+			yield new WeightsParameter();
+		}
+		
+		case DistributionParameter.PARAMETER_NAME: {
+			yield new DistributionParameter();
+		}
+		
+		case MeanParameter.PARAMETER_NAME: {
+			yield new MeanParameter();
+		}
+		
+		case VarianceParameter.PARAMETER_NAME: {
+			yield new VarianceParameter();
+		}
+		
+		case RangesParameter.PARAMETER_NAME: {
+			yield new RangesParameter();
 		}
 
 		default:

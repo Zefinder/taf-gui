@@ -3,137 +3,108 @@ package com.taf.logic.type;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.taf.logic.type.parameter.DistributionParameter;
 import com.taf.logic.type.parameter.MaxRealParameter;
+import com.taf.logic.type.parameter.MeanParameter;
 import com.taf.logic.type.parameter.MinRealParameter;
-import com.taf.logic.type.parameter.TypeNameParameter;
+import com.taf.logic.type.parameter.RangesParameter;
+import com.taf.logic.type.parameter.RangesParameter.Range;
 import com.taf.logic.type.parameter.TypeParameter;
+import com.taf.logic.type.parameter.VarianceParameter;
+import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
-public class RealType extends Type {
+public class RealType extends NumericalType {
 
 	public static final String TYPE_NAME = "real";
 	private static final HashSet<Class<? extends TypeParameter>> ALLOWED_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
-			.add(MaxRealParameter.class)
-			.add(MinRealParameter.class)
-			.build();
-	
-	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
-			.add(MaxRealParameter.PARAMETER_NAME)
-			.add(MinRealParameter.PARAMETER_NAME)
-			.build();
+			.add(MaxRealParameter.class).add(MinRealParameter.class).build();
 
-	private TypeParameter typeName;
-	private MinRealParameter min;
-	private MaxRealParameter max;
+	private static final HashSet<String> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(MaxRealParameter.PARAMETER_NAME).add(MinRealParameter.PARAMETER_NAME).build();
+
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(DistributionParameter.PARAMETER_NAME).add(MeanParameter.PARAMETER_NAME)
+			.add(VarianceParameter.PARAMETER_NAME).add(RangesParameter.PARAMETER_NAME)
+			.add(WeightsParameter.PARAMETER_NAME).build();
 
 	public RealType() {
-		typeName = new TypeNameParameter(TYPE_NAME);
+		super(TYPE_NAME, new MinRealParameter(ConstantManager.DEFAULT_MIN_VALUE),
+				new MaxRealParameter(ConstantManager.DEFAULT_MAX_VALUE));
 	}
 
-	public void addMinParameter(double minValue) {
-		if (min == null) {
-			min = new MinRealParameter(minValue);
-		} else {
-			min.setValue(minValue);
-		}
+	public void editMin(long minValue) {
+		super.editMin(minValue);
 	}
 
-	public void editMinParameter(double minValue) {
-		if (min != null) {
-			min.setValue(minValue);
-		}
+	public double getMin() {
+		return super.getMinNumber().doubleValue();
+	}
+
+	public void editMax(long maxValue) {
+		super.editMax(maxValue);
+	}
+
+	public double getMax() {
+		return super.getMaxNumber().doubleValue();
+	}
+
+	public void addInterval(double lowerBound, double upperBound, int weight) {
+		super.addInterval(lowerBound, upperBound, weight);
+	}
+
+	public void editLowerBound(int index, double lowerBound) {
+		super.editLowerBound(index, lowerBound);
+	}
+
+	public void editUpperBound(int index, double upperBound) {
+		super.editUpperBound(index, upperBound);
 	}
 	
-	public double getMinParameter() {
-		if (min == null) {
-			return 0;
-		}
-		
-		return min.getValue().doubleValue();
-	}
-	
-	public void removeMinParameter() {
-		min = null;
-	}
-
-	public boolean hasMinParameter() {
-		return min != null;
-	}
-
-	public void addMaxParameter(double maxValue) {
-		if (max == null) {
-			max = new MaxRealParameter(maxValue);
-		} else {
-			max.setValue(maxValue);
-		}
-	}
-
-	public void editMaxParameter(double maxValue) {
-		if (max != null) {
-			max.setValue(maxValue);
-		}
-	}
-	
-	public double getMaxParameter() {
-		if (max == null) {
-			return 0;
-		}
-		
-		return max.getValue().doubleValue();
-	}
-	
-	public void removeMaxParameter() {
-		max = null;
-	}
-	
-	public boolean hasMaxParameter() {
-		return max != null;
-	}
-
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
 		if (typeParameter instanceof MinRealParameter) {
-			addMinParameter(((MinRealParameter) typeParameter).getValue().doubleValue());
+			editMin(((MinRealParameter) typeParameter).getValue().doubleValue());
 		} else if (typeParameter instanceof MaxRealParameter) {
-			addMaxParameter(((MaxRealParameter) typeParameter).getValue().doubleValue());
+			editMax(((MaxRealParameter) typeParameter).getValue().doubleValue());
+		} else if (typeParameter instanceof DistributionParameter) {
+			setDistribution(((DistributionParameter) typeParameter).getDistributionType());
+		} else if (typeParameter instanceof MeanParameter) {
+			editMean(((MeanParameter) typeParameter).getMean());
+		} else if (typeParameter instanceof VarianceParameter) {
+			editVariance(((VarianceParameter) typeParameter).getVariance());
+		} else if (typeParameter instanceof RangesParameter) {
+			for (Range range : ((RangesParameter) typeParameter).getRanges()) {
+				addInterval(range.getLowerBound(), range.getUpperBound(), ConstantManager.DEFAULT_WEIGHT_VALUE);
+			}
+		} else if (typeParameter instanceof WeightsParameter) {
+			int[] weights = ((WeightsParameter) typeParameter).getWeights();
+			int rangeSize = super.getRangeNumber();
+			for (int i = 0; i < Math.min(rangeSize, weights.length); i++) {
+				editWeight(i, weights[i]);
+			}
 		}
 	}
-	
+
 	@Override
 	public Set<String> getMandatoryParametersName() {
-		return new HashSet<String>();
+		return MANDATORY_TYPE_PARAMETERS;
 	}
-	
+
 	@Override
 	public Set<String> getOptionalParametersName() {
 		return OPTIONAL_TYPE_PARAMETERS;
 	}
-	
+
 	@Override
 	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
 		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());
 	}
-	
+
 	@Override
 	public String getName() {
 		return TYPE_NAME;
-	}
-
-	@Override
-	public String typeToString() {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
-		String typeStr = typeName.toString();
-
-		if (min != null) {
-			typeStr += separator + min.toString();
-		}
-
-		if (max != null) {
-			typeStr += separator + max.toString();
-		}
-
-		return typeStr;
 	}
 
 }

@@ -1,41 +1,59 @@
 package com.taf.logic.type.parameter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.taf.exception.ParseException;
 import com.taf.manager.ConstantManager;
 
-public class WeightParameter extends TypeParameter {
+public class WeightsParameter extends TypeParameter {
 
 	private static final String ERROR_MESSAGE = "Weight value must be an integer!";
 
 	public static final String PARAMETER_NAME = "weights";
 
-	private int[] weights;
+	private List<Integer> weights;
 
-	WeightParameter() {
+	WeightsParameter() {
 		super(PARAMETER_NAME);
-		this.weights = new int[0];
+		this.weights = new ArrayList<Integer>();
 	}
 
-	public WeightParameter(int... weights) {
+	public WeightsParameter(int... weights) {
 		this();
 		// TODO Check if positive values
-		this.weights = weights;
+		this.weights = new ArrayList<Integer>();
+		for (int weight : weights) {
+			this.weights.add(weight);
+		}
+	}
+
+	public int[] getWeights() {
+		return weights.stream().mapToInt(value -> value.intValue()).toArray();
+	}
+
+	public void addWeight(int weight) {
+		weights.add(weight);
+	}
+
+	public void removeWeight(int index) {
+		weights.remove(index);
 	}
 	
-	public int[] getWeights() {
-		return weights;
+	public void editWeight(int index, int weight) {
+		weights.set(index, weight);
 	}
 
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
-		weights = new int[values.length];
+		weights = new ArrayList<Integer>();
 
 		try {
 			for (int i = 0; i < values.length; i++) {
 				int value = Integer.valueOf(values[i]);
-				weights[i] = value < 0 ? 0 : value;
+				weights.add(value < 0 ? 0 : value);
 			}
 		} catch (NumberFormatException e) {
 			throw new ParseException(ERROR_MESSAGE);
@@ -47,10 +65,10 @@ public class WeightParameter extends TypeParameter {
 		final String separator = ConstantManager.ELEMENT_SEPARATOR;
 		String valueStr = "";
 
-		for (int i = 0; i < weights.length; i++) {
-			valueStr += String.valueOf(weights[i]);
+		for (int i = 0; i < weights.size(); i++) {
+			valueStr += String.valueOf(weights.get(i));
 
-			if (i != weights.length - 1) {
+			if (i != weights.size() - 1) {
 				valueStr += separator;
 			}
 		}
