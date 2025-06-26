@@ -124,6 +124,7 @@ public class SaveManager extends Manager {
 	private static final String OTHER_USER_BASE_MAIN_DIR = ".";
 
 	private static final String TAF_DIRECTORY_NAME = "tafgui";
+	private static final String RUN_DIRECTORY_NAME = "run";
 
 	private static final String SAVE_ARGUMENT_FORMAT = "%s=\"([^\"]+)\"";
 	private static final String ENTITY_ARGUMENT = "entity";
@@ -155,6 +156,8 @@ public class SaveManager extends Manager {
 
 	private String mainDirectory;
 	private File mainDirectoryFile;
+	private String runDirectory;
+	private File runDirectoryFile;
 
 	private File projectFile;
 	private Root projectRoot;
@@ -188,6 +191,8 @@ public class SaveManager extends Manager {
 		// TODO Tell the user that a directory will be created
 		mainDirectory += File.separator + TAF_DIRECTORY_NAME;
 		mainDirectoryFile = new File(mainDirectory);
+		runDirectory = mainDirectory + File.separator + RUN_DIRECTORY_NAME;
+		runDirectoryFile = new File(runDirectory);
 
 		// Create all directories if do not exist
 		initCreation();
@@ -199,6 +204,10 @@ public class SaveManager extends Manager {
 	private void initCreation() {
 		if (!mainDirectoryFile.exists()) {
 			mainDirectoryFile.mkdirs();
+		}
+
+		if (!runDirectoryFile.exists()) {
+			runDirectoryFile.mkdir();
 		}
 	}
 
@@ -484,39 +493,118 @@ public class SaveManager extends Manager {
 		return true;
 	}
 
-	public void exportToXML() throws IOException {
+	void exportToXML(File xmlFile) throws IOException {
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(xmlFile))) {
+			writer.write(XML_HEADER);
+			writer.write(projectRoot.toString());
+			writer.write(newLine);
+		}
+	}
+
+	void exportToXML(boolean askCustomLocation) throws IOException {
 		if (projectRoot == null || projectFile == null) {
 			return;
 		}
 
 		String projectFileName = projectFile.getName();
-		String xmlFileName = projectFileName.substring(0,
-				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length())
-				+ ConstantManager.XML_FILE_EXTENSION;
+		String projectName = projectFileName.substring(0,
+				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+		String xmlFileName = projectName + ConstantManager.XML_FILE_EXTENSION;
 
 		File homeFile = FileSystemView.getFileSystemView().getHomeDirectory();
 		File predictedFile = new File(homeFile.getAbsolutePath() + File.separator + xmlFileName);
 
-		// Show file chooser in save mode
-		JFileChooser chooser = new JFileChooser();
-		chooser.setSelectedFile(predictedFile);
-		int returnVal = chooser.showSaveDialog(null);
+		File exportFile = new File(runDirectory + File.separator + projectName + File.separator + xmlFileName);
+		if (askCustomLocation) {
+			// Show file chooser in save mode
+			JFileChooser chooser = new JFileChooser();
+			chooser.setSelectedFile(predictedFile);
+			int returnVal = chooser.showSaveDialog(null);
 
-		if (returnVal == JFileChooser.APPROVE_OPTION) {
-			File xmlFile = chooser.getSelectedFile();
-			if (xmlFile.exists()) {
-				int answer = JOptionPane.showConfirmDialog(null, "This file already exist, do you want to replace it?",
-						"File already exist", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
-				if (answer != JOptionPane.YES_OPTION) {
-					return;
+			if (returnVal == JFileChooser.APPROVE_OPTION) {
+				File xmlFile = chooser.getSelectedFile();
+				if (xmlFile.exists()) {
+					int answer = JOptionPane.showConfirmDialog(null,
+							"This file already exist, do you want to replace it?", "File already exist",
+							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					if (answer != JOptionPane.YES_OPTION) {
+						return;
+					}
 				}
-			}
-			try (BufferedWriter writer = new BufferedWriter(new FileWriter(xmlFile))) {
-				writer.write(XML_HEADER);
-				writer.write(projectRoot.toString());
-				writer.write(newLine);
+				exportFile = xmlFile;
 			}
 		}
+
+		exportToXML(exportFile);
+	}
+
+	public void exportToXML() throws IOException {
+		exportToXML(true);
+	}
+
+	File getProjectRunFolder() {
+		String projectFileName = projectFile.getName();
+		String projectName = projectFile.getName().substring(0,
+				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+		File projectRunFolder = new File(runDirectory + File.separator + projectName);
+		File customLocationFile = new File(projectRunFolder.getAbsolutePath() + File.separator + "custom_location.txt");
+
+		if (!projectRunFolder.exists()) {
+			projectRunFolder.mkdir();
+
+			// Ask if the user wants a custom location
+			int answer = JOptionPane.showConfirmDialog(null, "Do you want to run in a custom location?",
+					"Custom location", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+			if (answer == JOptionPane.YES_OPTION) {
+				// Show a file chooser and select a directory!
+				JFileChooser projectLocationChooser = new JFileChooser();
+				projectLocationChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				projectLocationChooser.setMultiSelectionEnabled(false);
+				answer = projectLocationChooser.showDialog(null, "Select location");
+
+				if (answer == JFileChooser.APPROVE_OPTION) {
+					File newLocation = projectLocationChooser.getSelectedFile();
+
+					if (projectRunFolder.exists()) {
+						try (BufferedWriter writer = new BufferedWriter(new FileWriter(customLocationFile))) {
+							writer.write(newLocation.getAbsolutePath());
+						} catch (IOException e) {
+							ConstantManager.showError(
+									"An error occured when creating the custom location file: " + e.getMessage());
+							e.printStackTrace();
+						}
+					}
+				}
+			}
+		}
+
+		// Check the existence of the custom location file
+		if (customLocationFile.exists()) {
+			try (BufferedReader reader = new BufferedReader(new FileReader(customLocationFile))) {
+				String newLocationPath = reader.readLine();
+				File newLocation = new File(newLocationPath);
+				if (!newLocation.exists()) {
+					ConstantManager.showError("Custom location does not exist, using default location...");
+				} else {
+					projectRunFolder = newLocation;
+				}
+			} catch (IOException e) {
+				ConstantManager.showError(
+						"An error occured when reading the custom location file. Using default location instead\n"
+								+ e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+		return projectRunFolder;
+	}
+
+	String getRunXMLFileName() {
+		String projectFileName = projectFile.getName();
+		String projectName = projectFile.getName().substring(0,
+				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+		String xmlFileName = projectName + ConstantManager.XML_FILE_EXTENSION;
+		return xmlFileName;
 	}
 
 	public void deleteProject(String projectName) {
