@@ -10,6 +10,7 @@ import com.taf.frame.panel.RunPanel;
 import com.taf.manager.Manager;
 import com.taf.manager.RunManager;
 import com.taf.manager.SaveManager;
+import com.taf.manager.SettingsManager;
 
 public class RunFrame extends JFrame {
 
@@ -36,6 +37,7 @@ public class RunFrame extends JFrame {
 	
 	public static void main(String[] args) throws IOException, ParseException {
 		Manager.initAllManagers();
+		SettingsManager.getInstance().setTafDirectory("/home/jakub/work/taf/src/");
 		SaveManager.getInstance().openProject("test.taf");
 		RunManager.getInstance().prepareRunManager();
 		new RunFrame().initFrame();

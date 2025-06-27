@@ -6,9 +6,18 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Stream;
+
+import javax.swing.JTextPane;
+
+import com.taf.event.ProcessReadyEvent;
+import com.taf.util.ProcessStreamReader;
 
 public class RunManager extends Manager {
 
@@ -26,7 +35,10 @@ public class RunManager extends Manager {
 			</settings>
 			""";
 
-	private static final String GENERATE_FILE_CONTENT = """
+	private static final String GENERATE_FILE_FORMAT = """
+			import sys
+			sys.path.append('%s')
+			
 			import Taf
 
 			myTaf = Taf.CLI()
@@ -87,6 +99,7 @@ public class RunManager extends Manager {
 
 	private static final String DEFAULT_CHAR_VALUE = "";
 	private static final int DEFAULT_INTEGER_VALUE = -1;
+	private static final boolean DEFAULT_BOOLEAN_VALUE = false;
 
 	private String templatePath;
 	private String templateFileName;
@@ -103,7 +116,12 @@ public class RunManager extends Manager {
 	private int maxDiversity;
 	private int z3Timeout;
 
+	private boolean deleteExperimentFolder;
+
+	private ProcessStreamReader processStreamReader;
+
 	private RunManager() {
+		processStreamReader = new ProcessStreamReader();
 		resetValues();
 	}
 
@@ -233,8 +251,9 @@ public class RunManager extends Manager {
 
 		// Create Generate.py and Export.py if they do not exist
 		if (!generateFile.exists()) {
+			String tafDirectory = SettingsManager.getInstance().getTafDirectory();
 			try (BufferedWriter writer = new BufferedWriter(new FileWriter(generateFile))) {
-				writer.write(GENERATE_FILE_CONTENT);
+				writer.write(GENERATE_FILE_FORMAT.formatted(tafDirectory));
 			}
 		}
 
@@ -265,7 +284,37 @@ public class RunManager extends Manager {
 			writer.write(SETTINGS_FILE_TEMPLATE.formatted(settingsParameters));
 		}
 
-		// Run TAF
+		// Check if must delete the experiment folder
+		if (deleteExperimentFolder) {
+			File experimentFile = new File(
+					"." + File.separator + experimentPath + File.separator + experimentFolderName);
+			Path pathToBeDeleted = experimentFile.toPath();
+			try (Stream<Path> paths = Files.walk(pathToBeDeleted)) {
+				paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+			}
+		}
+
+		// Send an event to tell the console panel to redirect
+		ProcessReadyEvent event = new ProcessReadyEvent();
+		EventManager.getInstance().fireEvent(event);
+
+		// Create and start the TAF process
+		ProcessBuilder pb = new ProcessBuilder("python3", generateFile.getAbsolutePath());
+		pb.directory(runDirectory);
+		Process process = pb.start();
+		System.out.println(generateFile.getAbsolutePath());
+		// Setup the stream reader
+		processStreamReader.start(process);
+
+		// Wait for the process to terminate
+		try {
+			process.waitFor();
+		} catch (InterruptedException e) {
+			// No interruption
+		}
+
+		// Close the stream reader
+		processStreamReader.stop();
 	}
 
 	private String formatParameter(String parameterValue, String[] parameterPair) {
@@ -384,6 +433,10 @@ public class RunManager extends Manager {
 		this.z3Timeout = z3Timeout;
 	}
 
+	public void setDeleteExperimentFolder(boolean deleteExperimentFolder) {
+		this.deleteExperimentFolder = deleteExperimentFolder;
+	}
+
 	private void resetValues() {
 		templatePath = DEFAULT_CHAR_VALUE;
 		templateFileName = DEFAULT_CHAR_VALUE;
@@ -399,6 +452,11 @@ public class RunManager extends Manager {
 		maxBacktracking = DEFAULT_INTEGER_VALUE;
 		maxDiversity = DEFAULT_INTEGER_VALUE;
 		z3Timeout = DEFAULT_INTEGER_VALUE;
+		deleteExperimentFolder = DEFAULT_BOOLEAN_VALUE;
+	}
+
+	public void setTextPane(JTextPane textPane) {
+		processStreamReader.setTextPane(textPane);
 	}
 
 	@Override

@@ -21,6 +21,7 @@ import java.awt.Insets;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,7 +42,6 @@ public class SettingsPanel extends JPanel {
 		this.setLayout(new GridBagLayout());
 		RunManager runManager = RunManager.getInstance();
 
-		// TODO Fill values with the settings.xml if exists
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.gridy = 0;
 		JTextField templatePathField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
@@ -62,8 +62,6 @@ public class SettingsPanel extends JPanel {
 
 		JFormattedTextField nbTestCasesField = new JFormattedTextField(runManager.getNbTestCases());
 		nbTestCasesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		nbTestCasesField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> nbTestCases = ((Number) nbTestCasesField.getValue()).intValue());
 		addLabeledField(NB_TEST_CASES_STRING, nbTestCasesField, c);
 
 		JTextField testCaseFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
@@ -72,8 +70,6 @@ public class SettingsPanel extends JPanel {
 
 		JFormattedTextField nbTestArtifactsField = new JFormattedTextField(runManager.getNbTestArtifacts());
 		nbTestArtifactsField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		nbTestArtifactsField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> nbTestArtifacts = ((Number) nbTestArtifactsField.getValue()).intValue());
 		addLabeledField(NB_TEST_ARTIFACTS_STRING, nbTestArtifactsField, c);
 
 		JTextField testArtifactFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
@@ -83,47 +79,41 @@ public class SettingsPanel extends JPanel {
 		JFormattedTextField parameterMaxNbInstancesField = new JFormattedTextField(
 				runManager.getParameterMaxNbInstances());
 		parameterMaxNbInstancesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		parameterMaxNbInstancesField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> parameterMaxNbInstances = ((Number) parameterMaxNbInstancesField.getValue()).intValue());
 		addLabeledField(PARAMETER_MAX_NB_INSTANCES_STRING, parameterMaxNbInstancesField, c);
 
 		JFormattedTextField stringParameterMaxSizeField = new JFormattedTextField(
 				runManager.getStringParameterMaxSize());
 		stringParameterMaxSizeField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		stringParameterMaxSizeField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> stringParameterMaxSize = ((Number) stringParameterMaxSizeField.getValue()).intValue());
 		addLabeledField(STRING_PARAMETER_MAX_SIZE_STRING, stringParameterMaxSizeField, c);
 
 		JFormattedTextField nodeMaxNbInstancesField = new JFormattedTextField(runManager.getNodeMaxNbInstances());
 		nodeMaxNbInstancesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		nodeMaxNbInstancesField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> nodeMaxNbInstances = ((Number) nodeMaxNbInstancesField.getValue()).intValue());
 		addLabeledField(NODE_MAX_NB_INSTANCES_STRING, nodeMaxNbInstancesField, c);
 
 		JFormattedTextField maxBacktrackingField = new JFormattedTextField(runManager.getMaxBacktracking());
 		maxBacktrackingField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		maxBacktrackingField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> maxBacktracking = ((Number) maxBacktrackingField.getValue()).intValue());
 		addLabeledField(MAX_BACKTRACKING_STRING, maxBacktrackingField, c);
 
 		JFormattedTextField maxDiversityField = new JFormattedTextField(runManager.getMaxDiversity());
 		maxDiversityField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		maxDiversityField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> maxDiversity = ((Number) maxDiversityField.getValue()).intValue());
 		addLabeledField(MAX_DIVERSITY_STRING, maxDiversityField, c);
 
 		JFormattedTextField z3TimeoutField = new JFormattedTextField(runManager.getZ3Timeout());
 		z3TimeoutField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-//		z3TimeoutField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
-//				evt -> z3Timeout = ((Number) z3TimeoutField.getValue()).intValue());
 		addLabeledField(Z3_TIMEOUT_STRING, z3TimeoutField, c);
-
+		
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.LARGE_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, 0);
 		c.gridheight = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 0;
+		JCheckBox deleteExperimentBox = new JCheckBox(DELETE_EXPERIMENT_FOLDER_CHECKBOX_TEXT);
+		deleteExperimentBox.setSelected(false);
+		this.add(deleteExperimentBox, c);
+
+		c.insets = new Insets(ConstantManager.LARGE_INSET_GAP, 0, 0, 0);
+		c.gridy++;
 		JButton runButton = new JButton(RUN_BUTTON_TEXT);
 		runButton.addActionListener(e -> {
 			runManager.setTemplatePath(templatePathField.getText());
@@ -140,6 +130,7 @@ public class SettingsPanel extends JPanel {
 			runManager.setMaxBacktracking(((Number) maxBacktrackingField.getValue()).intValue());
 			runManager.setMaxDiversity(((Number) maxDiversityField.getValue()).intValue());
 			runManager.setZ3Timeout(((Number) z3TimeoutField.getValue()).intValue());
+			runManager.setDeleteExperimentFolder(deleteExperimentBox.isSelected());
 
 			try {
 				runManager.run();
