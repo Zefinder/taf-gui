@@ -1,16 +1,15 @@
 package com.taf.frame;
 
 import java.awt.BorderLayout;
-import java.io.IOException;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JFrame;
 
-import com.taf.exception.ParseException;
+import com.taf.event.Event;
+import com.taf.event.ProjectStopRunEvent;
 import com.taf.frame.panel.RunPanel;
-import com.taf.manager.Manager;
-import com.taf.manager.RunManager;
-import com.taf.manager.SaveManager;
-import com.taf.manager.SettingsManager;
+import com.taf.manager.EventManager;
 
 public class RunFrame extends JFrame {
 
@@ -18,29 +17,34 @@ public class RunFrame extends JFrame {
 
 	private static final String FRAME_NAME = "Run TAF";
 	
+	private RunPanel runPanel;
+	
 	public RunFrame() {
 		this.setTitle(FRAME_NAME);
 		this.setSize(1000, 600);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setResizable(true);
 		
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosing(WindowEvent e) {
+				// Send the event to notify that the frame is closed
+				Event event = new ProjectStopRunEvent();
+				EventManager.getInstance().fireEvent(event);
+				runPanel.unregisterConsolePanel();
+			}
+		});
+		
 		this.setLayout(new BorderLayout());
-		this.add(new RunPanel());
+		runPanel = new RunPanel();
+		this.add(runPanel);
 		
 		this.setVisible(false);
 	}
 	
 	public void initFrame() {
 		this.setVisible(true);
-	}
-	
-	public static void main(String[] args) throws IOException, ParseException {
-		Manager.initAllManagers();
-		SettingsManager.getInstance().setTafDirectory("/home/jakub/work/taf/src/");
-		SaveManager.getInstance().openProject("test.taf");
-		RunManager.getInstance().prepareRunManager();
-		new RunFrame().initFrame();
 	}
 
 }
