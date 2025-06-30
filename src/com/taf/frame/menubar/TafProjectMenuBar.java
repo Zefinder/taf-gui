@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 
 import com.taf.event.ProjectClosedEvent;
 import com.taf.frame.MainMenuFrame;
+import com.taf.frame.dialog.SettingsDialog;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.SaveManager;
@@ -43,6 +44,8 @@ public class TafProjectMenuBar extends JMenuBar {
 		saveItem.addActionListener(e -> save());
 		exportItem.addActionListener(e -> export());
 		quitItem.addActionListener(e -> quit());
+
+		pathItem.addActionListener(e -> new SettingsDialog().initDialog());
 
 		projectMenu.add(saveItem);
 		projectMenu.add(exportItem);

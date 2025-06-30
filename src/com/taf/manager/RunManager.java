@@ -292,7 +292,7 @@ public class RunManager extends Manager {
 			if (experimentFile.exists()) {
 				Path pathToBeDeleted = experimentFile.toPath();
 				try (Stream<Path> paths = Files.walk(pathToBeDeleted)) {
-					paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(System.out::println);
+					paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
 				}
 			}
 		}

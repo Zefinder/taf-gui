@@ -542,6 +542,10 @@ public class SaveManager extends Manager {
 		exportToXML(true);
 	}
 
+	String getMainDirectoryPath() {
+		return mainDirectory;
+	}
+	
 	File getProjectRunFolder() {
 		String projectFileName = projectFile.getName();
 		String projectName = projectFile.getName().substring(0,
