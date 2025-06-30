@@ -1,5 +1,6 @@
 package com.taf.manager;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -67,6 +68,18 @@ public class ConstantManager extends Manager {
 	
 	private static final String RANGE_PATTERN_STRING = "\\[[\s]*([^\"]+),[\s]*([^\"]+)\\]";
 	public static final Pattern RANGE_PATTERN = Pattern.compile(RANGE_PATTERN_STRING); 
+	
+	public static final Color CONSOLE_BACKGROUND_COLOR = new Color(0xC8C8C8);
+	public static final Color CONSOLE_FOREGROUND_COLOR = new Color(0x383838);
+	public static final Color BLACK_COLOR = new Color(0x000000);
+	public static final Color RED_COLOR = new Color(0xC91E1E);
+	public static final Color GREEN_COLOR = new Color(0x32A81B);
+	public static final Color YELLOW_COLOR = new Color(0x899114);
+	public static final Color BLUE_COLOR = new Color(0x244BB5);
+	public static final Color MAGENTA_COLOR = new Color(0x8C1B96);
+	public static final Color CYAN_COLOR = new Color(0x309DB0);
+	public static final Color WHITE_COLOR = new Color(0xFFFFFF);	
+	
 
 	public static final GridBagConstraints getDefaultConstraint() {
 		GridBagConstraints c = new GridBagConstraints();

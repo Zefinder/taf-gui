@@ -38,7 +38,7 @@ public class RunManager extends Manager {
 	private static final String GENERATE_FILE_FORMAT = """
 			import sys
 			sys.path.append('%s')
-			
+
 			import Taf
 
 			myTaf = Taf.CLI()
@@ -287,10 +287,13 @@ public class RunManager extends Manager {
 		// Check if must delete the experiment folder
 		if (deleteExperimentFolder) {
 			File experimentFile = new File(
-					"." + File.separator + experimentPath + File.separator + experimentFolderName);
-			Path pathToBeDeleted = experimentFile.toPath();
-			try (Stream<Path> paths = Files.walk(pathToBeDeleted)) {
-				paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+					runDirectory + File.separator + experimentPath + File.separator + experimentFolderName);
+
+			if (experimentFile.exists()) {
+				Path pathToBeDeleted = experimentFile.toPath();
+				try (Stream<Path> paths = Files.walk(pathToBeDeleted)) {
+					paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(System.out::println);
+				}
 			}
 		}
 
@@ -302,7 +305,7 @@ public class RunManager extends Manager {
 		ProcessBuilder pb = new ProcessBuilder("python3", generateFile.getAbsolutePath());
 		pb.directory(runDirectory);
 		Process process = pb.start();
-		System.out.println(generateFile.getAbsolutePath());
+
 		// Setup the stream reader
 		processStreamReader.start(process);
 

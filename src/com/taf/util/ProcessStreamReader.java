@@ -1,6 +1,6 @@
 package com.taf.util;
 
-import java.awt.Color;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -27,22 +27,23 @@ public class ProcessStreamReader {
 
 	public void setTextPane(JTextPane textPane) {
 		this.textPane = textPane;
-		
+
 		// Setup the underlying document
 		document = (StyledDocument) textPane.getDocument();
-		
+
 		// Clean the document for the new execution
 		try {
 			document.remove(0, document.getLength());
 		} catch (BadLocationException e) {
 			// Can never happen since this is the only place where the document is edited
 		}
-		
+
 		// Add the style
 		document.removeStyle("ConsoleStyle");
 		style = document.addStyle("ConsoleStyle", null);
 		StyleConstants.setFontFamily(style, "MonoSpaced");
 		StyleConstants.setFontSize(style, 12);
+		setStyle(ConsoleStyle.RESET_ALL);
 	}
 
 	public void start(Process process) {
@@ -53,6 +54,13 @@ public class ProcessStreamReader {
 		Thread errThread = new Thread(() -> runError(process.getErrorStream()));
 		errThread.setDaemon(true);
 		errThread.setName("Process error stream daemon");
+
+		// Write Y to the stream to create the folders
+		try (BufferedOutputStream out = new BufferedOutputStream(process.getOutputStream())) {
+			out.write('Y');
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		running.set(true);
 		inThread.start();
@@ -84,7 +92,7 @@ public class ProcessStreamReader {
 				// Nothing interesting here
 			}
 		}
-		
+
 		try {
 			writeIn(in);
 		} catch (IOException | BadLocationException e) {
@@ -109,32 +117,57 @@ public class ProcessStreamReader {
 				// Nothing interesting here
 			}
 		}
-		
+
 		try {
 			writeErr(err);
 		} catch (IOException | BadLocationException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	private synchronized void writeIn(InputStream in) throws IOException, BadLocationException {
 		if (in.available() != 0) {
 			// Print in black in the document
 			String input = this.readLine(in);
-			StyleConstants.setForeground(style, Color.black);
-			document.insertString(document.getLength(), input, style);
+
+			// Line contains formatting
+			if (input.contains("\033")) {
+				while (input.contains("\033")) {
+					// Get the index and write what was before with the cached style
+					int startFormatIndex = input.indexOf("\033");
+					String toWrite = input.substring(0, startFormatIndex);
+					document.insertString(document.getLength(), toWrite, style);
+
+					// Get the identifier and set the new style
+					input = input.substring(startFormatIndex);
+					int endFormatIndex = input.indexOf('m');
+					String identifier = input.substring(2, endFormatIndex);
+					ConsoleStyle consoleStyle = ConsoleStyle.fromIdentifier(identifier);
+					setStyle(consoleStyle);
+
+					// Resize input
+					input = input.substring(endFormatIndex + 1);
+				}
+
+				// Print the rest if not blank
+				if (!input.isBlank()) {
+					document.insertString(document.getLength(), input, style);
+				}
+			} else {
+				document.insertString(document.getLength(), input, style);
+			}
 			textPane.setCaretPosition(textPane.getDocument().getLength());
 		}
 	}
-	
+
 	private synchronized void writeErr(InputStream err) throws IOException, BadLocationException {
 		if (err.available() != 0) {
 			// Print in red in the document
-			String input = this.readLine(err);
-			StyleConstants.setForeground(style, Color.red);
+			String input = ConstantManager.LINE_JUMP + this.readLine(err);
+			setStyle(ConsoleStyle.RESET_ALL);
+			setStyle(ConsoleStyle.FG_RED);
 			document.insertString(document.getLength(), input, style);
 			textPane.setCaretPosition(textPane.getDocument().getLength());
-			System.err.println(input);
 		}
 	}
 
@@ -150,5 +183,95 @@ public class ProcessStreamReader {
 			input += new String(b, 0, b.length);
 		} while (!input.endsWith("\n") && !input.endsWith("\r\n") && !running.get());
 		return input;
+	}
+
+	private void setStyle(ConsoleStyle consoleStyle) {
+		switch (consoleStyle) {
+		case FG_BLACK:
+			StyleConstants.setForeground(style, ConstantManager.BLACK_COLOR);
+			break;
+
+		case FG_RED:
+			StyleConstants.setForeground(style, ConstantManager.RED_COLOR);
+			break;
+
+		case FG_GREEN:
+			StyleConstants.setForeground(style, ConstantManager.GREEN_COLOR);
+			break;
+
+		case FG_YELLOW:
+			StyleConstants.setForeground(style, ConstantManager.YELLOW_COLOR);
+			break;
+
+		case FG_BLUE:
+			StyleConstants.setForeground(style, ConstantManager.BLUE_COLOR);
+			break;
+
+		case FG_MAGENTA:
+			StyleConstants.setForeground(style, ConstantManager.MAGENTA_COLOR);
+			break;
+
+		case FG_CYAN:
+			StyleConstants.setForeground(style, ConstantManager.CYAN_COLOR);
+			break;
+
+		case FG_WHITE:
+			StyleConstants.setForeground(style, ConstantManager.WHITE_COLOR);
+			break;
+
+		case FG_RESET:
+			StyleConstants.setForeground(style, ConstantManager.CONSOLE_FOREGROUND_COLOR);
+			break;
+
+		case BG_BLACK:
+			StyleConstants.setBackground(style, ConstantManager.BLACK_COLOR);
+			break;
+
+		case BG_RED:
+			StyleConstants.setBackground(style, ConstantManager.RED_COLOR);
+			break;
+
+		case BG_GREEN:
+			StyleConstants.setBackground(style, ConstantManager.GREEN_COLOR);
+			break;
+
+		case BG_YELLOW:
+			StyleConstants.setBackground(style, ConstantManager.YELLOW_COLOR);
+			break;
+
+		case BG_BLUE:
+			StyleConstants.setBackground(style, ConstantManager.BLUE_COLOR);
+			break;
+
+		case BG_MAGENTA:
+			StyleConstants.setBackground(style, ConstantManager.MAGENTA_COLOR);
+			break;
+
+		case BG_CYAN:
+			StyleConstants.setBackground(style, ConstantManager.CYAN_COLOR);
+			break;
+
+		case BG_WHITE:
+			StyleConstants.setBackground(style, ConstantManager.WHITE_COLOR);
+			break;
+
+		case BG_RESET:
+			StyleConstants.setBackground(style, ConstantManager.CONSOLE_BACKGROUND_COLOR);
+			break;
+
+		case UNDERLINED:
+			StyleConstants.setUnderline(style, true);
+			break;
+
+		case RESET_ALL:
+			StyleConstants.setForeground(style, ConstantManager.CONSOLE_FOREGROUND_COLOR);
+			StyleConstants.setBackground(style, ConstantManager.CONSOLE_BACKGROUND_COLOR);
+			StyleConstants.setUnderline(style, false);
+
+		default:
+			// Do nothing
+			break;
+		}
+
 	}
 }

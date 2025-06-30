@@ -32,6 +32,7 @@ public class TafConsolePanel extends JPanel implements EventListener {
 
 		textPane = new JTextPane();
 		textPane.setEditable(false);
+		textPane.setBackground(ConstantManager.CONSOLE_BACKGROUND_COLOR);
 
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		this.add(scrollPane, c);
