@@ -7,8 +7,8 @@ import javax.swing.JFrame;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 import com.taf.event.ProjectClosedEvent;
-import com.taf.event.ProjectStartRunEvent;
-import com.taf.event.ProjectStopRunEvent;
+import com.taf.event.ProjectRunOpenedEvent;
+import com.taf.event.ProjectRunClosedEvent;
 import com.taf.frame.menubar.TafProjectMenuBar;
 import com.taf.frame.panel.TafPanel;
 import com.taf.logic.field.Root;
@@ -56,13 +56,14 @@ public class ProjectFrame extends JFrame implements EventListener {
 	}
 
 	@EventMethod
-	public void onProjectStartRun(ProjectStartRunEvent event) {
+	public void onProjectStartRun(ProjectRunOpenedEvent event) {
 		this.setVisible(false);
 	}
 	
 	@EventMethod
-	public void onProjectStopRun(ProjectStopRunEvent event) {
+	public void onProjectStopRun(ProjectRunClosedEvent event) {
 		this.setVisible(true);
+		this.repaint();
 	}
 	
 }

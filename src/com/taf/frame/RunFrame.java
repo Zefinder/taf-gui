@@ -7,7 +7,9 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 
 import com.taf.event.Event;
-import com.taf.event.ProjectStopRunEvent;
+import com.taf.event.ProjectRunAbortedEvent;
+import com.taf.event.ProjectRunClosedEvent;
+import com.taf.frame.menubar.RunMenuBar;
 import com.taf.frame.panel.RunPanel;
 import com.taf.manager.EventManager;
 
@@ -25,12 +27,17 @@ public class RunFrame extends JFrame {
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setResizable(true);
+		this.setJMenuBar(new RunMenuBar());
 		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
+				// Send the event to abort the process if it exists
+				Event event = new ProjectRunAbortedEvent();
+				EventManager.getInstance().fireEvent(event);
+				
 				// Send the event to notify that the frame is closed
-				Event event = new ProjectStopRunEvent();
+				event = new ProjectRunClosedEvent();
 				EventManager.getInstance().fireEvent(event);
 				runPanel.unregisterConsolePanel();
 			}

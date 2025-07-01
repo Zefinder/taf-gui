@@ -20,6 +20,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.io.IOException;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
@@ -27,16 +29,27 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.taf.event.EventListener;
+import com.taf.event.EventMethod;
+import com.taf.event.ProjectRunAbortedEvent;
+import com.taf.event.ProjectRunStartedEvent;
+import com.taf.event.ProjectRunStoppedEvent;
 import com.taf.manager.ConstantManager;
+import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
 
-public class SettingsPanel extends JPanel {
+public class SettingsPanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = 2148563875281479934L;
 
 	private static final String DELETE_EXPERIMENT_FOLDER_CHECKBOX_TEXT = "Delete experiment folder name before running TAF";
 
 	private static final String RUN_BUTTON_TEXT = "Run";
+	private static final String STOP_BUTTON_TEXT = "Stop";
+
+	
+	private JButton runButton;
+	private JButton stopButton;
 
 	public SettingsPanel() {
 		this.setLayout(new GridBagLayout());
@@ -112,9 +125,12 @@ public class SettingsPanel extends JPanel {
 		deleteExperimentBox.setSelected(false);
 		this.add(deleteExperimentBox, c);
 
-		c.insets = new Insets(ConstantManager.LARGE_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
+		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridy++;
-		JButton runButton = new JButton(RUN_BUTTON_TEXT);
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.LINE_AXIS));
+		runButton = new JButton(RUN_BUTTON_TEXT);
 		runButton.addActionListener(e -> {
 			runManager.setTemplatePath(templatePathField.getText());
 			runManager.setTemplateFileName(templateFileNameField.getText());
@@ -139,7 +155,16 @@ public class SettingsPanel extends JPanel {
 				e1.printStackTrace();
 			}
 		});
-		this.add(runButton, c);
+		buttonPanel.add(runButton);
+		buttonPanel.add(Box.createHorizontalStrut(10));
+		
+		stopButton = new JButton(STOP_BUTTON_TEXT);
+		stopButton.addActionListener(e -> EventManager.getInstance().fireEvent(new ProjectRunAbortedEvent()));
+		stopButton.setEnabled(false);
+		buttonPanel.add(stopButton);
+		this.add(buttonPanel, c);
+		
+		EventManager.getInstance().registerEventListener(this);
 	}
 
 	// TODO Add to constant manager and use on a lot of panels
@@ -159,6 +184,23 @@ public class SettingsPanel extends JPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(field, c);
 		c.gridy++;
+	}
+	
+	@EventMethod
+	public void onRunStartedEvent(ProjectRunStartedEvent event) {
+		runButton.setEnabled(false);
+		stopButton.setEnabled(true);
+	}
+	
+	@EventMethod
+	public void onRunStoppedEvent(ProjectRunStoppedEvent event) {
+		runButton.setEnabled(true);
+		stopButton.setEnabled(false);
+	}
+	
+	@Override
+	public void unregisterComponents() {
+		// Nothing here
 	}
 
 }

@@ -48,7 +48,7 @@ public class ProcessStreamReader {
 
 	public void start(Process process) {
 		Thread inThread = new Thread(() -> runInput(process.getInputStream()));
-		inThread.setDaemon(true);
+		inThread.setDaemon(false);
 		inThread.setName("Process input stream daemon");
 
 		Thread errThread = new Thread(() -> runError(process.getErrorStream()));
@@ -58,6 +58,8 @@ public class ProcessStreamReader {
 		// Write Y to the stream to create the folders
 		try (BufferedOutputStream out = new BufferedOutputStream(process.getOutputStream())) {
 			out.write('Y');
+//			out.write(new byte[] {'Y', 'a', 'l', 'l'});
+			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -156,6 +158,7 @@ public class ProcessStreamReader {
 			} else {
 				document.insertString(document.getLength(), input, style);
 			}
+			
 			textPane.setCaretPosition(textPane.getDocument().getLength());
 		}
 	}

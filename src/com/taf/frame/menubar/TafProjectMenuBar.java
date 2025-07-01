@@ -9,7 +9,7 @@ import javax.swing.JOptionPane;
 
 import com.taf.event.Event;
 import com.taf.event.ProjectClosedEvent;
-import com.taf.event.ProjectStartRunEvent;
+import com.taf.event.ProjectRunOpenedEvent;
 import com.taf.frame.MainMenuFrame;
 import com.taf.frame.RunFrame;
 import com.taf.frame.dialog.SettingsDialog;
@@ -104,7 +104,7 @@ public class TafProjectMenuBar extends JMenuBar {
 			RunManager.getInstance().prepareRunManager();
 			RunFrame runFrame = new RunFrame();
 			runFrame.initFrame();
-			Event event = new ProjectStartRunEvent();
+			Event event = new ProjectRunOpenedEvent();
 			EventManager.getInstance().fireEvent(event);
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -16,10 +16,17 @@ import java.util.stream.Stream;
 
 import javax.swing.JTextPane;
 
+import com.taf.event.Event;
+import com.taf.event.EventListener;
+import com.taf.event.EventMethod;
 import com.taf.event.ProcessReadyEvent;
+import com.taf.event.ProjectRunAbortedEvent;
+import com.taf.event.ProjectRunClosedEvent;
+import com.taf.event.ProjectRunStartedEvent;
+import com.taf.event.ProjectRunStoppedEvent;
 import com.taf.util.ProcessStreamReader;
 
-public class RunManager extends Manager {
+public class RunManager extends Manager implements EventListener {
 
 	private static final RunManager instance = new RunManager();
 
@@ -101,6 +108,8 @@ public class RunManager extends Manager {
 	private static final int DEFAULT_INTEGER_VALUE = -1;
 	private static final boolean DEFAULT_BOOLEAN_VALUE = false;
 
+	private static final String SAVE_ON_QUIT_ERROR_MESSAGE = "Something wrong happened when trying to save the settings: ";
+
 	private String templatePath;
 	private String templateFileName;
 	private String experimentPath;
@@ -118,7 +127,10 @@ public class RunManager extends Manager {
 
 	private boolean deleteExperimentFolder;
 
+	private File settingsFile;
 	private ProcessStreamReader processStreamReader;
+
+	private Process process;
 
 	private RunManager() {
 		processStreamReader = new ProcessStreamReader();
@@ -142,7 +154,7 @@ public class RunManager extends Manager {
 		templateFileName = xmlFileName;
 
 		// Read the settings file and fill info
-		File settingsFile = new File(runDirectory.getAbsolutePath() + File.separator + SETTINGS_FILE_NAME);
+		settingsFile = new File(runDirectory.getAbsolutePath() + File.separator + SETTINGS_FILE_NAME);
 		if (settingsFile.exists()) {
 			String rawSettings = "";
 			try (BufferedReader reader = new BufferedReader(new FileReader(settingsFile))) {
@@ -245,7 +257,6 @@ public class RunManager extends Manager {
 	}
 
 	public void run() throws IOException {
-		File settingsFile = new File(runDirectory.getAbsolutePath() + File.separator + SETTINGS_FILE_NAME);
 		File generateFile = new File(runDirectory.getAbsolutePath() + File.separator + GENERATE_FILE_NAME);
 		File exportFile = new File(runDirectory.getAbsolutePath() + File.separator + EXPORT_FILE_NAME);
 
@@ -264,6 +275,57 @@ public class RunManager extends Manager {
 		}
 
 		// Generate settings.xml
+		saveSettings();
+
+		// Check if must delete the experiment folder
+		if (deleteExperimentFolder) {
+			File experimentFile = new File(
+					runDirectory + File.separator + experimentPath + File.separator + experimentFolderName);
+
+			if (experimentFile.exists()) {
+				Path pathToBeDeleted = experimentFile.toPath();
+				try (Stream<Path> paths = Files.walk(pathToBeDeleted)) {
+					paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
+				}
+			}
+		}
+
+		// Send an event to tell the console panel to redirect
+		Event event = new ProcessReadyEvent();
+		EventManager.getInstance().fireEvent(event);
+
+		// Create and start the TAF process
+		ProcessBuilder pb = new ProcessBuilder("python3", generateFile.getAbsolutePath());
+		pb.directory(runDirectory);
+		process = pb.start();
+		event = new ProjectRunStartedEvent();
+		EventManager.getInstance().fireEvent(event);
+
+		// Setup the stream reader
+		processStreamReader.start(process);
+		
+		// Wait for the process to terminate in a new Thread
+		new Thread(() -> {
+			try {
+				process.waitFor();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			// Close the stream reader
+			processStreamReader.stop();
+
+			// Sent stop event
+			Event stopEvent = new ProjectRunStoppedEvent();
+			EventManager.getInstance().fireEvent(stopEvent);
+		}).start();
+	}
+
+	private String formatParameter(String parameterValue, String[] parameterPair) {
+		return SETTING_LINE_FORMAT.formatted(parameterPair[0], parameterPair[1], parameterValue);
+	}
+
+	private void saveSettings() throws IOException {
 		String settingsParameters = "";
 		settingsParameters += formatParameter(templatePath, TEMPLATE_PATH_PAIR);
 		settingsParameters += formatParameter(templateFileName, TEMPLATE_FILE_NAME_PAIR);
@@ -283,45 +345,6 @@ public class RunManager extends Manager {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(settingsFile))) {
 			writer.write(SETTINGS_FILE_TEMPLATE.formatted(settingsParameters));
 		}
-
-		// Check if must delete the experiment folder
-		if (deleteExperimentFolder) {
-			File experimentFile = new File(
-					runDirectory + File.separator + experimentPath + File.separator + experimentFolderName);
-
-			if (experimentFile.exists()) {
-				Path pathToBeDeleted = experimentFile.toPath();
-				try (Stream<Path> paths = Files.walk(pathToBeDeleted)) {
-					paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-				}
-			}
-		}
-
-		// Send an event to tell the console panel to redirect
-		ProcessReadyEvent event = new ProcessReadyEvent();
-		EventManager.getInstance().fireEvent(event);
-
-		// Create and start the TAF process
-		ProcessBuilder pb = new ProcessBuilder("python3", generateFile.getAbsolutePath());
-		pb.directory(runDirectory);
-		Process process = pb.start();
-
-		// Setup the stream reader
-		processStreamReader.start(process);
-
-		// Wait for the process to terminate
-		try {
-			process.waitFor();
-		} catch (InterruptedException e) {
-			// No interruption
-		}
-
-		// Close the stream reader
-		processStreamReader.stop();
-	}
-
-	private String formatParameter(String parameterValue, String[] parameterPair) {
-		return SETTING_LINE_FORMAT.formatted(parameterPair[0], parameterPair[1], parameterValue);
 	}
 
 	public String getTemplatePath() {
@@ -462,8 +485,31 @@ public class RunManager extends Manager {
 		processStreamReader.setTextPane(textPane);
 	}
 
+	@EventMethod
+	public void onProjectRunClosed(ProjectRunClosedEvent event) {
+		try {
+			saveSettings();
+		} catch (IOException e) {
+			ConstantManager.showError(SAVE_ON_QUIT_ERROR_MESSAGE + e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@EventMethod
+	public void onRunAborted(ProjectRunAbortedEvent event) {
+		if (process != null) {
+			process.destroyForcibly();
+		}
+	}
+
+	@Override
+	public void unregisterComponents() {
+		// Nothing here
+	}
+
 	@Override
 	public void initManager() {
+		EventManager.getInstance().registerEventListener(this);
 	}
 
 	public static RunManager getInstance() {
