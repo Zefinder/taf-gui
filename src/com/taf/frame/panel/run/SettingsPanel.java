@@ -169,6 +169,7 @@ public class SettingsPanel extends JPanel implements EventListener {
 
 	// TODO Add to constant manager and use on a lot of panels
 	private void addLabeledField(String text, JTextField field, GridBagConstraints c) {
+		// Add label
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
@@ -178,11 +179,13 @@ public class SettingsPanel extends JPanel implements EventListener {
 		JLabel label = new JLabel(text);
 		this.add(label, c);
 
+		// Add field
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(field, c);
+		
 		c.gridy++;
 	}
 	

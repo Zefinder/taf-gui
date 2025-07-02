@@ -7,6 +7,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -545,7 +549,34 @@ public class SaveManager extends Manager {
 	String getMainDirectoryPath() {
 		return mainDirectory;
 	}
-	
+
+	private File getCustomLocation(File customLocationFile) throws IOException {
+		File newLocationFile = null;
+		try (BufferedReader reader = new BufferedReader(new FileReader(customLocationFile))) {
+			String newLocationPath = reader.readLine();
+			File newLocation = new File(newLocationPath);
+			if (!newLocation.exists()) {
+				ConstantManager.showError("Custom location does not exist, using default location...");
+			} else {
+				newLocationFile = newLocation;
+			}
+		}
+
+		return newLocationFile;
+	}
+
+	private void copyDirectory(Path sourcePath, Path destinationPath) throws IOException {
+		Files.walk(sourcePath).forEach(source -> {
+			Path destination = Paths.get(destinationPath.toString(),
+					source.toString().substring(sourcePath.toString().length()));
+			try {
+				Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+
 	File getProjectRunFolder() {
 		String projectFileName = projectFile.getName();
 		String projectName = projectFile.getName().substring(0,
@@ -569,14 +600,16 @@ public class SaveManager extends Manager {
 				if (answer == JFileChooser.APPROVE_OPTION) {
 					File newLocation = projectLocationChooser.getSelectedFile();
 
-					if (projectRunFolder.exists()) {
-						try (BufferedWriter writer = new BufferedWriter(new FileWriter(customLocationFile))) {
-							writer.write(newLocation.getAbsolutePath());
-						} catch (IOException e) {
-							ConstantManager.showError(
-									"An error occured when creating the custom location file: " + e.getMessage());
-							e.printStackTrace();
-						}
+					if (!newLocation.exists()) {
+						newLocation.mkdir();
+					}
+
+					try (BufferedWriter writer = new BufferedWriter(new FileWriter(customLocationFile))) {
+						writer.write(newLocation.getAbsolutePath());
+					} catch (IOException e) {
+						ConstantManager.showError(
+								"An error occured when creating the custom location file: " + e.getMessage());
+						e.printStackTrace();
 					}
 				}
 			}
@@ -584,14 +617,8 @@ public class SaveManager extends Manager {
 
 		// Check the existence of the custom location file
 		if (customLocationFile.exists()) {
-			try (BufferedReader reader = new BufferedReader(new FileReader(customLocationFile))) {
-				String newLocationPath = reader.readLine();
-				File newLocation = new File(newLocationPath);
-				if (!newLocation.exists()) {
-					ConstantManager.showError("Custom location does not exist, using default location...");
-				} else {
-					projectRunFolder = newLocation;
-				}
+			try {
+				projectRunFolder = getCustomLocation(customLocationFile);
 			} catch (IOException e) {
 				ConstantManager.showError(
 						"An error occured when reading the custom location file. Using default location instead\n"
@@ -601,6 +628,47 @@ public class SaveManager extends Manager {
 		}
 
 		return projectRunFolder;
+	}
+
+	public void removeRunCustomLocation(boolean wantCopy) throws IOException {
+		String projectFileName = projectFile.getName();
+		String projectName = projectFile.getName().substring(0,
+				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+		File projectRunFolder = new File(runDirectory + File.separator + projectName);
+		File customLocationFile = new File(projectRunFolder.getAbsolutePath() + File.separator + "custom_location.txt");
+
+		// If user wants, copy from the old one to here
+		if (wantCopy) {
+			File oldLocationFile = getCustomLocation(customLocationFile);
+			copyDirectory(oldLocationFile.toPath(), projectRunFolder.toPath());
+		}
+
+		if (customLocationFile.exists()) {
+			customLocationFile.delete();
+		}
+	}
+
+	public void changeRunCustomLocation(String customLocationPath, boolean wantCopy) throws IOException {
+		String projectFileName = projectFile.getName();
+		String projectName = projectFile.getName().substring(0,
+				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+		File projectRunFolder = new File(runDirectory + File.separator + projectName);
+		File customLocationFile = new File(projectRunFolder.getAbsolutePath() + File.separator + "custom_location.txt");
+
+		// If user wants to copy, check if the files are in the default directory first
+		if (wantCopy) {
+			File newLocation = new File(customLocationPath);
+			if (customLocationFile.exists()) {
+				File oldLocation = getCustomLocation(customLocationFile);
+				copyDirectory(oldLocation.toPath(), newLocation.toPath());
+			} else {
+				copyDirectory(projectRunFolder.toPath(), newLocation.toPath());
+			}
+		}
+
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(customLocationFile))) {
+			writer.write(customLocationPath);
+		}
 	}
 
 	String getRunXMLFileName() {
