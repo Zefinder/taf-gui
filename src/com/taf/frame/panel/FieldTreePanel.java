@@ -1,5 +1,6 @@
 package com.taf.frame.panel;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -7,13 +8,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
@@ -86,6 +90,28 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		tree = new JTree(rootNode);
 		treeModel = (DefaultTreeModel) tree.getModel();
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		tree.setCellRenderer(new DefaultTreeCellRenderer() {
+			private static final long serialVersionUID = 3600625563246633955L;
+
+			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
+					boolean leaf, int row, boolean hasFocus) {
+				super.getTreeCellRendererComponent(tree, value, selected,expanded, leaf, row, hasFocus);
+		        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+		        Icon icon;
+		        if (node.getAllowsChildren()) {
+		        	if (expanded) {
+		        		icon = (Icon) UIManager.get("Tree.openIcon");
+		        	} else {
+		        		icon = (Icon) UIManager.get("Tree.closedIcon");
+		        	}
+		        } else {
+		        	icon = (Icon) UIManager.get("Tree.leafIcon");
+		        }
+		        
+		        setIcon(icon);
+				return this;
+			};
+		});
 		tree.addTreeSelectionListener(e -> {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 			if (node == null) {
@@ -96,7 +122,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			if (nodeInfo.isRoot) {
 				System.out.println(nodeInfo.entity.toString());
 			}
-			
+
 			Event event = new EntitySelectedEvent(nodeInfo.getEntity());
 			EventManager.getInstance().fireEvent(event);
 		});
