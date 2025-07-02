@@ -20,7 +20,6 @@ public class RunMenuBar extends JMenuBar {
 
 	private static final String PROJECT_MENU_TEXT = "Project";
 	private static final String CHANGE_PROJECT_LOCATION_ITEM_TEXT = "Change project location";
-	private static final String RETURN_ITEM_TEXT = "Return to project";
 	private static final String SETTINGS_MENU_TEXT = "Settings";
 	private static final String PATH_ITEM_TEXT = "Path settings";
 
@@ -29,7 +28,6 @@ public class RunMenuBar extends JMenuBar {
 	public RunMenuBar() {
 		JMenu projectMenu = new JMenu(PROJECT_MENU_TEXT);
 		JMenuItem changeLocationItem = new JMenuItem(CHANGE_PROJECT_LOCATION_ITEM_TEXT);
-		JMenuItem returnItem = new JMenuItem(RETURN_ITEM_TEXT);
 
 		JMenu settingsMenu = new JMenu(SETTINGS_MENU_TEXT);
 		JMenuItem pathItem = new JMenuItem(PATH_ITEM_TEXT);
@@ -80,12 +78,9 @@ public class RunMenuBar extends JMenuBar {
 			}
 		});
 
-		returnItem.addActionListener(e -> {
-		}); // TODO
 		pathItem.addActionListener(e -> new SettingsDialog().initDialog());
 
 		projectMenu.add(changeLocationItem);
-		projectMenu.add(returnItem);
 		settingsMenu.add(pathItem);
 
 		this.add(projectMenu);
