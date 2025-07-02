@@ -11,6 +11,8 @@ public abstract class Manager {
 			.add(TypeManager.getInstance())
 			.add(EventManager.getInstance())
 			.add(SaveManager.getInstance())
+			.add(RunManager.getInstance())
+			.add(SettingsManager.getInstance())
 			.build();
 	
 	public Manager() {

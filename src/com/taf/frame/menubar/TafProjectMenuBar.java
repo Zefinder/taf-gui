@@ -7,10 +7,15 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import com.taf.event.Event;
 import com.taf.event.ProjectClosedEvent;
+import com.taf.event.ProjectRunOpenedEvent;
 import com.taf.frame.MainMenuFrame;
+import com.taf.frame.RunFrame;
+import com.taf.frame.dialog.SettingsDialog;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
+import com.taf.manager.RunManager;
 import com.taf.manager.SaveManager;
 
 public class TafProjectMenuBar extends JMenuBar {
@@ -42,7 +47,10 @@ public class TafProjectMenuBar extends JMenuBar {
 
 		saveItem.addActionListener(e -> save());
 		exportItem.addActionListener(e -> export());
+		runItem.addActionListener(e -> run());
 		quitItem.addActionListener(e -> quit());
+
+		pathItem.addActionListener(e -> new SettingsDialog().initDialog());
 
 		projectMenu.add(saveItem);
 		projectMenu.add(exportItem);
@@ -85,6 +93,21 @@ public class TafProjectMenuBar extends JMenuBar {
 			SaveManager.getInstance().exportToXML();
 		} catch (IOException e) {
 			ConstantManager.showError(ERROR_EXPORT_DIALOG_TEXT + e.getMessage());
+		}
+	}
+	
+	private void run() {
+		// TODO Ask if wants to save
+		saveAnd();
+		
+		try {
+			RunManager.getInstance().prepareRunManager();
+			RunFrame runFrame = new RunFrame();
+			runFrame.initFrame();
+			Event event = new ProjectRunOpenedEvent();
+			EventManager.getInstance().fireEvent(event);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
