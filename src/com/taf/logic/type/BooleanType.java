@@ -6,14 +6,19 @@ import java.util.Set;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
+import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.manager.ConstantManager;
+import com.taf.util.HashSetBuilder;
 
 public class BooleanType extends Type {
 		
 	private static final String PARAMETER_FORMAT = "%s %s %s";
+
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(ValuesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
 	
 	public static final String TYPE_NAME = "boolean";
-
+	
 	private TypeNameParameter typeName;
 	private ValuesParameter values;
 	
@@ -42,6 +47,10 @@ public class BooleanType extends Type {
 	
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
+		// Ignore values
+		if (typeParameter instanceof WeightsParameter) {
+			values.setWeights(((WeightsParameter) typeParameter).getWeights());
+		}
 	}
 	
 	@Override
@@ -51,7 +60,7 @@ public class BooleanType extends Type {
 	
 	@Override
 	public Set<String> getOptionalParametersName() {
-		return new HashSet<String>();
+		return OPTIONAL_TYPE_PARAMETERS;
 	}
 
 	@Override

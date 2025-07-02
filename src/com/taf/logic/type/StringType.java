@@ -15,7 +15,7 @@ public class StringType extends Type {
 
 	public static final String TYPE_NAME = "string";
 
-	private static final HashSet<String> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<String>()
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
 			.add(ValuesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
 
 	private TypeParameter typeName;
@@ -65,12 +65,12 @@ public class StringType extends Type {
 
 	@Override
 	public Set<String> getMandatoryParametersName() {
-		return MANDATORY_TYPE_PARAMETERS;
+		return new HashSet<String>();
 	}
 
 	@Override
 	public Set<String> getOptionalParametersName() {
-		return new HashSet<String>();
+		return OPTIONAL_TYPE_PARAMETERS;
 	}
 
 	@Override
