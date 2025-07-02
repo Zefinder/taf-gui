@@ -11,7 +11,10 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import com.taf.event.ProjectRunSpecialErrorEvent;
+import com.taf.event.ProjectRunSpecialErrorEvent.ErrorType;
 import com.taf.manager.ConstantManager;
+import com.taf.manager.EventManager;
 
 public class ProcessStreamReader {
 
@@ -58,7 +61,6 @@ public class ProcessStreamReader {
 		// Write Y to the stream to create the folders
 		try (BufferedOutputStream out = new BufferedOutputStream(process.getOutputStream())) {
 			out.write('Y');
-//			out.write(new byte[] {'Y', 'a', 'l', 'l'});
 			out.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -167,6 +169,14 @@ public class ProcessStreamReader {
 		if (err.available() != 0) {
 			// Print in red in the document
 			String input = ConstantManager.LINE_JUMP + this.readLine(err);
+			
+			// Check for special messages on the error stream
+			ProjectRunSpecialErrorEvent event;
+			if (input.contains("import Taf")) {
+				event = new ProjectRunSpecialErrorEvent(ErrorType.MODULE_NOT_FOUND_ERROR);
+				EventManager.getInstance().fireEvent(event);
+			}
+			
 			setStyle(ConsoleStyle.RESET_ALL);
 			setStyle(ConsoleStyle.FG_RED);
 			document.insertString(document.getLength(), input, style);
