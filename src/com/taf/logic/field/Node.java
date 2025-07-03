@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
-import com.taf.logic.type.AnonymousType;
+import com.taf.logic.type.NodeType;
 import com.taf.logic.type.Type;
 import com.taf.manager.ConstantManager;
 
@@ -16,13 +16,19 @@ public class Node extends Field {
 			%s
 			%s</node>""";
 
+	private NodeType type;
+	
 	private Set<Field> fieldSet;
 	private Set<Constraint> constraintSet;
 
-	public Node(String name, Type type) {
+	protected Node(String name, NodeType type) {
 		super(name, type);
 		fieldSet = new LinkedHashSet<Field>();
 		constraintSet = new LinkedHashSet<Constraint>();
+	}
+
+	public Node(String name) {
+		this(name, new NodeType());
 	}
 
 	public void addEntity(Entity entity) {
@@ -58,6 +64,30 @@ public class Node extends Field {
 	
 	public void removeConstraint(Constraint constraint) {
 		constraintSet.remove(constraint);
+	}
+	
+	public void editMin(int minValue) {
+		type.editMin(minValue);
+	}
+
+	public int getMin() {
+		return type.getMin();
+	}
+
+	public void editMax(int maxValue) {
+		type.editMax(maxValue);
+	}
+
+	public int getMax() {
+		return type.getMax();
+	}
+
+	public void editInstanceNumber(int number) {
+		type.editInstanceNumber(number);
+	}
+
+	public int getInstanceNumber() {
+		return type.getInstanceNumber();
 	}
 
 	protected String insideFieldsToString() {
@@ -104,7 +134,7 @@ public class Node extends Field {
 	@Override
 	public String getEntityTypeName() {
 		Type type = getType();
-		if (type instanceof AnonymousType) {
+		if (type instanceof NodeType) {
 			return ConstantManager.NODE_ENTITY_NAME;
 		}
 

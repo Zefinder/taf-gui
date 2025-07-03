@@ -17,7 +17,7 @@ import com.taf.event.ConstraintCreatedEvent;
 import com.taf.event.Event;
 import com.taf.frame.dialog.ConstraintCreationDialog;
 import com.taf.logic.constraint.Constraint;
-import com.taf.logic.type.AnonymousType;
+import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
@@ -34,7 +34,7 @@ public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel impleme
 
 	private static final int MAX_COLUMN_NUMBER = 4;
 
-	private AnonymousType type;
+	private NodeType type;
 
 	private JFormattedTextField instanceField;
 	private JFormattedTextField minInstanceField;
@@ -44,16 +44,16 @@ public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel impleme
 	private int minInstanceNumber;
 	private int maxInstanceNumber;
 
-	public AnonymousPropertyPanel(AnonymousType type) {
+	public AnonymousPropertyPanel(NodeType type) {
 		this.type = type;
 
 		boolean hasMinMax = type.hasMinMaxInstance();
-		instanceNumber = type.getInstanceNumberParameter();
+		instanceNumber = type.getInstanceNumber();
 		minInstanceNumber = ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER;
 		maxInstanceNumber = ConstantManager.DEFAULT_MAX_INSTANCE_NUMBER;
 		if (type.hasMinMaxInstance()) {
-			minInstanceNumber = type.getMinInstanceParameter();
-			maxInstanceNumber = type.getMaxInstanceParameter();
+			minInstanceNumber = type.getMin();
+			maxInstanceNumber = type.getMax();
 		}
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
@@ -183,15 +183,15 @@ public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel impleme
 	}
 
 	private void updateInstanceNumber() {
-		type.editInstanceNumberParameter(instanceNumber);
+		type.editInstanceNumber(instanceNumber);
 	}
 
 	private void updateMinInstanceNumber() {
-		type.editMinInstanceParameter(minInstanceNumber);
+		type.editMin(minInstanceNumber);
 	}
 
 	private void updateMaxInstanceNumber() {
-		type.editMaxInstanceParameter(maxInstanceNumber);
+		type.editMax(maxInstanceNumber);
 	}
 
 	@Override

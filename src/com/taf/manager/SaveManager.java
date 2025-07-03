@@ -32,7 +32,6 @@ import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Root;
-import com.taf.logic.type.AnonymousType;
 import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.RealType;
@@ -297,7 +296,7 @@ public class SaveManager extends Manager {
 						node = root;
 
 					} else {
-						AnonymousType type = new AnonymousType();
+						node = new Node(entityName);
 
 						// Check if number of instances or min-max, else throw
 						Optional<String> instanceNumberOp = getArgument(line, INSTANCE_ARGUMENT);
@@ -311,14 +310,14 @@ public class SaveManager extends Manager {
 
 							int minNumber = Integer.valueOf(minNumberOp.get());
 							int maxNumber = Integer.valueOf(maxNumberOp.get());
-							type.addMinMaxInstanceParameter(minNumber, maxNumber);
+							node.editMin(minNumber);
+							node.editMax(maxNumber);
 
 						} else {
 							int instanceNumber = Integer.valueOf(instanceNumberOp.get());
-							type.editInstanceNumberParameter(instanceNumber);
+							node.editInstanceNumber(instanceNumber);
 						}
 
-						node = new Node(entityName, type);
 						nodes.get(parentId).addField(node);
 					}
 

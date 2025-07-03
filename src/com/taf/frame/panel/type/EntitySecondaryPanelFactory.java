@@ -1,7 +1,7 @@
 package com.taf.frame.panel.type;
 
 import com.taf.logic.constraint.Constraint;
-import com.taf.logic.type.AnonymousType;
+import com.taf.logic.type.NodeType;
 import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.RealType;
@@ -19,8 +19,8 @@ public class EntitySecondaryPanelFactory {
 	}
 	
 	public static EntitySecondaryPropertyPanel createFieldPropertyPanel(Type type) {
-		if (type instanceof AnonymousType) {
-			return new AnonymousPropertyPanel((AnonymousType) type);
+		if (type instanceof NodeType) {
+			return new AnonymousPropertyPanel((NodeType) type);
 		}
 		
 		if (type instanceof BooleanType) {

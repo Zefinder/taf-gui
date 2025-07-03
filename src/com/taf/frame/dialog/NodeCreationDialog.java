@@ -8,7 +8,7 @@ import javax.swing.JTextField;
 
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
-import com.taf.logic.type.AnonymousType;
+import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
 
 public class NodeCreationDialog extends InputInformationDialog {
@@ -48,7 +48,7 @@ public class NodeCreationDialog extends InputInformationDialog {
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
-			com.taf.logic.type.Type type = new AnonymousType();
+			com.taf.logic.type.Type type = new NodeType();
 			createdField = new Node(name, type);
 			dispose();
 		}

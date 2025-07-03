@@ -1,6 +1,6 @@
 package com.taf.logic.field;
 
-import com.taf.logic.type.AnonymousType;
+import com.taf.logic.type.NodeType;
 
 public class Root extends Node {
 
@@ -10,7 +10,7 @@ public class Root extends Node {
 			</root>""";
 
 	public Root(String name) {
-		super(name, new AnonymousType());
+		super(name, new NodeType());
 	}
 
 	@Override

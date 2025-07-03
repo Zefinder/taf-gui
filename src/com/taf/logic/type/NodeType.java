@@ -10,7 +10,7 @@ import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
-public class AnonymousType extends Type {
+public class NodeType extends Type {
 
 	private static final HashSet<Class<? extends TypeParameter>> ALLOWED_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
 			.add(MaxInstanceParameter.class).add(MinInstanceParameter.class).build();
@@ -19,66 +19,36 @@ public class AnonymousType extends Type {
 	private MinInstanceParameter min;
 	private MaxInstanceParameter max;
 
-	public AnonymousType() {
+	public NodeType() {
 		instanceNumber = new InstanceNumberParameter(ConstantManager.DEFAULT_INSTANCE_NUMBER);
+		min = new MinInstanceParameter(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER);
+		max = new MaxInstanceParameter(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER);
 	}
 
-	public void addMinMaxInstanceParameter(int minValue, int maxValue) {
-		// Both are linked, if one is null, both are null
-		if (min == null) {
-			min = new MinInstanceParameter(minValue);
-			max = new MaxInstanceParameter(maxValue);
-		} else {
-			min.setValue(minValue);
-			min.setValue(maxValue);
-		}
+	public void editMin(int minValue) {
+		min.setValue(minValue);
 	}
 
-	public void editMinInstanceParameter(int minValue) {
-		if (min != null) {
-			min.setValue(minValue);
-		}
-	}
-	
-	public int getMinInstanceParameter() {
-		if (min == null) {
-			return 0;
-		}
-		
+	public int getMin() {
 		return min.getValue().intValue();
 	}
 
-	public void editMaxInstanceParameter(int maxValue) {
-		if (max != null) {
-			max.setValue(maxValue);
-		}
+	public void editMax(int maxValue) {
+		max.setValue(maxValue);
 	}
-	
-	public int getMaxInstanceParameter() {
-		if (max == null) {
-			return 0;
-		}
-		
+
+	public int getMax() {
 		return max.getValue().intValue();
 	}
-	
-	public boolean hasMinMaxInstance() {
-		return min != null;
-	}
-	
-	public void editInstanceNumberParameter(int number) {
+
+	public void editInstanceNumber(int number) {
 		instanceNumber.setInstanceNumber(number);
 	}
-	
-	public int getInstanceNumberParameter() {
+
+	public int getInstanceNumber() {
 		return instanceNumber.getInstanceNumber();
 	}
-	
-	public void removeMinMaxInstanceParameter() {
-		min = null;
-		max = null;
-	}
-	
+
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
 		return;
@@ -88,7 +58,7 @@ public class AnonymousType extends Type {
 	public Set<String> getMandatoryParametersName() {
 		return new HashSet<String>();
 	}
-	
+
 	@Override
 	public Set<String> getOptionalParametersName() {
 		return new HashSet<String>();
