@@ -21,7 +21,7 @@ import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
-public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
+public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 293578359212546065L;
 
@@ -44,7 +44,7 @@ public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel impleme
 	private int minInstanceNumber;
 	private int maxInstanceNumber;
 
-	public AnonymousPropertyPanel(NodeType type) {
+	public NodePropertyPanel(NodeType type) {
 		this.type = type;
 
 		boolean hasMinMax = type.hasMinMaxInstance();
@@ -174,12 +174,7 @@ public class AnonymousPropertyPanel extends EntitySecondaryPropertyPanel impleme
 		instanceField.setEnabled(activate);
 		minInstanceField.setEnabled(!activate);
 		maxInstanceField.setEnabled(!activate);
-
-		if (activate) {
-			type.removeMinMaxInstanceParameter();
-		} else {
-			type.addMinMaxInstanceParameter(minInstanceNumber, maxInstanceNumber);
-		}
+		type.setMinMaxInstance(!activate);
 	}
 
 	private void updateInstanceNumber() {

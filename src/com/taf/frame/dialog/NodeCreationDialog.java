@@ -8,7 +8,6 @@ import javax.swing.JTextField;
 
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
-import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
 
 public class NodeCreationDialog extends InputInformationDialog {
@@ -24,7 +23,7 @@ public class NodeCreationDialog extends InputInformationDialog {
 	public NodeCreationDialog() {
 		this.setTitle(DIALOG_TITLE);
 
-		// TODO Put in InputInformationDialog as they all use it? 
+		// TODO Put in InputInformationDialog as they all use it?
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
 		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.LARGE_INSET_GAP,
@@ -48,8 +47,7 @@ public class NodeCreationDialog extends InputInformationDialog {
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
-			com.taf.logic.type.Type type = new NodeType();
-			createdField = new Node(name, type);
+			createdField = new Node(name);
 			dispose();
 		}
 	}

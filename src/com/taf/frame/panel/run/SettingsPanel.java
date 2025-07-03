@@ -34,6 +34,7 @@ import com.taf.event.EventMethod;
 import com.taf.event.ProjectRunAbortedEvent;
 import com.taf.event.ProjectRunStartedEvent;
 import com.taf.event.ProjectRunStoppedEvent;
+import com.taf.event.RunLocationChangedEvent;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
@@ -47,7 +48,21 @@ public class SettingsPanel extends JPanel implements EventListener {
 	private static final String RUN_BUTTON_TEXT = "Run";
 	private static final String STOP_BUTTON_TEXT = "Stop";
 
-	
+	private JTextField templatePathField;
+	private JTextField templateFileNameField;
+	private JTextField experimentPathField;
+	private JTextField experimentFolderNameField;
+	private JFormattedTextField nbTestCasesField;
+	private JTextField testCaseFolderNameField;
+	private JFormattedTextField nbTestArtifactsField;
+	private JTextField testArtifactFolderNameField;
+	private JFormattedTextField parameterMaxNbInstancesField;
+	private JFormattedTextField stringParameterMaxSizeField;
+	private JFormattedTextField nodeMaxNbInstancesField;
+	private JFormattedTextField maxBacktrackingField;
+	private JFormattedTextField maxDiversityField;
+	private JFormattedTextField z3TimeoutField;
+
 	private JButton runButton;
 	private JButton stopButton;
 
@@ -57,64 +72,58 @@ public class SettingsPanel extends JPanel implements EventListener {
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.gridy = 0;
-		JTextField templatePathField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		templatePathField.setText(runManager.getTemplatePath());
+		templatePathField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEMPLATE_PATH_STRING, templatePathField, c);
 
-		JTextField templateFileNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		templateFileNameField.setText(runManager.getTemplateFileName());
+		templateFileNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEMPLATE_FILE_NAME_STRING, templateFileNameField, c);
 
-		JTextField experimentPathField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		experimentPathField.setText(runManager.getExperimentPath());
+		experimentPathField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(EXPERIMENT_PATH_STRING, experimentPathField, c);
 
-		JTextField experimentFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		experimentFolderNameField.setText(runManager.getExperimentFolderName());
+		experimentFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(EXPERIMENT_FOLDER_NAME_STRING, experimentFolderNameField, c);
 
-		JFormattedTextField nbTestCasesField = new JFormattedTextField(runManager.getNbTestCases());
+		nbTestCasesField = new JFormattedTextField(runManager.getNbTestCases());
 		nbTestCasesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(NB_TEST_CASES_STRING, nbTestCasesField, c);
 
-		JTextField testCaseFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		testCaseFolderNameField.setText(runManager.getTestCaseFolderName());
+		testCaseFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEST_CASE_FOLDER_NAME_STRING, testCaseFolderNameField, c);
 
-		JFormattedTextField nbTestArtifactsField = new JFormattedTextField(runManager.getNbTestArtifacts());
+		nbTestArtifactsField = new JFormattedTextField(runManager.getNbTestArtifacts());
 		nbTestArtifactsField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(NB_TEST_ARTIFACTS_STRING, nbTestArtifactsField, c);
 
-		JTextField testArtifactFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		testArtifactFolderNameField.setText(runManager.getTestArtifactFolderName());
+		testArtifactFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEST_ARTIFACT_FOLDER_NAME_STRING, testArtifactFolderNameField, c);
 
-		JFormattedTextField parameterMaxNbInstancesField = new JFormattedTextField(
-				runManager.getParameterMaxNbInstances());
+		parameterMaxNbInstancesField = new JFormattedTextField(runManager.getParameterMaxNbInstances());
 		parameterMaxNbInstancesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(PARAMETER_MAX_NB_INSTANCES_STRING, parameterMaxNbInstancesField, c);
 
-		JFormattedTextField stringParameterMaxSizeField = new JFormattedTextField(
-				runManager.getStringParameterMaxSize());
+		stringParameterMaxSizeField = new JFormattedTextField(runManager.getStringParameterMaxSize());
 		stringParameterMaxSizeField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(STRING_PARAMETER_MAX_SIZE_STRING, stringParameterMaxSizeField, c);
 
-		JFormattedTextField nodeMaxNbInstancesField = new JFormattedTextField(runManager.getNodeMaxNbInstances());
+		nodeMaxNbInstancesField = new JFormattedTextField(runManager.getNodeMaxNbInstances());
 		nodeMaxNbInstancesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(NODE_MAX_NB_INSTANCES_STRING, nodeMaxNbInstancesField, c);
 
-		JFormattedTextField maxBacktrackingField = new JFormattedTextField(runManager.getMaxBacktracking());
+		maxBacktrackingField = new JFormattedTextField(runManager.getMaxBacktracking());
 		maxBacktrackingField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(MAX_BACKTRACKING_STRING, maxBacktrackingField, c);
 
-		JFormattedTextField maxDiversityField = new JFormattedTextField(runManager.getMaxDiversity());
+		maxDiversityField = new JFormattedTextField(runManager.getMaxDiversity());
 		maxDiversityField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(MAX_DIVERSITY_STRING, maxDiversityField, c);
 
-		JFormattedTextField z3TimeoutField = new JFormattedTextField(runManager.getZ3Timeout());
+		z3TimeoutField = new JFormattedTextField(runManager.getZ3Timeout());
 		z3TimeoutField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(Z3_TIMEOUT_STRING, z3TimeoutField, c);
 		
+		updateFields();
+
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, 0);
@@ -157,14 +166,32 @@ public class SettingsPanel extends JPanel implements EventListener {
 		});
 		buttonPanel.add(runButton);
 		buttonPanel.add(Box.createHorizontalStrut(10));
-		
+
 		stopButton = new JButton(STOP_BUTTON_TEXT);
 		stopButton.addActionListener(e -> EventManager.getInstance().fireEvent(new ProjectRunAbortedEvent()));
 		stopButton.setEnabled(false);
 		buttonPanel.add(stopButton);
 		this.add(buttonPanel, c);
-		
+
 		EventManager.getInstance().registerEventListener(this);
+	}
+
+	private void updateFields() {
+		RunManager runManager = RunManager.getInstance();
+		templatePathField.setText(runManager.getTemplatePath());
+		templateFileNameField.setText(runManager.getTemplateFileName());
+		experimentPathField.setText(runManager.getExperimentPath());
+		experimentFolderNameField.setText(runManager.getExperimentFolderName());
+		nbTestCasesField.setValue(runManager.getNbTestCases());
+		testCaseFolderNameField.setText(runManager.getTestCaseFolderName());
+		nbTestArtifactsField.setValue(runManager.getNbTestArtifacts());
+		testArtifactFolderNameField.setText(runManager.getTestArtifactFolderName());
+		parameterMaxNbInstancesField.setValue(runManager.getParameterMaxNbInstances());
+		stringParameterMaxSizeField.setValue(runManager.getStringParameterMaxSize());
+		nodeMaxNbInstancesField.setValue(runManager.getNodeMaxNbInstances());
+		maxBacktrackingField.setValue(runManager.getMaxBacktracking());
+		maxDiversityField.setValue(runManager.getMaxDiversity());
+		z3TimeoutField.setValue(runManager.getZ3Timeout());
 	}
 
 	// TODO Add to constant manager and use on a lot of panels
@@ -185,20 +212,25 @@ public class SettingsPanel extends JPanel implements EventListener {
 		c.gridx = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(field, c);
-		
+
 		c.gridy++;
 	}
-	
+
 	@EventMethod
 	public void onRunStartedEvent(ProjectRunStartedEvent event) {
 		runButton.setEnabled(false);
 		stopButton.setEnabled(true);
 	}
-	
+
 	@EventMethod
 	public void onRunStoppedEvent(ProjectRunStoppedEvent event) {
 		runButton.setEnabled(true);
 		stopButton.setEnabled(false);
+	}
+
+	@EventMethod
+	public void onLocationChanged(RunLocationChangedEvent event) {
+		updateFields();
 	}
 	
 	@Override

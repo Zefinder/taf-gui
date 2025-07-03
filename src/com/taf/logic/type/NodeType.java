@@ -18,6 +18,8 @@ public class NodeType extends Type {
 	private InstanceNumberParameter instanceNumber;
 	private MinInstanceParameter min;
 	private MaxInstanceParameter max;
+	
+	private boolean minMaxInstance;
 
 	public NodeType() {
 		instanceNumber = new InstanceNumberParameter(ConstantManager.DEFAULT_INSTANCE_NUMBER);
@@ -47,6 +49,14 @@ public class NodeType extends Type {
 
 	public int getInstanceNumber() {
 		return instanceNumber.getInstanceNumber();
+	}
+	
+	public boolean hasMinMaxInstance() {
+		return minMaxInstance;
+	}
+	
+	public void setMinMaxInstance(boolean minMaxInstance) {
+		this.minMaxInstance = minMaxInstance;
 	}
 
 	@Override

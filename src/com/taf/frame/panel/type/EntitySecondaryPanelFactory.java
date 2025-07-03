@@ -20,7 +20,7 @@ public class EntitySecondaryPanelFactory {
 	
 	public static EntitySecondaryPropertyPanel createFieldPropertyPanel(Type type) {
 		if (type instanceof NodeType) {
-			return new AnonymousPropertyPanel((NodeType) type);
+			return new NodePropertyPanel((NodeType) type);
 		}
 		
 		if (type instanceof BooleanType) {
