@@ -10,7 +10,7 @@ import com.taf.event.Event;
 import com.taf.event.FieldTypeChangedEvent;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Parameter;
-import com.taf.logic.type.Type;
+import com.taf.logic.type.FieldType;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.TypeManager;
@@ -52,7 +52,7 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
-		typeNames = new JComboBox<String>(TypeManager.getInstance().getTypeNames().toArray(String[]::new));
+		typeNames = new JComboBox<String>(TypeManager.getInstance().getParameterTypeNames().toArray(String[]::new));
 		String typeName = parameter.getType().getName();
 		typeNames.setSelectedItem(typeNameToTypeString(typeName));
 		typeNames.addActionListener(e -> updateFieldType(parameter));
@@ -65,7 +65,7 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private void updateFieldType(Field field) {
 		String typeName = (String) typeNames.getSelectedItem();
-		Type type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
+		FieldType type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
 		// TODO Add JOptionPane message to confirm you want to change type
 
 		field.setType(type);

@@ -23,6 +23,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 
+import com.taf.event.ProjectClosedEvent;
 import com.taf.exception.ImportException;
 import com.taf.exception.ParseException;
 import com.taf.logic.constraint.Constraint;
@@ -32,11 +33,12 @@ import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Root;
+import com.taf.logic.field.Type;
 import com.taf.logic.type.BooleanType;
+import com.taf.logic.type.FieldType;
 import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
-import com.taf.logic.type.Type;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.TypeParameterFactory;
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
@@ -248,7 +250,8 @@ public class SaveManager extends Manager {
 		this.projectFile = getProjectFileFromName(projectName);
 		Root root = null;
 		int lineNumber = 1;
-		List<Node> nodes = new ArrayList<Node>();
+		// TODO Find a better name
+		List<Type> nodes = new ArrayList<Type>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(projectFile))) {
 			String line;
@@ -287,6 +290,20 @@ public class SaveManager extends Manager {
 				String entityName = entityNameOp.get();
 
 				switch (entityType) {
+				case ConstantManager.TYPE_ENTITY_NAME:
+					Type type = new Type(entityName);
+
+					// Parent id must be 0
+					// TODO send a warning
+
+					nodes.get(0).addEntity(type);
+					nodes.add(type);
+
+					// Add to type manager
+					TypeManager.getInstance().addCustomNodeType(type);
+
+					break;
+
 				case ConstantManager.NODE_ENTITY_NAME:
 					Node node;
 
@@ -318,7 +335,7 @@ public class SaveManager extends Manager {
 							node.editInstanceNumber(instanceNumber);
 						}
 
-						nodes.get(parentId).addField(node);
+						nodes.get(parentId).addEntity(node);
 					}
 
 					nodes.add(node);
@@ -332,7 +349,7 @@ public class SaveManager extends Manager {
 					}
 					String typeName = typeNameOp.get();
 					TypeParameterFactory.MinMaxTypeParameterType maxTypeParameterType;
-					Type type = switch (typeName) {
+					FieldType fieldType = switch (typeName) {
 					case BooleanType.TYPE_NAME: {
 						maxTypeParameterType = MinMaxTypeParameterType.NONE;
 						yield new BooleanType();
@@ -358,7 +375,7 @@ public class SaveManager extends Manager {
 					};
 
 					// Add mandatory parameters
-					for (String mandatoryTypeName : type.getMandatoryParametersName()) {
+					for (String mandatoryTypeName : fieldType.getMandatoryParametersName()) {
 						Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
 						if (mandatoryTypeOp.isEmpty()) {
 							throw new ParseException(
@@ -368,23 +385,23 @@ public class SaveManager extends Manager {
 
 						TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
 								typeParameterValue, maxTypeParameterType);
-						type.addTypeParameter(typeParameter);
+						fieldType.addTypeParameter(typeParameter);
 					}
 
 					// Add optional parameters
-					for (String optionalTypeName : type.getOptionalParametersName()) {
+					for (String optionalTypeName : fieldType.getOptionalParametersName()) {
 						Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
 						if (!optionalTypeOp.isEmpty()) {
 							String typeParameterValue = optionalTypeOp.get();
 
 							TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
 									typeParameterValue, maxTypeParameterType);
-							type.addTypeParameter(typeParameter);
+							fieldType.addTypeParameter(typeParameter);
 						}
 					}
 
-					Parameter parameter = new Parameter(entityName, type);
-					nodes.get(parentId).addField(parameter);
+					Parameter parameter = new Parameter(entityName, fieldType);
+					nodes.get(parentId).addEntity(parameter);
 					break;
 
 				case ConstantManager.CONSTRAINT_ENTITY_NAME:
@@ -399,7 +416,7 @@ public class SaveManager extends Manager {
 						}
 					}
 
-					nodes.get(parentId).addConstraint(constraint);
+					nodes.get(parentId).addEntity(constraint);
 					break;
 				}
 
@@ -422,33 +439,44 @@ public class SaveManager extends Manager {
 		writer.write(format.formatted(NAME_ARGUMENT, name));
 	}
 
-	private void writeRoot(BufferedWriter writer, String name) throws IOException {
+	private int writeRoot(BufferedWriter writer, String name, Set<Type> typeList) throws IOException {
+		int rootId = ROOT_PARENT + 1;
+		int currentId = ROOT_PARENT + 1;
 		writeEntityArguments(writer, ConstantManager.NODE_ENTITY_NAME, ROOT_PARENT, name);
 		writer.write(newLine);
+
+		// Write types first
+		String typeEntityName = ConstantManager.TYPE_ENTITY_NAME;
+		for (Type type : typeList) {
+			writeField(writer, type, typeEntityName, rootId);
+			currentId++;
+		}
+
+		return currentId;
 	}
 
-	private void writeField(BufferedWriter writer, Field field, String entityString, int nodeId) throws IOException {
-		writeEntityArguments(writer, entityString, nodeId, field.getName());
+	private void writeField(BufferedWriter writer, Field field, String entityString, int parentId) throws IOException {
+		writeEntityArguments(writer, entityString, parentId, field.getName());
 		writer.write(field.getType().toString());
 		writer.write(newLine);
 	}
 
-	private int writeNode(BufferedWriter writer, Node node, int nodeId) throws IOException {
-		int numberNodes = nodeId;
-		for (Field field : node.getFieldList()) {
+	private int writeNode(BufferedWriter writer, Node node, int parentId) throws IOException {
+		int numberNodes = parentId;
+		for (Field field : node.getFieldSet()) {
 			boolean isNode = field instanceof Node;
 			String entityString = ConstantManager.NODE_ENTITY_NAME;
 			if (!isNode) {
 				entityString = ConstantManager.PARAMETER_ENTITY_NAME;
 			}
 
-			writeField(writer, field, entityString, nodeId);
+			writeField(writer, field, entityString, parentId);
 
 			if (isNode) {
 				Node innerNode = (Node) field;
 				int innerNodeId = numberNodes + 1;
 				numberNodes = writeNode(writer, innerNode, innerNodeId);
-				for (Constraint constraint : innerNode.getConstraintList()) {
+				for (Constraint constraint : innerNode.getConstraintSet()) {
 					writeConstraint(writer, constraint, innerNodeId);
 				}
 			}
@@ -457,8 +485,8 @@ public class SaveManager extends Manager {
 		return numberNodes;
 	}
 
-	private void writeConstraint(BufferedWriter writer, Constraint constraint, int nodeId) throws IOException {
-		writeEntityArguments(writer, ConstantManager.CONSTRAINT_ENTITY_NAME, nodeId, constraint.getName());
+	private void writeConstraint(BufferedWriter writer, Constraint constraint, int parentId) throws IOException {
+		writeEntityArguments(writer, ConstantManager.CONSTRAINT_ENTITY_NAME, parentId, constraint.getName());
 		writer.write(constraint.parametersToString().strip());
 		writer.write(newLine);
 	}
@@ -466,9 +494,8 @@ public class SaveManager extends Manager {
 	public void saveProject() throws IOException {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
 			// Write root node
-			writeRoot(writer, projectRoot.getName());
-			writer.write(newLine);
-			writeNode(writer, projectRoot, ROOT_PARENT + 1);
+			int parentId = writeRoot(writer, projectRoot.getName(), projectRoot.getTypeList());
+			writeNode(writer, projectRoot, parentId);
 		}
 	}
 
@@ -487,13 +514,30 @@ public class SaveManager extends Manager {
 
 		newProjectFile.createNewFile();
 		BufferedWriter writer = new BufferedWriter(new FileWriter(newProjectFile));
-		writeRoot(writer, projectName.substring(0, projectName.length() - ConstantManager.TAF_FILE_EXTENSION.length()));
+		// Write an empty root with no type
+		writeRoot(writer, projectName.substring(0, projectName.length() - ConstantManager.TAF_FILE_EXTENSION.length()),
+				new HashSet<Type>());
 		writer.close();
 
 		// Add to created project
 		projectNames.add(newProjectFile);
 
 		return true;
+	}
+
+	public void closeProject(boolean save) throws IOException {
+		if (save) {
+			saveProject();
+		}
+
+		projectFile = null;
+		projectRoot = null;
+
+		// Remove all custom types
+		TypeManager.getInstance().resetCustomNodeTypes();
+
+		// Send close event
+		EventManager.getInstance().fireEvent(new ProjectClosedEvent());
 	}
 
 	void exportToXML(File xmlFile) throws IOException {
@@ -504,9 +548,13 @@ public class SaveManager extends Manager {
 		}
 	}
 
-	void exportToXML(boolean askCustomLocation) throws IOException {
+	void exportToXML(boolean askCustomLocation, boolean save) throws IOException {
 		if (projectRoot == null || projectFile == null) {
 			return;
+		}
+
+		if (save) {
+			saveProject();
 		}
 
 		String projectFileName = projectFile.getName();
@@ -541,8 +589,8 @@ public class SaveManager extends Manager {
 		exportToXML(exportFile);
 	}
 
-	public void exportToXML() throws IOException {
-		exportToXML(true);
+	public void exportToXML(boolean save) throws IOException {
+		exportToXML(true, save);
 	}
 
 	String getMainDirectoryPath() {
@@ -569,7 +617,8 @@ public class SaveManager extends Manager {
 			Path destination = Paths.get(destinationPath.toString(),
 					source.toString().substring(sourcePath.toString().length()));
 			try {
-				Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+				Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING,
+						StandardCopyOption.COPY_ATTRIBUTES);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

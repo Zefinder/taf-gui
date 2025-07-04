@@ -1,18 +1,18 @@
 package com.taf.logic.field;
 
 import com.taf.logic.Entity;
-import com.taf.logic.type.Type;
+import com.taf.logic.type.FieldType;
 import com.taf.manager.ConstantManager;
 
 public abstract class Field implements Entity {
 
 	private String name;
-	private Type type;
-	private Node parent;
+	private FieldType type;
+	private Type parent;
 
 	protected int indentationLevel;
 
-	public Field(String name, Type type) {
+	public Field(String name, FieldType type) {
 		this.name = name;
 		this.type = type;
 		this.indentationLevel = 0;
@@ -26,11 +26,11 @@ public abstract class Field implements Entity {
 		this.name = name;
 	}
 
-	public Type getType() {
+	public FieldType getType() {
 		return type;
 	}
 
-	public void setType(Type type) {
+	public void setType(FieldType type) {
 		this.type = type;
 	}
 
@@ -55,12 +55,12 @@ public abstract class Field implements Entity {
 	}
 
 	@Override
-	public Node getParent() {
+	public Type getParent() {
 		return this.parent;
 	}
 
 	@Override
-	public void setParent(Node parent) {
+	public void setParent(Type parent) {
 		this.parent = parent;
 	}
 

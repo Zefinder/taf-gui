@@ -8,7 +8,6 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 import com.taf.event.Event;
-import com.taf.event.ProjectClosedEvent;
 import com.taf.event.ProjectRunOpenedEvent;
 import com.taf.frame.MainMenuFrame;
 import com.taf.frame.RunFrame;
@@ -30,9 +29,9 @@ public class TafProjectMenuBar extends JMenuBar {
 	private static final String SETTINGS_MENU_TEXT = "Settings";
 	private static final String PATH_ITEM_TEXT = "Path settings";
 
+	private static final String SAVE_DIALOG_TEXT = "Do you want to save?";
+	private static final String SAVE_DIALOG_TITLE = "Save?";
 	private static final String ERROR_SAVE_DIALOG_TEXT = "An error occured when trying to save...\n";
-	private static final String ERROR_SAVE_INPUT_DIALOG_TITLE = "Error!";
-	private static final String ERROR_SAVE_INPUT_DIALOG_TEXT = "An error occured when trying to save... Do you want to continue anyways?\n";
 	private static final String ERROR_EXPORT_DIALOG_TEXT = "An error occured when trying to export...\n";
 
 	public TafProjectMenuBar() {
@@ -71,35 +70,31 @@ public class TafProjectMenuBar extends JMenuBar {
 		}
 	}
 
-	private boolean saveAnd() {
-		try {
-			SaveManager.getInstance().saveProject();
-		} catch (IOException e) {
-			int answer = JOptionPane.showConfirmDialog(null, ERROR_SAVE_INPUT_DIALOG_TEXT + e.getMessage(),
-					ERROR_SAVE_INPUT_DIALOG_TITLE, JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
-			if (answer != JOptionPane.YES_OPTION) {
-				return false;
-			}
-		}
-		
-		return true;
+	private int askSave() {
+		int answer = JOptionPane.showConfirmDialog(null, SAVE_DIALOG_TEXT, SAVE_DIALOG_TITLE, JOptionPane.YES_NO_OPTION,
+				JOptionPane.INFORMATION_MESSAGE);
+		return answer;
 	}
-	
+
 	private void export() {
-		// TODO Ask if wants to save
-		saveAnd();
-		
+		int save = askSave();
+		if (save != JOptionPane.YES_OPTION && save != JOptionPane.NO_OPTION) {
+			return;
+		}
+
 		try {
-			SaveManager.getInstance().exportToXML();
+			SaveManager.getInstance().exportToXML(save == JOptionPane.YES_OPTION);
 		} catch (IOException e) {
 			ConstantManager.showError(ERROR_EXPORT_DIALOG_TEXT + e.getMessage());
 		}
 	}
-	
+
 	private void run() {
-		// TODO Ask if wants to save
-		saveAnd();
-		
+		int save = askSave();
+		if (save == JOptionPane.YES_OPTION) {
+			save();
+		}
+
 		try {
 			RunManager.getInstance().prepareRunManager();
 			RunFrame runFrame = new RunFrame();
@@ -112,12 +107,18 @@ public class TafProjectMenuBar extends JMenuBar {
 	}
 
 	private void quit() {
-		// TODO Ask if want to save
-		saveAnd();
+		int save = askSave();
+		if (save != JOptionPane.YES_OPTION && save != JOptionPane.NO_OPTION) {
+			return;
+		}
 
 		MainMenuFrame frame = new MainMenuFrame();
 		frame.initFrame();
-		EventManager.getInstance().fireEvent(new ProjectClosedEvent());
+		try {
+			SaveManager.getInstance().closeProject(save == JOptionPane.YES_OPTION);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

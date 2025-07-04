@@ -11,7 +11,7 @@ import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
-public class StringType extends Type {
+public class StringType extends FieldType {
 
 	public static final String TYPE_NAME = "string";
 

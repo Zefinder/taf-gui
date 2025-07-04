@@ -10,15 +10,19 @@ import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
-public class NodeType extends Type {
+public class NodeType extends FieldType {
 
 	private static final HashSet<Class<? extends TypeParameter>> ALLOWED_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
 			.add(MaxInstanceParameter.class).add(MinInstanceParameter.class).build();
 
+	private static final HashSet<String> OPTIONAL_TYPE_PARAMETERS = new HashSetBuilder<String>()
+			.add(InstanceNumberParameter.PARAMETER_NAME).add(MinInstanceParameter.PARAMETER_NAME)
+			.add(MaxInstanceParameter.PARAMETER_NAME).build();
+
 	private InstanceNumberParameter instanceNumber;
 	private MinInstanceParameter min;
 	private MaxInstanceParameter max;
-	
+
 	private boolean minMaxInstance;
 
 	public NodeType() {
@@ -50,11 +54,11 @@ public class NodeType extends Type {
 	public int getInstanceNumber() {
 		return instanceNumber.getInstanceNumber();
 	}
-	
+
 	public boolean hasMinMaxInstance() {
 		return minMaxInstance;
 	}
-	
+
 	public void setMinMaxInstance(boolean minMaxInstance) {
 		this.minMaxInstance = minMaxInstance;
 	}
@@ -71,7 +75,7 @@ public class NodeType extends Type {
 
 	@Override
 	public Set<String> getOptionalParametersName() {
-		return new HashSet<String>();
+		return OPTIONAL_TYPE_PARAMETERS;
 	}
 
 	@Override
@@ -84,7 +88,7 @@ public class NodeType extends Type {
 		final String separator = ConstantManager.PARAMETER_SEPARATOR;
 		String typeStr = "";
 
-		if (min != null) {
+		if (minMaxInstance) {
 			typeStr += min.toString() + separator + max.toString();
 		} else {
 			typeStr += instanceNumber.toString();

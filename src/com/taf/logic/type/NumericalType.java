@@ -13,7 +13,7 @@ import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.manager.ConstantManager;
 
-public abstract class NumericalType extends Type {
+public abstract class NumericalType extends FieldType {
 
 	private final String typeName;
 	private TypeParameter typeNameParameter;

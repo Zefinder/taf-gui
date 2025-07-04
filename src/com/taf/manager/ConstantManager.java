@@ -20,6 +20,7 @@ public class ConstantManager extends Manager {
 	public static final String XML_FILE_EXTENSION = ".xml";
 	
 	public static final String PARAMETER_ENTITY_NAME = "parameter";
+	public static final String TYPE_ENTITY_NAME = "type";
 	public static final String NODE_ENTITY_NAME = "node";
 	public static final String CONSTRAINT_ENTITY_NAME = "constraint";
 	

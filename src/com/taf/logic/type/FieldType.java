@@ -7,13 +7,13 @@ import java.util.Set;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.manager.ConstantManager;
 
-public abstract class Type {
+public abstract class FieldType {
 
 	// TODO Remove
 	// List for custom types!
 	private List<TypeParameter> parameterList;
 
-	public Type() {
+	public FieldType() {
 		this.parameterList = new ArrayList<TypeParameter>();
 	}
 
@@ -28,6 +28,7 @@ public abstract class Type {
 	public abstract Set<String> getOptionalParametersName();
 
 	// TODO Remove this method
+	@Deprecated(forRemoval = true)
 	public abstract boolean isAllowedTypeParameter(TypeParameter typeParameter);
 
 	public abstract String typeToString();
@@ -50,11 +51,11 @@ public abstract class Type {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Type)) {
+		if (!(obj instanceof FieldType)) {
 			return false;
 		}
 
-		Type other = (Type) obj;
+		FieldType other = (FieldType) obj;
 		return this.getName().equals(other.getName()) && this.toString().equals(other.toString());
 	}
 

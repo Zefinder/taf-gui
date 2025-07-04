@@ -1,16 +1,16 @@
 package com.taf.event;
 
-import com.taf.logic.type.Type;
+import com.taf.logic.type.FieldType;
 
 public class FieldTypeChangedEvent implements Event {
 
-	private Type type;
+	private FieldType type;
 	
-	public FieldTypeChangedEvent(Type type) {
+	public FieldTypeChangedEvent(FieldType type) {
 		this.type = type;
 	}
 
-	public Type getType() {
+	public FieldType getType() {
 		return type;
 	}
 	

@@ -1,14 +1,14 @@
 package com.taf.event;
 
 import com.taf.logic.Entity;
-import com.taf.logic.field.Node;
+import com.taf.logic.field.Type;
 
 public class EntityDeletedEvent implements Event {
 
 	private Entity entity;
-	private Node parent;
+	private Type parent;
 	
-	public EntityDeletedEvent(Entity entity, Node parent) {
+	public EntityDeletedEvent(Entity entity, Type parent) {
 		this.entity = entity;
 	}
 	
@@ -16,7 +16,7 @@ public class EntityDeletedEvent implements Event {
 		return entity;
 	}
 	
-	public Node getParent() {
+	public Type getParent() {
 		return parent;
 	}
 

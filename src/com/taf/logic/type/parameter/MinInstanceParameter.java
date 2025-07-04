@@ -15,7 +15,12 @@ public class MinInstanceParameter extends MinParameter {
 	public MinInstanceParameter(Integer value) {
 		super(PARAMETER_NAME, value, false);
 	}
-
+	
+	@Override
+	public void setValue(Number value) {
+		super.setValue(value.intValue() < 0 ? 0 : value);
+	}
+	
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
 		try {

@@ -6,7 +6,7 @@ import javax.swing.JPopupMenu;
 import com.taf.event.EntityDeletedEvent;
 import com.taf.event.Event;
 import com.taf.logic.Entity;
-import com.taf.logic.field.Node;
+import com.taf.logic.field.Type;
 import com.taf.manager.EventManager;
 
 public class TreeEntityPopupMenu extends JPopupMenu {
@@ -18,7 +18,7 @@ public class TreeEntityPopupMenu extends JPopupMenu {
 	public TreeEntityPopupMenu(Entity entity) {
 		JMenuItem deleteItem = new JMenuItem(DELETE_ITEM_TEXT);
 		deleteItem.addActionListener(e -> {
-			Node parent = entity.getParent();
+			Type parent = entity.getParent();
 			parent.removeEntity(entity);
 			Event event = new EntityDeletedEvent(entity, parent);
 			EventManager.getInstance().fireEvent(event);

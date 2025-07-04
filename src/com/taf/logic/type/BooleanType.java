@@ -10,7 +10,7 @@ import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.manager.ConstantManager;
 import com.taf.util.HashSetBuilder;
 
-public class BooleanType extends Type {
+public class BooleanType extends FieldType {
 		
 	private static final String PARAMETER_FORMAT = "%s %s %s";
 

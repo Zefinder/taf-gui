@@ -55,7 +55,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP,
 				ConstantManager.SMALL_INSET_GAP, ConstantManager.LARGE_INSET_GAP);
 		c.gridx = 1;
-		typeNames = new JComboBox<String>(TypeManager.getInstance().getTypeNames().toArray(String[]::new));
+		typeNames = new JComboBox<String>(TypeManager.getInstance().getParameterTypeNames().toArray(String[]::new));
 		addComponent(typeNames, c);
 	}
 
@@ -63,7 +63,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
 			String typeName = (String) typeNames.getSelectedItem();
-			com.taf.logic.type.Type type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
+			com.taf.logic.type.FieldType type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
 			createdField = new Parameter(name, type);
 			dispose();
 		}

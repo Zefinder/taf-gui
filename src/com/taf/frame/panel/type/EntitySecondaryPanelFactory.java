@@ -6,7 +6,7 @@ import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
-import com.taf.logic.type.Type;
+import com.taf.logic.type.FieldType;
 
 public class EntitySecondaryPanelFactory {
 
@@ -18,7 +18,7 @@ public class EntitySecondaryPanelFactory {
 		return null;
 	}
 	
-	public static EntitySecondaryPropertyPanel createFieldPropertyPanel(Type type) {
+	public static EntitySecondaryPropertyPanel createFieldPropertyPanel(FieldType type) {
 		if (type instanceof NodeType) {
 			return new NodePropertyPanel((NodeType) type);
 		}

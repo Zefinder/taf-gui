@@ -1,5 +1,6 @@
 package com.taf.frame.panel;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -15,7 +16,6 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.DefaultTreeModel;
@@ -38,6 +38,7 @@ import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Root;
+import com.taf.logic.field.Type;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
@@ -95,20 +96,29 @@ public class FieldTreePanel extends JPanel implements EventListener {
 
 			public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded,
 					boolean leaf, int row, boolean hasFocus) {
-				super.getTreeCellRendererComponent(tree, value, selected,expanded, leaf, row, hasFocus);
-		        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
-		        Icon icon;
-		        if (node.getAllowsChildren()) {
-		        	if (expanded) {
-		        		icon = (Icon) UIManager.get("Tree.openIcon");
-		        	} else {
-		        		icon = (Icon) UIManager.get("Tree.closedIcon");
-		        	}
-		        } else {
-		        	icon = (Icon) UIManager.get("Tree.leafIcon");
-		        }
-		        
-		        setIcon(icon);
+				super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+				DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+				NodeObject nodeObject = (NodeObject) node.getUserObject();
+				Icon icon;
+				if (nodeObject.isType) {
+					if (expanded) {
+						icon = getDefaultOpenIcon();
+					} else {
+						icon = getDefaultClosedIcon();
+					}
+				} else {
+					icon = getDefaultLeafIcon();
+				}
+
+				Color backgroundColor;
+				if (hasFocus) {
+					backgroundColor = getBackgroundSelectionColor();
+				} else {
+					backgroundColor = getBackgroundNonSelectionColor();
+				}
+				
+				setIcon(icon);
+				setBackground(backgroundColor);
 				return this;
 			};
 		});
@@ -187,8 +197,17 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		this.add(treeView, c);
 	}
 
-	private void initTreeNodes(DefaultMutableTreeNode parentNode, Node node) {
-		for (Field field : node.getFieldList()) {
+	private void initTreeNodes(DefaultMutableTreeNode parentNode, Type node) {
+		if (node instanceof Root) {
+			Root root = (Root) node;
+			for (Type type : root.getTypeList()) {
+				DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(type));
+				parentNode.add(treeNode);
+				initTreeNodes(treeNode, type);
+			}
+		}
+		
+		for (Field field : node.getFieldSet()) {
 			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(field));
 			parentNode.add(treeNode);
 
@@ -197,7 +216,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			}
 		}
 
-		for (Constraint constraint : node.getConstraintList()) {
+		for (Constraint constraint : node.getConstraintSet()) {
 			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(constraint));
 			parentNode.add(treeNode);
 		}
@@ -242,7 +261,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 
 		// Add to the field
-		parent.addField(field);
+		parent.addEntity(field);
 
 		// Add to the tree node
 		DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(new NodeObject(field), false);
@@ -266,7 +285,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 
 		// Add to the field
-		parent.addField(field);
+		parent.addEntity(field);
 
 		// Add to the tree node
 		DefaultMutableTreeNode nodeNode = new DefaultMutableTreeNode(new NodeObject(field), true);
@@ -295,7 +314,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		// TODO Find somewhere else to put the constraint in the node?
 		NodeObject nodeObject = (NodeObject) node.getUserObject();
 		Node a = (Node) nodeObject.getEntity();
-		a.addConstraint(constraint);
+		a.addEntity(constraint);
 
 		addConstraint(node, constraint);
 		treeModel.nodeChanged(node);
@@ -333,6 +352,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		private String entityName;
 		private String typeName;
 		private boolean isRoot;
+		private boolean isType;
 
 		public NodeObject(Entity entity) {
 			this.entity = entity;
@@ -343,6 +363,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			entityName = entity.getName();
 			typeName = entity.getEntityTypeName();
 			isRoot = entity instanceof Root;
+			isType = entity instanceof Type;
 		}
 
 		public Entity getEntity() {
