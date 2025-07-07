@@ -26,6 +26,8 @@ public class ConstantManager extends Manager {
 	
 	public static final String PARAMETER_NAME_LABEL_TEXT = "Parameter name";
 	public static final String PARAMETER_TYPE_LABEL_TEXT = "Parameter type";
+	public static final String ROOT_NAME_LABEL_TEXT = "Root name";
+	public static final String TYPE_NAME_LABEL_TEXT = "Type name";
 	public static final String NODE_NAME_LABEL_TEXT = "Node name";
 	public static final String CONSTRAINT_NAME_LABEL_TEXT = "Constraint name";
 	
