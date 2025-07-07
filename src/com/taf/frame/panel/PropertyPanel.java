@@ -9,10 +9,10 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
-import com.taf.event.EntitySelectedEvent;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
-import com.taf.event.FieldTypeChangedEvent;
+import com.taf.event.entity.EntitySelectedEvent;
+import com.taf.event.entity.FieldTypeChangedEvent;
 import com.taf.frame.panel.primary.EntityPrimaryPanelFactory;
 import com.taf.frame.panel.primary.EntityPrimaryPropertyPanel;
 import com.taf.frame.panel.secondary.EntitySecondaryPanelFactory;

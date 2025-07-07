@@ -5,10 +5,10 @@ import java.awt.Insets;
 
 import javax.swing.JButton;
 
-import com.taf.event.ConstraintCreatedEvent;
 import com.taf.event.Event;
-import com.taf.frame.dialog.ConstraintCreationDialog;
-import com.taf.logic.constraint.Constraint;
+import com.taf.event.entity.creation.TypeCreatedEvent;
+import com.taf.frame.dialog.TypeCreationDialog;
+import com.taf.logic.field.Type;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
@@ -31,12 +31,11 @@ public class RootAddEntityPanel extends TypeAddEntityPanel {
 		c.gridy = 3;
 		JButton addTypeButton = new JButton(ADD_TYPE_BUTTON_TEXT);
 		addTypeButton.addActionListener(e -> {
-			// TODO
-			ConstraintCreationDialog dialog = new ConstraintCreationDialog();
+			TypeCreationDialog dialog = new TypeCreationDialog();
 			dialog.initDialog();
-			Constraint constraint = dialog.getConstraint();
-			if (constraint != null) {
-				Event event = new ConstraintCreatedEvent(constraint);
+			Type type = dialog.getField();
+			if (type != null) {
+				Event event = new TypeCreatedEvent(type);
 				EventManager.getInstance().fireEvent(event);
 			}
 		});

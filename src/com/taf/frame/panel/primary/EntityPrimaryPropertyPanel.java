@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.taf.event.Event;
-import com.taf.event.EntityNameChangedEvent;
+import com.taf.event.entity.EntityNameChangedEvent;
 import com.taf.logic.Entity;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;

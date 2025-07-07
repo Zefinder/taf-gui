@@ -7,10 +7,16 @@ import java.awt.Insets;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
-import com.taf.event.ConstraintCreatedEvent;
 import com.taf.event.Event;
+import com.taf.event.entity.creation.ConstraintCreatedEvent;
+import com.taf.event.entity.creation.NodeCreatedEvent;
+import com.taf.event.entity.creation.ParameterCreatedEvent;
 import com.taf.frame.dialog.ConstraintCreationDialog;
+import com.taf.frame.dialog.NodeCreationDialog;
+import com.taf.frame.dialog.ParameterCreationDialog;
 import com.taf.logic.constraint.Constraint;
+import com.taf.logic.field.Node;
+import com.taf.logic.field.Parameter;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
@@ -34,11 +40,11 @@ public class TypeAddEntityPanel extends JPanel {
 		JButton addParameterButton = new JButton(ADD_PARAMETER_BUTTON_TEXT);
 		addParameterButton.addActionListener(e -> {
 			// TODO
-			ConstraintCreationDialog dialog = new ConstraintCreationDialog();
+			ParameterCreationDialog dialog = new ParameterCreationDialog();
 			dialog.initDialog();
-			Constraint constraint = dialog.getConstraint();
-			if (constraint != null) {
-				Event event = new ConstraintCreatedEvent(constraint);
+			Parameter parameter = dialog.getField();
+			if (parameter != null) {
+				Event event = new ParameterCreatedEvent(parameter);
 				EventManager.getInstance().fireEvent(event);
 			}
 		});
@@ -48,12 +54,11 @@ public class TypeAddEntityPanel extends JPanel {
 		c.gridy = 1;
 		JButton addNodeButton = new JButton(ADD_NODE_BUTTON_TEXT);
 		addNodeButton.addActionListener(e -> {
-			// TODO
-			ConstraintCreationDialog dialog = new ConstraintCreationDialog();
+			NodeCreationDialog dialog = new NodeCreationDialog();
 			dialog.initDialog();
-			Constraint constraint = dialog.getConstraint();
-			if (constraint != null) {
-				Event event = new ConstraintCreatedEvent(constraint);
+			Node node = dialog.getField();
+			if (node != null) {
+				Event event = new NodeCreatedEvent(node);
 				EventManager.getInstance().fireEvent(event);
 			}
 		});

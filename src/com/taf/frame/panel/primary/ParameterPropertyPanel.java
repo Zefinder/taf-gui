@@ -7,7 +7,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
 import com.taf.event.Event;
-import com.taf.event.FieldTypeChangedEvent;
+import com.taf.event.entity.FieldTypeChangedEvent;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.type.FieldType;

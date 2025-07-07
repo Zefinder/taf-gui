@@ -7,7 +7,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import com.taf.logic.field.Field;
 import com.taf.logic.field.Parameter;
 import com.taf.manager.ConstantManager;
 import com.taf.manager.TypeManager;
@@ -21,7 +20,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 	private final JTextField fieldName;
 	private final JComboBox<String> typeNames;
 
-	private Field createdField;
+	private Parameter createdParameter;
 
 	public ParameterCreationDialog() {
 		this.setTitle(DIALOG_TITLE);
@@ -64,18 +63,18 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		if (!name.isBlank()) {
 			String typeName = (String) typeNames.getSelectedItem();
 			com.taf.logic.type.FieldType type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
-			createdField = new Parameter(name, type);
+			createdParameter = new Parameter(name, type);
 			dispose();
 		}
 	}
 
-	public Field getField() {
-		return createdField;
+	public Parameter getField() {
+		return createdParameter;
 	}
 
 	@Override
 	public void initDialog() {
-		createdField = null;
+		createdParameter = null;
 		super.initDialog();
 	}
 

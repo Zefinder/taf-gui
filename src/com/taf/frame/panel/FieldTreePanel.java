@@ -4,13 +4,11 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -22,16 +20,17 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.taf.event.ConstraintCreatedEvent;
-import com.taf.event.EntityDeletedEvent;
-import com.taf.event.EntityNameChangedEvent;
-import com.taf.event.EntitySelectedEvent;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
-import com.taf.event.FieldTypeChangedEvent;
-import com.taf.frame.dialog.NodeCreationDialog;
-import com.taf.frame.dialog.ParameterCreationDialog;
+import com.taf.event.entity.EntityDeletedEvent;
+import com.taf.event.entity.EntityNameChangedEvent;
+import com.taf.event.entity.EntitySelectedEvent;
+import com.taf.event.entity.FieldTypeChangedEvent;
+import com.taf.event.entity.creation.ConstraintCreatedEvent;
+import com.taf.event.entity.creation.NodeCreatedEvent;
+import com.taf.event.entity.creation.ParameterCreatedEvent;
+import com.taf.event.entity.creation.TypeCreatedEvent;
 import com.taf.frame.popup.TreeEntityPopupMenu;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
@@ -45,13 +44,9 @@ import com.taf.manager.EventManager;
 public class FieldTreePanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = -8299875121910645683L;
-	private static final String ADD_PARAMETER_BUTTON_TEXT = "+ Add parameter";
-	private static final String ADD_NODE_BUTTON_TEXT = "+ Add node";
 
 	private JTree tree;
 	private DefaultTreeModel treeModel;
-	private JButton addParameterButton;
-	private JButton addNodeButton;
 
 	private DefaultMutableTreeNode rootNode;
 
@@ -63,28 +58,12 @@ public class FieldTreePanel extends JPanel implements EventListener {
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(0, 0, 0, 5);
 		c.fill = GridBagConstraints.BOTH;
-		c.gridheight = 1;
-		c.gridwidth = 1;
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 1;
-		c.weighty = 0;
-		addParameterButton = new JButton(ADD_PARAMETER_BUTTON_TEXT);
-		addParameterButton.addActionListener(e -> addParameter());
-		this.add(addParameterButton, c);
-
-		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, 0, 0);
-		c.gridx = 1;
-		addNodeButton = new JButton(ADD_NODE_BUTTON_TEXT);
-		addNodeButton.addActionListener(e -> addNode());
-		this.add(addNodeButton, c);
-
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, 0);
-		c.gridwidth = 2;
-		c.gridx = 0;
-		c.gridy = 1;
 		c.weighty = 1;
 		rootNode = new DefaultMutableTreeNode(new NodeObject(root));
 		initTreeNodes(rootNode, root);
@@ -116,7 +95,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 				} else {
 					backgroundColor = getBackgroundNonSelectionColor();
 				}
-				
+
 				setIcon(icon);
 				setBackground(backgroundColor);
 				return this;
@@ -206,7 +185,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 				initTreeNodes(treeNode, type);
 			}
 		}
-		
+
 		for (Field field : node.getFieldSet()) {
 			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(field));
 			parentNode.add(treeNode);
@@ -222,82 +201,26 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 	}
 
-	private DefaultMutableTreeNode getNearestTypeField() {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		if (node == null) {
-			// In that case, the node will be the root node
-			node = rootNode;
-		}
-
-		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		/*
-		 * Check if the node is not a parameter. If it is a parameter, then take the
-		 * parent.
-		 */
-		if (!nodeInfo.isType) {
-			node = (DefaultMutableTreeNode) node.getParent();
-		}
-
-		return node;
-	}
-
 	private int getNodeRow(DefaultMutableTreeNode node) {
 		TreePath path = new TreePath(node.getPath());
 		return tree.getRowForPath(path);
 	}
 
-	private void addParameter() {
-		DefaultMutableTreeNode node = getNearestTypeField();
-		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Type parent = (Type) nodeInfo.getEntity(); // Sure that it is a type
-
-		// Call the dialog to create a parameter
-		ParameterCreationDialog dialog = new ParameterCreationDialog();
-		dialog.initDialog();
-		Field field = dialog.getField();
-		if (field == null) {
-			return;
-		}
-
-		// Add to the field
-		parent.addEntity(field);
-
-		// Add to the tree node
-		DefaultMutableTreeNode parameterNode = new DefaultMutableTreeNode(new NodeObject(field), false);
-		treeModel.insertNodeInto(parameterNode, node, node.getChildCount());
-
-		// If the node is the root and had no children, expand
+	private void addEntity(Entity entity) {
+		// Get tree node and user object
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		NodeObject nodeObject = (NodeObject) node.getUserObject();
+		
+		// Add entity to parent type
+		Type parent = (Type) nodeObject.getEntity();
+		parent.addEntity(entity);
+		
+		// Update tree
+		boolean isType = entity instanceof Type;
+		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(new NodeObject(entity), isType);
+		treeModel.insertNodeInto(newNode, node, node.getChildCount());
 		tree.expandRow(getNodeRow(node));
-	}
-
-	private void addNode() {
-		DefaultMutableTreeNode node = getNearestTypeField();
-		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Type parent = (Type) nodeInfo.getEntity(); // Sure that it is a node
-
-		// Call the dialog to create a parameter
-		NodeCreationDialog dialog = new NodeCreationDialog();
-		dialog.initDialog();
-		Field field = dialog.getField();
-		if (field == null) {
-			return;
-		}
-
-		// Add to the field
-		parent.addEntity(field);
-
-		// Add to the tree node
-		DefaultMutableTreeNode nodeNode = new DefaultMutableTreeNode(new NodeObject(field), true);
-		treeModel.insertNodeInto(nodeNode, node, node.getChildCount());
-
-		// If the node is the root and had no children, expand
-		tree.expandRow(getNodeRow(node));
-	}
-
-	public void addConstraint(DefaultMutableTreeNode node, Constraint constraint) {
-		DefaultMutableTreeNode constraintNode = new DefaultMutableTreeNode(new NodeObject(constraint), false);
-		treeModel.insertNodeInto(constraintNode, node, node.getChildCount());
-		tree.expandRow(getNodeRow(node));
+		treeModel.nodeChanged(node);
 	}
 
 	@Override
@@ -306,17 +229,23 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	}
 
 	@EventMethod
+	public void onTypeCreated(TypeCreatedEvent event) {
+		addEntity(event.getType());
+	}
+	
+	@EventMethod
+	public void onParameterCreated(ParameterCreatedEvent event) {
+		addEntity(event.getParameter());
+	}
+
+	@EventMethod
+	public void onNodeCreated(NodeCreatedEvent event) {
+		addEntity(event.getNode());
+	}
+	
+	@EventMethod
 	public void onConstraintCreated(ConstraintCreatedEvent event) {
-		Constraint constraint = event.getConstraint();
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-
-		// TODO Find somewhere else to put the constraint in the node?
-		NodeObject nodeObject = (NodeObject) node.getUserObject();
-		Type a = (Type) nodeObject.getEntity();
-		a.addEntity(constraint);
-
-		addConstraint(node, constraint);
-		treeModel.nodeChanged(node);
+		addEntity(event.getConstraint());
 	}
 
 	@EventMethod

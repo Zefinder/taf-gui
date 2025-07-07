@@ -1,5 +1,6 @@
-package com.taf.event;
+package com.taf.event.entity;
 
+import com.taf.event.Event;
 import com.taf.logic.type.FieldType;
 
 public class FieldTypeChangedEvent implements Event {

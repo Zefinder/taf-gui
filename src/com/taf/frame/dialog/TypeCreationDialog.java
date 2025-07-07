@@ -6,20 +6,19 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import com.taf.logic.field.Node;
 import com.taf.manager.ConstantManager;
 
-public class NodeCreationDialog extends InputInformationDialog {
+public class TypeCreationDialog extends InputInformationDialog {
 
 	private static final long serialVersionUID = 8094717940445682259L;
 
-	private static final String DIALOG_TITLE = "Create a new node";
+	private static final String DIALOG_TITLE = "Create a new type";
 
 	private final JTextField fieldName;
 
-	private Node createdNode;
+	private com.taf.logic.field.Type createdType;
 
-	public NodeCreationDialog() {
+	public TypeCreationDialog() {
 		this.setTitle(DIALOG_TITLE);
 
 		// TODO Put in InputInformationDialog as they all use it?
@@ -46,18 +45,18 @@ public class NodeCreationDialog extends InputInformationDialog {
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
-			createdNode = new Node(name);
+			createdType = new com.taf.logic.field.Type(name);
 			dispose();
 		}
 	}
 
-	public Node getField() {
-		return createdNode;
+	public com.taf.logic.field.Type getField() {
+		return createdType;
 	}
 
 	@Override
 	public void initDialog() {
-		createdNode = null;
+		createdType = null;
 		super.initDialog();
 	}
 

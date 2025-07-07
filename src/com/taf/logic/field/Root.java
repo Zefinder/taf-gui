@@ -32,8 +32,24 @@ public class Root extends Node {
 		}		
 	}
 
+	@Override
+	public void removeEntity(Entity entity) {
+		// Remove pure type items
+		if (entity instanceof Type && !(entity instanceof Node)) {
+			removeType((Type) entity);
+		} else {			
+			super.removeEntity(entity);
+		}
+	}
+	
 	private void addType(Type type) {
+		type.setIndentationLevel(indentationLevel + 1);
 		typeSet.add(type);
+		type.setParent(this);
+	}
+	
+	private void removeType(Type type) {
+		typeSet.remove(type);
 	}
 	
 	public Set<Type> getTypeList() {

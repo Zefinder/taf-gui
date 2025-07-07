@@ -1,5 +1,6 @@
-package com.taf.event;
+package com.taf.event.entity.creation;
 
+import com.taf.event.Event;
 import com.taf.logic.constraint.Constraint;
 
 public class ConstraintCreatedEvent implements Event {

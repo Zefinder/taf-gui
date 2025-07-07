@@ -1,4 +1,6 @@
-package com.taf.event;
+package com.taf.event.entity;
+
+import com.taf.event.Event;
 
 public class EntityNameChangedEvent implements Event {
 
