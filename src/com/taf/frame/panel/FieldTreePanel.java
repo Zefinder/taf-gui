@@ -222,7 +222,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 	}
 
-	private DefaultMutableTreeNode getNearestNodeField() {
+	private DefaultMutableTreeNode getNearestTypeField() {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		if (node == null) {
 			// In that case, the node will be the root node
@@ -230,12 +230,11 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Entity entity = nodeInfo.getEntity();
 		/*
 		 * Check if the node is not a parameter. If it is a parameter, then take the
 		 * parent.
 		 */
-		if (!(entity instanceof Node)) {
+		if (!nodeInfo.isType) {
 			node = (DefaultMutableTreeNode) node.getParent();
 		}
 
@@ -248,9 +247,9 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	}
 
 	private void addParameter() {
-		DefaultMutableTreeNode node = getNearestNodeField();
+		DefaultMutableTreeNode node = getNearestTypeField();
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Node parent = (Node) nodeInfo.getEntity(); // Sure that it is a node
+		Type parent = (Type) nodeInfo.getEntity(); // Sure that it is a type
 
 		// Call the dialog to create a parameter
 		ParameterCreationDialog dialog = new ParameterCreationDialog();
@@ -272,9 +271,9 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	}
 
 	private void addNode() {
-		DefaultMutableTreeNode node = getNearestNodeField();
+		DefaultMutableTreeNode node = getNearestTypeField();
 		NodeObject nodeInfo = (NodeObject) node.getUserObject();
-		Node parent = (Node) nodeInfo.getEntity(); // Sure that it is a node
+		Type parent = (Type) nodeInfo.getEntity(); // Sure that it is a node
 
 		// Call the dialog to create a parameter
 		NodeCreationDialog dialog = new NodeCreationDialog();
@@ -313,7 +312,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 
 		// TODO Find somewhere else to put the constraint in the node?
 		NodeObject nodeObject = (NodeObject) node.getUserObject();
-		Node a = (Node) nodeObject.getEntity();
+		Type a = (Type) nodeObject.getEntity();
 		a.addEntity(constraint);
 
 		addConstraint(node, constraint);

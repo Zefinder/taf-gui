@@ -441,18 +441,22 @@ public class SaveManager extends Manager {
 
 	private int writeRoot(BufferedWriter writer, String name, Set<Type> typeList) throws IOException {
 		int rootId = ROOT_PARENT + 1;
-		int currentId = ROOT_PARENT + 1;
+		int nodeCount = ROOT_PARENT + 1;
 		writeEntityArguments(writer, ConstantManager.NODE_ENTITY_NAME, ROOT_PARENT, name);
 		writer.write(newLine);
 
 		// Write types first
 		String typeEntityName = ConstantManager.TYPE_ENTITY_NAME;
 		for (Type type : typeList) {
+			// Write type and increase node count
 			writeField(writer, type, typeEntityName, rootId);
-			currentId++;
+			nodeCount++;
+			
+			// Write type components
+			nodeCount = writeNode(writer, type, nodeCount, nodeCount);
 		}
 
-		return currentId;
+		return nodeCount;
 	}
 
 	private void writeField(BufferedWriter writer, Field field, String entityString, int parentId) throws IOException {
@@ -461,8 +465,7 @@ public class SaveManager extends Manager {
 		writer.write(newLine);
 	}
 
-	private int writeNode(BufferedWriter writer, Node node, int parentId) throws IOException {
-		int numberNodes = parentId;
+	private int writeNode(BufferedWriter writer, Type node, int parentId, int nodeCount) throws IOException {
 		for (Field field : node.getFieldSet()) {
 			boolean isNode = field instanceof Node;
 			String entityString = ConstantManager.NODE_ENTITY_NAME;
@@ -473,16 +476,16 @@ public class SaveManager extends Manager {
 			writeField(writer, field, entityString, parentId);
 
 			if (isNode) {
-				Node innerNode = (Node) field;
-				int innerNodeId = numberNodes + 1;
-				numberNodes = writeNode(writer, innerNode, innerNodeId);
+				Type innerNode = (Type) field;
+				int innerNodeId = nodeCount + 1;
+				nodeCount = writeNode(writer, innerNode, innerNodeId, innerNodeId);
 				for (Constraint constraint : innerNode.getConstraintSet()) {
 					writeConstraint(writer, constraint, innerNodeId);
 				}
 			}
 		}
 
-		return numberNodes;
+		return nodeCount;
 	}
 
 	private void writeConstraint(BufferedWriter writer, Constraint constraint, int parentId) throws IOException {
@@ -494,8 +497,8 @@ public class SaveManager extends Manager {
 	public void saveProject() throws IOException {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
 			// Write root node
-			int parentId = writeRoot(writer, projectRoot.getName(), projectRoot.getTypeList());
-			writeNode(writer, projectRoot, parentId);
+			int nodeCount = writeRoot(writer, projectRoot.getName(), projectRoot.getTypeList());
+			writeNode(writer, projectRoot, ROOT_PARENT + 1, nodeCount);
 		}
 	}
 
