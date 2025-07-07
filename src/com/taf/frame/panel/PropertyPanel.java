@@ -11,6 +11,7 @@ import javax.swing.SwingConstants;
 
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
+import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.EntitySelectedEvent;
 import com.taf.event.entity.FieldTypeChangedEvent;
 import com.taf.frame.panel.primary.EntityPrimaryPanelFactory;
@@ -102,6 +103,17 @@ public class PropertyPanel extends JPanel implements EventListener {
 	@EventMethod
 	public void onFieldTypeChanged(FieldTypeChangedEvent event) {
 		updatePanel();
+	}
+	
+	@EventMethod
+	public void onEntityDeleted(EntityDeletedEvent event) {
+		// Deselect the current entity and its panels if it is the deleted entity
+		if (entity.equals(event.getEntity())) {			
+			entity = null;
+			entityPropertyPanel = null;
+			typePropertyPanel = null;
+			updatePanel();
+		}
 	}
 
 }
