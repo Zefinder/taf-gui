@@ -1,4 +1,4 @@
-package com.taf.frame.panel.entity;
+package com.taf.frame.panel.primary;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;

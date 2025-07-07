@@ -1,19 +1,19 @@
-package com.taf.frame.panel.entity;
+package com.taf.frame.panel.primary;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 import javax.swing.JLabel;
 
-import com.taf.logic.constraint.Constraint;
+import com.taf.logic.field.Type;
 import com.taf.manager.ConstantManager;
 
-public class ConstraintPrimaryPropertyPanel extends EntityPrimaryPropertyPanel {
+public class TypePropertyPanel extends EntityPrimaryPropertyPanel {
 
-	private static final long serialVersionUID = 1744588782255512565L;
+	private static final long serialVersionUID = 8423915116760040223L;
 
-	public ConstraintPrimaryPropertyPanel(Constraint constraint) {
-		super(constraint);
+	public TypePropertyPanel(Type node) {
+		super(node);
 
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
@@ -21,8 +21,8 @@ public class ConstraintPrimaryPropertyPanel extends EntityPrimaryPropertyPanel {
 		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
 		c.weightx = 0;
 		c.weighty = 0;
-		JLabel constraintLabel = new JLabel(ConstantManager.CONSTRAINT_NAME_LABEL_TEXT);
-		this.add(constraintLabel, c);
+		JLabel nodeLabel = new JLabel(ConstantManager.TYPE_NAME_LABEL_TEXT);
+		this.add(nodeLabel, c);
 
 		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;

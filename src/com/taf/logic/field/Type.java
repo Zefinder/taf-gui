@@ -14,7 +14,7 @@ public class Type extends Field {
 	private static final String TYPE_STRING_FORMAT = """
 			<type %s>
 			%s
-			%s</type>""";
+			\t</type>""";
 
 	private Set<Field> fieldSet;
 	private Set<Constraint> constraintSet;
@@ -128,7 +128,7 @@ public class Type extends Field {
 			typeStr += constraintsToString();
 		}
 
-		return TYPE_STRING_FORMAT.formatted(fieldToString(), typeStr, getIndentation());
+		return TYPE_STRING_FORMAT.formatted(fieldToString(), typeStr);
 	}
 
 }

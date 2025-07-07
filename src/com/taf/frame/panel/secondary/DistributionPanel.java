@@ -1,4 +1,4 @@
-package com.taf.frame.panel.type;
+package com.taf.frame.panel.secondary;
 
 import java.awt.CardLayout;
 import java.awt.GridBagConstraints;

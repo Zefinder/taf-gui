@@ -1,4 +1,4 @@
-package com.taf.frame.panel.type;
+package com.taf.frame.panel.secondary;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -7,19 +7,16 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.ButtonGroup;
-import javax.swing.JButton;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JSeparator;
+import javax.swing.SwingConstants;
 
-import com.taf.event.ConstraintCreatedEvent;
-import com.taf.event.Event;
-import com.taf.frame.dialog.ConstraintCreationDialog;
-import com.taf.logic.constraint.Constraint;
+import com.taf.frame.panel.secondary.type.TypeAddEntityPanel;
 import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
-import com.taf.manager.EventManager;
 
 public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
@@ -30,7 +27,7 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 	private static final String INSTANCE_LABEL_TEXT = "Instance number";
 	private static final String MIN_INSTANCE_LABEL_TEXT = "Min instance number";
 	private static final String MAX_INSTANCE_LABEL_TEXT = "Max instance number";
-	private static final String ADD_CONSTRAINT_BUTTON_TEXT = "+ Add constraint";
+	
 
 	private static final int MAX_COLUMN_NUMBER = 4;
 
@@ -80,24 +77,22 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 
 		c.gridy = 3;
 		this.add(createMinMaxInstancePanel(hasMinMax), c);
+		
+		c.anchor = GridBagConstraints.CENTER;
+		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, 0);
+		c.gridy = 4;
+		JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
+		this.add(separator, c);
 
+		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, 0, 0, 0);
 		c.weightx = 0;
 		c.weighty = 1;
 		c.gridx = 0;
-		c.gridy = 4;
-		JButton addConstraintButton = new JButton(ADD_CONSTRAINT_BUTTON_TEXT);
-		addConstraintButton.addActionListener(e -> {
-			ConstraintCreationDialog dialog = new ConstraintCreationDialog();
-			dialog.initDialog();
-			Constraint constraint = dialog.getConstraint();
-			if (constraint != null) {
-				Event event = new ConstraintCreatedEvent(constraint);
-				EventManager.getInstance().fireEvent(event);
-			}
-		});
-		this.add(addConstraintButton, c);
+		c.gridy = 5;
+		this.add(new TypeAddEntityPanel(), c);
+
 
 		ButtonGroup group = new ButtonGroup();
 		group.add(instanceButton);

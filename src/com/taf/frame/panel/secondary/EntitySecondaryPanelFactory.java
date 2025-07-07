@@ -1,8 +1,9 @@
-package com.taf.frame.panel.type;
+package com.taf.frame.panel.secondary;
 
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.NodeType;
 import com.taf.logic.type.BooleanType;
+import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
@@ -14,11 +15,14 @@ public class EntitySecondaryPanelFactory {
 	}
 
 	public static EntitySecondaryPropertyPanel createRootPropertyPanel() {
-		// TODO
-		return null;
+		return new RootPropertyPanel();
 	}
 	
 	public static EntitySecondaryPropertyPanel createFieldPropertyPanel(FieldType type) {
+		if (type instanceof DefaultFieldType) {
+			return new TypePropertyPanel();
+		}
+		
 		if (type instanceof NodeType) {
 			return new NodePropertyPanel((NodeType) type);
 		}

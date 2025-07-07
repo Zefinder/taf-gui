@@ -1,50 +1,45 @@
-package com.taf.frame.panel.type;
+package com.taf.frame.panel.secondary;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Locale;
 
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 
-import com.taf.logic.type.RealType;
+import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.parameter.DistributionType;
 import com.taf.manager.ConstantManager;
 
-public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
+public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -9035183700723112945L;
 
 	private static final String DISTRIBUTION_LABEL_TEXT = "Distribution";
-	
-	private RealType type;
-	private NumberFormat format;
 
-	private double minValue;
-	private double maxValue;
+	private IntegerType type;
+
+	private long minValue;
+	private long maxValue;
 
 	private JLabel minLabel;
 	private JFormattedTextField minField;
 
 	private JLabel maxLabel;
 	private JFormattedTextField maxField;
-	
+
 	private JLabel distributionLabel;
 	private JComboBox<DistributionType> distributionBox;
 
 	private DistributionPanel distributionPanel;
 
-	public RealPropertyPanel(RealType type) {
+	public IntegerPropertyPanel(IntegerType type) {
 		this.type = type;
-		format = DecimalFormat.getInstance(Locale.US);
 		minValue = type.getMin();
 		maxValue = type.getMax();
-		
+
 		GridBagConstraints c = ConstantManager.getDefaultConstraint();
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
@@ -59,8 +54,7 @@ public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements P
 		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
-		minField = new JFormattedTextField(format);
-		minField.setValue(minValue);
+		minField = new JFormattedTextField(minValue);
 		minField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		minField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(minField, c);
@@ -78,13 +72,13 @@ public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements P
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridheight = 1;
 		c.gridx = 1;
-		maxField = new JFormattedTextField(format);
-		maxField.setValue(maxValue);
+		maxField = new JFormattedTextField(maxValue);
 		maxField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
 		maxField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(maxField, c);
-		
+
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
@@ -146,10 +140,10 @@ public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements P
 	public void propertyChange(PropertyChangeEvent evt) {
 		Object source = evt.getSource();
 		if (source == minField) {
-			minValue = ((Number) minField.getValue()).doubleValue();
+			minValue = ((Number) minField.getValue()).longValue();
 			updateMin();
 		} else if (source == maxField) {
-			maxValue = ((Number) maxField.getValue()).doubleValue();
+			maxValue = ((Number) maxField.getValue()).longValue();
 			updateMax();
 		}
 	}

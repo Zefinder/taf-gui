@@ -1,4 +1,4 @@
-package com.taf.frame.panel.entity;
+package com.taf.frame.panel.primary;
 
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
