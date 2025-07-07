@@ -1,10 +1,20 @@
 package com.taf.manager;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
+import com.taf.event.EventListener;
+import com.taf.event.EventMethod;
+import com.taf.event.entity.EntityDeletedEvent;
+import com.taf.event.entity.NodeTypeChangedEvent;
+import com.taf.event.entity.creation.NodeCreatedEvent;
+import com.taf.event.entity.creation.TypeCreatedEvent;
+import com.taf.logic.Entity;
+import com.taf.logic.field.Node;
 import com.taf.logic.field.Type;
 import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.FieldType;
@@ -13,7 +23,7 @@ import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
 import com.taf.util.HashSetBuilder;
 
-public class TypeManager extends Manager {
+public class TypeManager extends Manager implements EventListener {
 
 	private static final TypeManager instance = new TypeManager();
 
@@ -22,6 +32,9 @@ public class TypeManager extends Manager {
 
 	private final Set<String> parameterTypeNameSet;
 	private final Set<String> customNodeTypeSet;
+	private final Set<String> customNodeRefSet;
+	private final Map<String, Set<Node>> typeToNodeMap;
+	private final Map<String, Set<Node>> refToNodeMap;
 
 	private TypeManager() {
 		parameterTypeNameSet = new LinkedHashSet<String>();
@@ -29,26 +42,59 @@ public class TypeManager extends Manager {
 			parameterTypeNameSet.add(basicType.getSimpleName());
 		}
 		customNodeTypeSet = new LinkedHashSet<String>();
+		customNodeRefSet = new LinkedHashSet<String>();
+		typeToNodeMap = new HashMap<String, Set<Node>>();
+		refToNodeMap = new HashMap<String, Set<Node>>();
 	}
 
-	public void addCustomNodeType(Type type) {
+	void addCustomNodeType(Type type) {
 		customNodeTypeSet.add(type.getName());
+		typeToNodeMap.put(type.getName(), new HashSet<Node>());
 	}
-	
-	public void removeCustomNodeType(String typeName) {
+
+	private void removeCustomNodeType(String typeName) {
+		// Remove types of associated nodes
+		typeToNodeMap.get(typeName).forEach(node -> node.removeType());
+		typeToNodeMap.remove(typeName);
+
+		// Remove from type set
 		customNodeTypeSet.remove(typeName);
 	}
-	
-	public void resetCustomNodeTypes() {
-		customNodeTypeSet.clear();
+
+	void addCustomReference(Node node) {
+		customNodeRefSet.add(node.getName());
+		refToNodeMap.put(node.getName(), new HashSet<Node>());
 	}
-	
+
+	private void removeCustomReference(String refName) {
+		// Remove ref of associated nodes
+		refToNodeMap.get(refName).forEach(node -> node.removeType());
+		refToNodeMap.remove(refName);
+
+		// Remove from ref set
+		customNodeRefSet.remove(refName);
+	}
+
+	public void resetCustomNodeTypes() {
+		// Remove types
+		typeToNodeMap.clear();
+		customNodeTypeSet.clear();
+
+		// Remove refs
+		refToNodeMap.clear();
+		customNodeRefSet.clear();
+	}
+
 	public Set<String> getParameterTypeNames() {
 		return parameterTypeNameSet;
 	}
-	
+
 	public Set<String> getCustomNodeTypeSet() {
 		return customNodeTypeSet;
+	}
+
+	public Set<String> getCustomNodeRefSet() {
+		return customNodeRefSet;
 	}
 
 	// TODO Create a type annotation to check at compile time if first constructor
@@ -66,20 +112,83 @@ public class TypeManager extends Manager {
 				}
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public FieldType instanciateTypeFromTypeName(String typeName) {
 		String typeClassName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1) + "Type";
 		return instanciateTypeFromClassName(typeClassName);
 	}
 
+	@EventMethod
+	public void onTypeCreated(TypeCreatedEvent event) {
+		addCustomNodeType(event.getType());
+	}
+
+	@EventMethod
+	public void onNodeCreated(NodeCreatedEvent event) {
+		addCustomReference(event.getNode());
+	}
+
+	@EventMethod
+	public void onEntityDeleted(EntityDeletedEvent event) {
+		Entity entity = event.getEntity();
+		if (entity instanceof Node) {
+			Node node = (Node) entity;
+			// Remove references
+			removeCustomReference(node.getName());
+
+			// Remove from type map iff it has a type or a ref
+			String typeName = node.getTypeName();
+			if (node.hasType()) {
+				typeToNodeMap.get(typeName).remove(node);
+				node.removeType();
+			} else if (node.hasRef()) {
+				refToNodeMap.get(typeName).remove(node);
+				node.removeType();
+			}
+
+		} else if (entity instanceof Type) {
+			removeCustomNodeType(entity.getName());
+		}
+	}
+
+	@EventMethod
+	public void onNodeTypeChanged(NodeTypeChangedEvent event) {
+		Node node = event.getNode();
+		String previousValue = event.getPreviousValue();
+
+		// Do nothing if the value did not change
+		if (node.getTypeName().equals(previousValue)) {
+			return;
+		}
+
+		// Remove from old maps if it was not empty
+		if (event.hadType()) {
+			typeToNodeMap.get(previousValue).remove(node);
+		} else if (event.hadRef()) {
+			refToNodeMap.get(previousValue).remove(node);
+		}
+
+		// Add to new maps
+		if (node.hasType()) {
+			typeToNodeMap.get(node.getTypeName()).add(node);
+		} else if (node.hasRef()) {
+			refToNodeMap.get(node.getTypeName()).add(node);
+		}
+	}
+
+	@Override
+	public void unregisterComponents() {
+		// Nothing to unregister
+	}
+
 	@Override
 	public void initManager() {
-		// Nothing to do here
+		EventManager.getInstance().registerEventListener(instance);
 	}
-	
+
 	public static TypeManager getInstance() {
 		return instance;
 	}

@@ -31,7 +31,7 @@ public class TypeCreationDialog extends InputInformationDialog {
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel fieldLabel = new JLabel(ConstantManager.NODE_NAME_LABEL_TEXT);
+		JLabel fieldLabel = new JLabel(ConstantManager.TYPE_NAME_LABEL_TEXT);
 		addComponent(fieldLabel, c);
 
 		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.SMALL_INSET_GAP,

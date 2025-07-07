@@ -301,7 +301,6 @@ public class SaveManager extends Manager {
 
 					// Add to type manager
 					TypeManager.getInstance().addCustomNodeType(type);
-
 					break;
 
 				case ConstantManager.NODE_ENTITY_NAME:
@@ -336,9 +335,11 @@ public class SaveManager extends Manager {
 						}
 
 						nodes.get(parentId).addEntity(node);
+						// Add to type manager
+						TypeManager.getInstance().addCustomReference(node);
 					}
 
-					nodes.add(node);
+					nodes.add(node);					
 					break;
 
 				case ConstantManager.PARAMETER_ENTITY_NAME:

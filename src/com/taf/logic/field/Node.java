@@ -45,7 +45,31 @@ public class Node extends Type {
 	public int getInstanceNumber() {
 		return type.getInstanceNumber();
 	}
+	
+	public void setType(String typeName) {
+		type.setType(typeName);
+	}
+	
+	public void setReference(String referenceName) {
+		type.setReference(referenceName);
+	}
+	
+	public void removeType() {
+		type.removeType();
+	}
 
+	public String getTypeName() {
+		return type.getName();
+	}
+	
+	public boolean hasType() {
+		return type.hasType();
+	}
+	
+	public boolean hasRef() {
+		return type.hasRef();
+	}
+	
 	@Override
 	public String getEntityTypeName() {
 		FieldType type = getType();

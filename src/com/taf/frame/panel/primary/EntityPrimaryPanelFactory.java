@@ -14,19 +14,17 @@ public class EntityPrimaryPanelFactory {
 	
 	public static final EntityPrimaryPropertyPanel createEntityPropertyPanel(Entity entity) {
 		if (entity instanceof Type) {
+			if (entity instanceof Root) {
+				return new RootPropertyPanel((Root) entity);
+			}
+			
 			if (entity instanceof Node) {
 				return new NodePropertyPanel((Node) entity);
 			}
 			
-			if (entity instanceof Root) {
-				return new NodePropertyPanel((Root) entity);
-			}
-			
 			return new TypePropertyPanel((Type) entity);
 		}
-		
-
-		
+				
 		if (entity instanceof Parameter) {			
 			return new ParameterPropertyPanel((Parameter) entity);
 		}

@@ -20,7 +20,7 @@ public class TreeEntityPopupMenu extends JPopupMenu {
 		deleteItem.addActionListener(e -> {
 			Type parent = entity.getParent();
 			parent.removeEntity(entity);
-			Event event = new EntityDeletedEvent(entity, parent);
+			Event event = new EntityDeletedEvent(entity);
 			EventManager.getInstance().fireEvent(event);
 		});
 		
