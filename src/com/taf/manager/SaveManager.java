@@ -37,6 +37,7 @@ import com.taf.logic.field.Type;
 import com.taf.logic.type.BooleanType;
 import com.taf.logic.type.FieldType;
 import com.taf.logic.type.IntegerType;
+import com.taf.logic.type.NodeType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
 import com.taf.logic.type.parameter.TypeParameter;
@@ -131,13 +132,10 @@ public class SaveManager extends Manager {
 	private static final String TAF_DIRECTORY_NAME = "tafgui";
 	private static final String RUN_DIRECTORY_NAME = "run";
 
-	private static final String SAVE_ARGUMENT_FORMAT = "%s=\"([^\"]+)\"";
+	private static final String SAVE_ARGUMENT_FORMAT = "\\b%s=\"([^\"]+)\""; // Arguments must be separated
 	private static final String ENTITY_ARGUMENT = "entity";
 	private static final String PARENT_ARGUMENT = "parent";
 	private static final String NAME_ARGUMENT = "name";
-	private static final String INSTANCE_ARGUMENT = "nb_instances"; // TODO Move to node
-	private static final String MIN_INSTANCE_ARGUMENT = "min"; // TODO Move to node
-	private static final String MAX_INSTANCE_ARGUMENT = "max"; // TODO Move to node
 	private static final String TYPE_ARGUMENT = "type";
 
 	private static final int ROOT_PARENT = -1;
@@ -146,7 +144,6 @@ public class SaveManager extends Manager {
 	private static final String PARENT_MISSING_ERROR_MESSAGE = "The entity must have a parent!";
 	private static final String PARENT_UNKNWON_FORMAT_ERROR_MESSAGE = "The parent %d does not exist!";
 	private static final String NAME_MISSING_ERROR_MESSAGE = "Entity must have a name!";
-	private static final String INSTANCE_MISSING_ERROR_MESSAGE = "Node must have either an instance number or a minimum and a maximum number";
 	private static final String PARAMETER_TYPE_ERROR_MESSAGE = "Parameter must have a type";
 	private static final String PARAMETER_UNEXPECTED_ERROR_MESSAGE = "Unexpected parameter type value: ";
 	private static final String PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE = "Type %s must have the \"%s\" argument";
@@ -264,20 +261,20 @@ public class SaveManager extends Manager {
 				// Get entity type
 				Optional<String> entityTypeOp = getArgument(line, ENTITY_ARGUMENT);
 				if (entityTypeOp.isEmpty()) {
-					throw new ParseException(ENTITY_MISSING_ERROR_MESSAGE);
+					throw new ParseException(this.getClass(), ENTITY_MISSING_ERROR_MESSAGE);
 				}
 				String entityType = entityTypeOp.get();
 
 				// Get parent id
 				Optional<String> parentIdOp = getArgument(line, PARENT_ARGUMENT);
 				if (parentIdOp.isEmpty()) {
-					throw new ParseException(PARENT_MISSING_ERROR_MESSAGE);
+					throw new ParseException(this.getClass(), PARENT_MISSING_ERROR_MESSAGE);
 				}
 				int parentId = Integer.valueOf(parentIdOp.get());
 
 				// Check if parent exists
 				if (parentId < -1 || parentId >= nodes.size()) {
-					throw new ParseException(PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
+					throw new ParseException(this.getClass(), PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
 				}
 
 				// TODO Check if multiple roots
@@ -285,7 +282,7 @@ public class SaveManager extends Manager {
 				// Search for the name
 				Optional<String> entityNameOp = getArgument(line, NAME_ARGUMENT);
 				if (entityNameOp.isEmpty()) {
-					throw new ParseException(NAME_MISSING_ERROR_MESSAGE);
+					throw new ParseException(this.getClass(), NAME_MISSING_ERROR_MESSAGE);
 				}
 				String entityName = entityNameOp.get();
 
@@ -312,94 +309,55 @@ public class SaveManager extends Manager {
 						node = root;
 
 					} else {
-						node = new Node(entityName);
+						// Create a node type and fill parameters
+						NodeType nodeType = new NodeType();
+						addParametersToFieldType(nodeType, line, MinMaxTypeParameterType.INSTANCE);
 
-						// Check if number of instances or min-max, else throw
-						Optional<String> instanceNumberOp = getArgument(line, INSTANCE_ARGUMENT);
-						if (instanceNumberOp.isEmpty()) {
-							Optional<String> minNumberOp = getArgument(line, MIN_INSTANCE_ARGUMENT);
-							Optional<String> maxNumberOp = getArgument(line, MAX_INSTANCE_ARGUMENT);
-
-							if (minNumberOp.isEmpty() || maxNumberOp.isEmpty()) {
-								throw new ParseException(INSTANCE_MISSING_ERROR_MESSAGE);
-							}
-
-							int minNumber = Integer.valueOf(minNumberOp.get());
-							int maxNumber = Integer.valueOf(maxNumberOp.get());
-							node.editMin(minNumber);
-							node.editMax(maxNumber);
-
-						} else {
-							int instanceNumber = Integer.valueOf(instanceNumberOp.get());
-							node.editInstanceNumber(instanceNumber);
-						}
-
+						// Create node and add it to its parent
+						node = new Node(entityName, nodeType);
 						nodes.get(parentId).addEntity(node);
-						// Add to type manager
+
+						// Add to type manager as a possible reference
 						TypeManager.getInstance().addCustomReference(node);
 					}
 
-					nodes.add(node);					
+					nodes.add(node);
 					break;
 
 				case ConstantManager.PARAMETER_ENTITY_NAME:
 					// Get parameter type
 					Optional<String> typeNameOp = getArgument(line, TYPE_ARGUMENT);
 					if (typeNameOp.isEmpty()) {
-						throw new ParseException(PARAMETER_TYPE_ERROR_MESSAGE);
+						throw new ParseException(this.getClass(), PARAMETER_TYPE_ERROR_MESSAGE);
 					}
 					String typeName = typeNameOp.get();
-					TypeParameterFactory.MinMaxTypeParameterType maxTypeParameterType;
+					TypeParameterFactory.MinMaxTypeParameterType minMaxType;
 					FieldType fieldType = switch (typeName) {
 					case BooleanType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.NONE;
+						minMaxType = MinMaxTypeParameterType.NONE;
 						yield new BooleanType();
 					}
 
 					case IntegerType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.INTEGER;
+						minMaxType = MinMaxTypeParameterType.INTEGER;
 						yield new IntegerType();
 					}
 
 					case RealType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.REAL;
+						minMaxType = MinMaxTypeParameterType.REAL;
 						yield new RealType();
 					}
 
 					case StringType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.NONE;
+						minMaxType = MinMaxTypeParameterType.NONE;
 						yield new StringType();
 					}
 
 					default:
-						throw new ParseException(PARAMETER_UNEXPECTED_ERROR_MESSAGE + typeName);
+						throw new ParseException(this.getClass(), PARAMETER_UNEXPECTED_ERROR_MESSAGE + typeName);
 					};
 
-					// Add mandatory parameters
-					for (String mandatoryTypeName : fieldType.getMandatoryParametersName()) {
-						Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
-						if (mandatoryTypeOp.isEmpty()) {
-							throw new ParseException(
-									PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE.formatted(typeName, mandatoryTypeName));
-						}
-						String typeParameterValue = mandatoryTypeOp.get();
-
-						TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
-								typeParameterValue, maxTypeParameterType);
-						fieldType.addTypeParameter(typeParameter);
-					}
-
-					// Add optional parameters
-					for (String optionalTypeName : fieldType.getOptionalParametersName()) {
-						Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
-						if (!optionalTypeOp.isEmpty()) {
-							String typeParameterValue = optionalTypeOp.get();
-
-							TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
-									typeParameterValue, maxTypeParameterType);
-							fieldType.addTypeParameter(typeParameter);
-						}
-					}
+					addParametersToFieldType(fieldType, line, minMaxType);
 
 					Parameter parameter = new Parameter(entityName, fieldType);
 					nodes.get(parentId).addEntity(parameter);
@@ -433,6 +391,35 @@ public class SaveManager extends Manager {
 		return root;
 	}
 
+	private void addParametersToFieldType(FieldType fieldType, String line, MinMaxTypeParameterType minMaxType)
+			throws ParseException {
+		// Add mandatory parameters
+		for (String mandatoryTypeName : fieldType.getMandatoryParametersName()) {
+			Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
+			if (mandatoryTypeOp.isEmpty()) {
+				throw new ParseException(this.getClass(),
+						PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE.formatted(fieldType.getName(), mandatoryTypeName));
+			}
+			String typeParameterValue = mandatoryTypeOp.get();
+
+			TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
+					typeParameterValue, minMaxType);
+			fieldType.addTypeParameter(typeParameter);
+		}
+
+		// Add optional parameters
+		for (String optionalTypeName : fieldType.getOptionalParametersName()) {
+			Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
+			if (!optionalTypeOp.isEmpty()) {
+				String typeParameterValue = optionalTypeOp.get();
+
+				TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
+						typeParameterValue, minMaxType);
+				fieldType.addTypeParameter(typeParameter);
+			}
+		}
+	}
+
 	private void writeEntityArguments(BufferedWriter writer, String entityString, int nodeId, String name)
 			throws IOException {
 		writer.write(format.formatted(ENTITY_ARGUMENT, entityString));
@@ -452,7 +439,7 @@ public class SaveManager extends Manager {
 			// Write type and increase node count
 			writeField(writer, type, typeEntityName, rootId);
 			nodeCount++;
-			
+
 			// Write type components
 			nodeCount = writeNode(writer, type, nodeCount, nodeCount);
 		}
@@ -773,7 +760,7 @@ public class SaveManager extends Manager {
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
-		throw new ParseException(PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE.formatted(message, lineNumber));
+		throw new ParseException(SaveManager.class, PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE.formatted(message, lineNumber));
 	}
 
 	public String[] getProjectNames() {

@@ -76,9 +76,10 @@ public class EventManager extends Manager {
 			}
 			listenerToObjectMap.remove(listener);
 
-			// Remove also components
-			listener.unregisterComponents();
 		}
+
+		// Remove also components
+		listener.unregisterComponents();
 	}
 
 	public static EventManager getInstance() {

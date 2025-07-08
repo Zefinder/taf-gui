@@ -88,30 +88,44 @@ public class PropertyPanel extends JPanel implements EventListener {
 		// removeAll method invalidates
 		this.validate();
 	}
-	
+
 	@Override
 	public void unregisterComponents() {
-		// No inner listeners
+		// Unregister type property panel if it isn't already null
+		if (typePropertyPanel != null) {
+			EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+		}
 	}
 
 	@EventMethod
 	public void onEntitySelected(EntitySelectedEvent event) {
 		this.entity = event.getEntity();
+		// Don't forget to unregister here since the property panel will change
+		if (typePropertyPanel != null) {
+			EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+		}
 		updatePanel();
 	}
 
 	@EventMethod
 	public void onFieldTypeChanged(FieldTypeChangedEvent event) {
+		// The field type changed so the type property panel will also change
+		if (typePropertyPanel != null) {
+			EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+		}
 		updatePanel();
 	}
-	
+
 	@EventMethod
 	public void onEntityDeleted(EntityDeletedEvent event) {
 		// Deselect the current entity and its panels if it is the deleted entity
-		if (entity.equals(event.getEntity())) {			
+		if (entity.equals(event.getEntity())) {
 			entity = null;
 			entityPropertyPanel = null;
-			typePropertyPanel = null;
+			if (typePropertyPanel != null) {
+				EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+				typePropertyPanel = null;
+			}
 			updatePanel();
 		}
 	}

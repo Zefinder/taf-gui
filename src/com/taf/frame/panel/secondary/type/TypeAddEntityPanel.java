@@ -37,6 +37,20 @@ public class TypeAddEntityPanel extends JPanel {
 		c.weighty = 0;
 		c.gridwidth = 1;
 		c.gridy = 0;
+		JButton addNodeButton = new JButton(ADD_NODE_BUTTON_TEXT);
+		addNodeButton.addActionListener(e -> {
+			NodeCreationDialog dialog = new NodeCreationDialog();
+			dialog.initDialog();
+			Node node = dialog.getField();
+			if (node != null) {
+				Event event = new NodeCreatedEvent(node);
+				EventManager.getInstance().fireEvent(event);
+			}
+		});
+		this.add(addNodeButton, c);
+		
+		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
+		c.gridy = 1;
 		JButton addParameterButton = new JButton(ADD_PARAMETER_BUTTON_TEXT);
 		addParameterButton.addActionListener(e -> {
 			// TODO
@@ -49,20 +63,6 @@ public class TypeAddEntityPanel extends JPanel {
 			}
 		});
 		this.add(addParameterButton, c);
-		
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
-		c.gridy = 1;
-		JButton addNodeButton = new JButton(ADD_NODE_BUTTON_TEXT);
-		addNodeButton.addActionListener(e -> {
-			NodeCreationDialog dialog = new NodeCreationDialog();
-			dialog.initDialog();
-			Node node = dialog.getField();
-			if (node != null) {
-				Event event = new NodeCreatedEvent(node);
-				EventManager.getInstance().fireEvent(event);
-			}
-		});
-		this.add(addNodeButton, c);
 		
 		c.insets = new Insets(0, 0, 0, 0);
 		c.gridy = 2;

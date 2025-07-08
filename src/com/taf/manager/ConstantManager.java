@@ -55,6 +55,7 @@ public class ConstantManager extends Manager {
 	public static final int DEFAULT_MAX_VALUE = 10;
 	
 	public static final int DEFAULT_INSTANCE_NUMBER = 1;
+	public static final int DEFAULT_DEPTH_NUMBER = 1;
 	public static final int DEFAULT_MIN_INSTANCE_NUMBER = 1;
 	public static final int DEFAULT_MAX_INSTANCE_NUMBER = 1;
 	

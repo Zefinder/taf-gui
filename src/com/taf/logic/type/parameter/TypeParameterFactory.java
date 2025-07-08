@@ -3,7 +3,7 @@ package com.taf.logic.type.parameter;
 import com.taf.exception.ParseException;
 
 public class TypeParameterFactory {
-	
+
 	private static final String MAX_PARAMETER_ERROR_MESSAGE = "The parameter type for max must be different from NONE";
 	private static final String MIN_PARAMETER_ERROR_MESSAGE = "The parameter type for min must be different from NONE";
 	private static final String UNEXPECTED_VALUE_ERROR_MESSAGE = "Unexpected type name: ";
@@ -19,12 +19,17 @@ public class TypeParameterFactory {
 		return createTypeParameter(typeName, stringValue, MinMaxTypeParameterType.NONE);
 	}
 
-	public static TypeParameter createTypeParameter(String typeName, String stringValue, MinMaxTypeParameterType minMaxTypeParameter)
-			throws ParseException {
+	public static TypeParameter createTypeParameter(String typeName, String stringValue,
+			MinMaxTypeParameterType minMaxTypeParameter) throws ParseException {
 		TypeParameter type = switch (typeName) {
 
 		case InstanceNumberParameter.PARAMETER_NAME: {
 			yield new InstanceNumberParameter();
+		}
+
+		// Must be before MaxParameter since not the same name
+		case MaxDepthParameter.PARAMETER_NAME: {
+			yield new MaxDepthParameter();
 		}
 
 		case MaxParameter.PARAMETER_NAME: {
@@ -39,8 +44,13 @@ public class TypeParameterFactory {
 				yield new MaxInstanceParameter();
 
 			default:
-				throw new ParseException(MAX_PARAMETER_ERROR_MESSAGE);
+				throw new ParseException(TypeParameterFactory.class, MAX_PARAMETER_ERROR_MESSAGE);
 			}
+		}
+
+		// Must be before MinParameter since not the same name
+		case MinDepthParameter.PARAMETER_NAME: {
+			yield new MinDepthParameter();
 		}
 
 		case MinParameter.PARAMETER_NAME: {
@@ -55,7 +65,7 @@ public class TypeParameterFactory {
 				yield new MinInstanceParameter();
 
 			default:
-				throw new ParseException(MIN_PARAMETER_ERROR_MESSAGE);
+				throw new ParseException(TypeParameterFactory.class, MIN_PARAMETER_ERROR_MESSAGE);
 			}
 		}
 
@@ -70,27 +80,35 @@ public class TypeParameterFactory {
 		case WeightsParameter.PARAMETER_NAME: {
 			yield new WeightsParameter();
 		}
-		
+
 		case DistributionParameter.PARAMETER_NAME: {
 			yield new DistributionParameter();
 		}
-		
+
 		case MeanParameter.PARAMETER_NAME: {
 			yield new MeanParameter();
 		}
-		
+
 		case VarianceParameter.PARAMETER_NAME: {
 			yield new VarianceParameter();
 		}
-		
+
 		case RangesParameter.PARAMETER_NAME: {
 			yield new RangesParameter();
 		}
+		
+		case ReferenceParameter.PARAMETER_NAME: {
+			yield new ReferenceParameter();
+		}
+		
+		case DepthNumberParameter.PARAMETER_NAME: {
+			yield new DepthNumberParameter();
+		}
 
 		default:
-			throw new ParseException(UNEXPECTED_VALUE_ERROR_MESSAGE + typeName);
+			throw new ParseException(TypeParameterFactory.class, UNEXPECTED_VALUE_ERROR_MESSAGE + typeName);
 		};
-		
+
 		type.stringToValue(stringValue);
 
 		return type;

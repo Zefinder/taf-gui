@@ -1,7 +1,5 @@
 package com.taf.logic.type;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import com.taf.logic.type.parameter.TypeParameter;
@@ -9,27 +7,14 @@ import com.taf.manager.ConstantManager;
 
 public abstract class FieldType {
 
-	// TODO Remove
-	// List for custom types!
-	private List<TypeParameter> parameterList;
-
 	public FieldType() {
-		this.parameterList = new ArrayList<TypeParameter>();
 	}
 
 	public abstract void addTypeParameter(TypeParameter typeParameter);
 
-	public void removeTypeParameter(int index) {
-		parameterList.remove(index);
-	}
-
 	public abstract Set<String> getMandatoryParametersName();
 
 	public abstract Set<String> getOptionalParametersName();
-
-	// TODO Remove this method
-	@Deprecated(forRemoval = true)
-	public abstract boolean isAllowedTypeParameter(TypeParameter typeParameter);
 
 	public abstract String typeToString();
 
@@ -39,14 +24,7 @@ public abstract class FieldType {
 
 	@Override
 	public String toString() {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
-		String typeStr = typeToString();
-
-		for (TypeParameter typeParameter : parameterList) {
-			typeStr += separator + typeParameter.toString();
-		}
-
-		return typeStr;
+		return typeToString();
 	}
 
 	@Override

@@ -74,11 +74,6 @@ public class StringType extends FieldType {
 	}
 
 	@Override
-	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
-		return false;
-	}
-
-	@Override
 	public String getName() {
 		return TYPE_NAME;
 	}

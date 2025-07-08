@@ -24,7 +24,7 @@ public class ConstraintParameterFactory {
 			yield new TypesConstraintParameter();
 
 		default:
-			throw new ParseException(UNEXPECTED_VALUE_ERROR_MESSAGE + name);
+			throw new ParseException(ConstraintParameterFactory.class, UNEXPECTED_VALUE_ERROR_MESSAGE + name);
 		};
 
 		parameter.stringToValue(stringValue);

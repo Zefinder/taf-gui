@@ -56,7 +56,7 @@ public class WeightsParameter extends TypeParameter {
 				weights.add(value < 0 ? 0 : value);
 			}
 		} catch (NumberFormatException e) {
-			throw new ParseException(ERROR_MESSAGE);
+			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}
 

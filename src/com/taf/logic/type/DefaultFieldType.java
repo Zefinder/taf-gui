@@ -26,11 +26,6 @@ public class DefaultFieldType extends FieldType {
 	}
 
 	@Override
-	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
-		return false; 
-	}
-
-	@Override
 	public String typeToString() {
 		return "";
 	}

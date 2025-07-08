@@ -32,7 +32,7 @@ public class InstanceNumberParameter extends TypeParameter {
 		try {			
 			this.instanceNumber = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException(ERROR_MESSAGE);
+			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}
 

@@ -62,11 +62,6 @@ public class BooleanType extends FieldType {
 	public Set<String> getOptionalParametersName() {
 		return OPTIONAL_TYPE_PARAMETERS;
 	}
-
-	@Override
-	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
-		return false;
-	}
 	
 	@Override
 	public String getName() {

@@ -13,29 +13,34 @@ public class Node extends Type {
 
 	private NodeType type;
 
-	protected Node(String name, NodeType type) {
+	public Node(String name, NodeType type) {
 		super(name, type);
 		this.type = type;
 	}
 
+	/**
+	 * New node with node type with default values.
+	 * 
+	 * @param name the node name
+	 */
 	public Node(String name) {
 		this(name, new NodeType());
 	}
-	
+
 	public void editMin(int minValue) {
-		type.editMin(minValue);
+		type.editMinInstance(minValue);
 	}
 
 	public int getMin() {
-		return type.getMin();
+		return type.getMinInstance();
 	}
 
 	public void editMax(int maxValue) {
-		type.editMax(maxValue);
+		type.editMaxInstance(maxValue);
 	}
 
 	public int getMax() {
-		return type.getMax();
+		return type.getMaxInstance();
 	}
 
 	public void editInstanceNumber(int number) {
@@ -45,15 +50,15 @@ public class Node extends Type {
 	public int getInstanceNumber() {
 		return type.getInstanceNumber();
 	}
-	
+
 	public void setType(String typeName) {
 		type.setType(typeName);
 	}
-	
+
 	public void setReference(String referenceName) {
 		type.setReference(referenceName);
 	}
-	
+
 	public void removeType() {
 		type.removeType();
 	}
@@ -61,21 +66,21 @@ public class Node extends Type {
 	public String getTypeName() {
 		return type.getName();
 	}
-	
+
 	public boolean hasType() {
 		return type.hasType();
 	}
-	
+
 	public boolean hasRef() {
 		return type.hasRef();
 	}
-	
+
 	@Override
 	public String getEntityTypeName() {
 		FieldType type = getType();
 		if (type.getName().isBlank()) {
 			return ConstantManager.NODE_ENTITY_NAME;
-		} 
+		}
 
 		return type.getName();
 	}

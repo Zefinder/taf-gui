@@ -27,6 +27,7 @@ import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.EntityNameChangedEvent;
 import com.taf.event.entity.EntitySelectedEvent;
 import com.taf.event.entity.FieldTypeChangedEvent;
+import com.taf.event.entity.NodeTypeChangedEvent;
 import com.taf.event.entity.creation.ConstraintCreatedEvent;
 import com.taf.event.entity.creation.NodeCreatedEvent;
 import com.taf.event.entity.creation.ParameterCreatedEvent;
@@ -260,6 +261,14 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	@EventMethod
 	public void onTypeNameChanged(FieldTypeChangedEvent event) {
 		// Editable node is the selected one
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+		NodeObject nodeObject = (NodeObject) node.getUserObject();
+		nodeObject.refresh();
+		treeModel.nodeChanged(node);
+	}
+	
+	@EventMethod
+	public void onNodeTypeChanged(NodeTypeChangedEvent event) {
 		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 		NodeObject nodeObject = (NodeObject) node.getUserObject();
 		nodeObject.refresh();

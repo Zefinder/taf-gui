@@ -2,20 +2,20 @@ package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
 
-public class MaxInstanceParameter extends MaxParameter {
+public class MaxDepthParameter extends MaxParameter {
 
 	private static final String ERROR_MESSAGE = "Max instance number must be an integer!";
-	
-	public static final String PARAMETER_NAME = "max";
-	
-	MaxInstanceParameter() {
+
+	public static final String PARAMETER_NAME = "max_depth";
+
+	MaxDepthParameter() {
 		super(PARAMETER_NAME);
 	}
-	
-	public MaxInstanceParameter(Integer value) {
+
+	public MaxDepthParameter(Integer value) {
 		super(PARAMETER_NAME, value, false);
 	}
-	
+
 	@Override
 	public void setValue(Number value) {
 		super.setValue(value.intValue() < 0 ? 0 : value);
@@ -23,11 +23,10 @@ public class MaxInstanceParameter extends MaxParameter {
 
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
-		try {			
+		try {
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}
-
 }

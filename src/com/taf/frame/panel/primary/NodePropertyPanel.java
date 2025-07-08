@@ -84,6 +84,7 @@ public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 		
 		// If no type selected then remove recursivity
 		if (selectedType.equals(NO_TYPE)) {
+			cachedType = selectedType;
 			node.removeType();
 			EventManager.getInstance().fireEvent(event);
 			return;
@@ -92,6 +93,7 @@ public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 		// Get custom types list and check if present
 		Set<String> customNodeTypeSet = TypeManager.getInstance().getCustomNodeTypeSet();
 		if (customNodeTypeSet.contains(selectedType)) {
+			cachedType = selectedType;
 			node.setType(selectedType);
 			EventManager.getInstance().fireEvent(event);
 			return;
@@ -100,6 +102,7 @@ public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 		// Get node names list and check if present
 		Set<String> customRefTypeSet = TypeManager.getInstance().getCustomNodeRefSet();
 		if (customRefTypeSet.contains(selectedType)) {
+			cachedType = selectedType;
 			node.setReference(selectedType);
 			EventManager.getInstance().fireEvent(event);
 			return;
