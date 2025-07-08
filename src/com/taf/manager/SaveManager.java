@@ -319,6 +319,13 @@ public class SaveManager extends Manager {
 
 						// Add to type manager as a possible reference
 						TypeManager.getInstance().addCustomReference(node);
+						
+						// Check if node has a type. If so, tell it to the type manager
+						if (node.hasType()) {
+							TypeManager.getInstance().setNodeType(node.getTypeName(), node);
+						} else if (node.hasRef()) {
+							TypeManager.getInstance().setNodeRef(node.getTypeName(), node);
+						}
 					}
 
 					nodes.add(node);

@@ -54,7 +54,10 @@ public class TypeManager extends Manager implements EventListener {
 
 	private void removeCustomNodeType(String typeName) {
 		// Remove types of associated nodes
-		typeToNodeMap.get(typeName).forEach(node -> node.removeType());
+		typeToNodeMap.get(typeName).forEach(node -> {
+			node.removeType();
+			EventManager.getInstance().fireEvent(new NodeTypeChangedEvent(node));
+		});
 		typeToNodeMap.remove(typeName);
 
 		// Remove from type set
@@ -119,6 +122,18 @@ public class TypeManager extends Manager implements EventListener {
 	public FieldType instanciateTypeFromTypeName(String typeName) {
 		String typeClassName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1) + "Type";
 		return instanciateTypeFromClassName(typeClassName);
+	}
+
+	void setNodeType(String typeName, Node node) {
+		// Must appear after type creation!
+		if (customNodeTypeSet.contains(typeName)) {
+			typeToNodeMap.get(typeName).add(node);
+		}
+	}
+
+	void setNodeRef(String nodeName, Node node) {
+		// Can appear BEFORE the ref node exist...
+		refToNodeMap.computeIfAbsent(nodeName, t -> new HashSet<Node>()).add(node);
 	}
 
 	@EventMethod
