@@ -53,7 +53,6 @@ public class TypeAddEntityPanel extends JPanel {
 		c.gridy = 1;
 		JButton addParameterButton = new JButton(ADD_PARAMETER_BUTTON_TEXT);
 		addParameterButton.addActionListener(e -> {
-			// TODO
 			ParameterCreationDialog dialog = new ParameterCreationDialog();
 			dialog.initDialog();
 			Parameter parameter = dialog.getField();

@@ -190,7 +190,6 @@ public class SaveManager extends Manager {
 			break;
 		}
 
-		// TODO Tell the user that a directory will be created
 		mainDirectory += File.separator + TAF_DIRECTORY_NAME;
 		mainDirectoryFile = new File(mainDirectory);
 		runDirectory = mainDirectory + File.separator + RUN_DIRECTORY_NAME;
@@ -247,8 +246,7 @@ public class SaveManager extends Manager {
 		this.projectFile = getProjectFileFromName(projectName);
 		Root root = null;
 		int lineNumber = 1;
-		// TODO Find a better name
-		List<Type> nodes = new ArrayList<Type>();
+		List<Type> typeList = new ArrayList<Type>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(projectFile))) {
 			String line;
@@ -274,7 +272,7 @@ public class SaveManager extends Manager {
 				int parentId = Integer.valueOf(parentIdOp.get());
 
 				// Check if parent exists
-				if (parentId < -1 || parentId >= nodes.size()) {
+				if (parentId < -1 || parentId >= typeList.size()) {
 					throw new ParseException(this.getClass(), PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
 				}
 
@@ -294,8 +292,8 @@ public class SaveManager extends Manager {
 					// Parent id must be 0
 					// TODO send a warning
 
-					nodes.get(0).addEntity(type);
-					nodes.add(type);
+					typeList.get(0).addEntity(type);
+					typeList.add(type);
 
 					// Add to type manager
 					TypeManager.getInstance().addCustomNodeType(type);
@@ -316,7 +314,7 @@ public class SaveManager extends Manager {
 
 						// Create node and add it to its parent
 						node = new Node(entityName, nodeType);
-						nodes.get(parentId).addEntity(node);
+						typeList.get(parentId).addEntity(node);
 
 						// Add to type manager as a possible reference
 						TypeManager.getInstance().addCustomReference(node);
@@ -329,7 +327,7 @@ public class SaveManager extends Manager {
 						}
 					}
 
-					nodes.add(node);
+					typeList.add(node);
 					break;
 
 				case ConstantManager.PARAMETER_ENTITY_NAME:
@@ -368,7 +366,7 @@ public class SaveManager extends Manager {
 					addParametersToFieldType(fieldType, line, minMaxType);
 
 					Parameter parameter = new Parameter(entityName, fieldType);
-					nodes.get(parentId).addEntity(parameter);
+					typeList.get(parentId).addEntity(parameter);
 					break;
 
 				case ConstantManager.CONSTRAINT_ENTITY_NAME:
@@ -383,7 +381,7 @@ public class SaveManager extends Manager {
 						}
 					}
 
-					nodes.get(parentId).addEntity(constraint);
+					typeList.get(parentId).addEntity(constraint);
 					break;
 				}
 

@@ -78,8 +78,7 @@ public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 		if (cachedType.equals(selectedType)) {
 			return;
 		}
-		
-		// TODO Send event in node
+
 		Event event = new NodeTypeChangedEvent(node);
 		
 		// If no type selected then remove recursivity

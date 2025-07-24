@@ -66,7 +66,6 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 	private void updateFieldType(Field field) {
 		String typeName = (String) typeNames.getSelectedItem();
 		FieldType type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
-		// TODO Add JOptionPane message to confirm you want to change type
 
 		field.setType(type);
 		Event event = new FieldTypeChangedEvent(field, type);
