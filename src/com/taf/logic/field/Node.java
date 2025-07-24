@@ -1,110 +1,84 @@
 package com.taf.logic.field;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import com.taf.logic.Entity;
-import com.taf.logic.constraint.Constraint;
-import com.taf.logic.type.AnonymousType;
-import com.taf.logic.type.Type;
+import com.taf.logic.type.FieldType;
+import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
 
-public class Node extends Field {
+public class Node extends Type {
 
 	private static final String NODE_STRING_FORMAT = """
 			<node %s>
 			%s
 			%s</node>""";
 
-	private Set<Field> fieldSet;
-	private Set<Constraint> constraintSet;
+	private NodeType type;
 
-	public Node(String name, Type type) {
+	public Node(String name, NodeType type) {
 		super(name, type);
-		fieldSet = new LinkedHashSet<Field>();
-		constraintSet = new LinkedHashSet<Constraint>();
+		this.type = type;
 	}
 
-	public void addEntity(Entity entity) {
-		if (entity instanceof Field) {
-			addField((Field) entity);
-		} else if (entity instanceof Constraint) {
-			addConstraint((Constraint) entity);
-		}
-	}
-	
-	public void removeEntity(Entity entity) {
-		if (entity instanceof Field) {
-			removeField((Field) entity);
-		} else if (entity instanceof Constraint) {
-			removeConstraint((Constraint) entity);
-		}
-	}
-	
-	public void addField(Field field) {
-		field.setIndentationLevel(indentationLevel + 1);
-		fieldSet.add(field);
-		field.setParent(this);
+	/**
+	 * New node with node type with default values.
+	 * 
+	 * @param name the node name
+	 */
+	public Node(String name) {
+		this(name, new NodeType());
 	}
 
-	public void removeField(Field field) {
-		fieldSet.remove(field);
+	public void editMin(int minValue) {
+		type.editMinInstance(minValue);
 	}
 
-	public void addConstraint(Constraint constraint) {
-		constraintSet.add(constraint);
-		constraint.setParent(this);
-	}
-	
-	public void removeConstraint(Constraint constraint) {
-		constraintSet.remove(constraint);
+	public int getMin() {
+		return type.getMinInstance();
 	}
 
-	protected String insideFieldsToString() {
-		final String lineJump = ConstantManager.LINE_JUMP;
-		final String indent = getIndentation() + ConstantManager.TAB;
-
-		String strFields = "";
-		int i = 0;
-		for (Field field : fieldSet) {
-			strFields += indent + field.toString();
-			
-			if (i++ != fieldSet.size() - 1) {
-				strFields += lineJump;
-			}
-		}
-
-		return strFields;
+	public void editMax(int maxValue) {
+		type.editMaxInstance(maxValue);
 	}
 
-	private String constraintsToString() {
-		final String lineJump = ConstantManager.LINE_JUMP;
-		final String indent = getIndentation() + ConstantManager.TAB;
-
-		String strConstraints = "";
-		int i = 0;
-		for (Constraint constraint : constraintSet) {
-			strConstraints += indent + constraint.toString();
-			
-			if (i++ != constraintSet.size() - 1) {
-				strConstraints += lineJump;
-			}
-		}
-		return strConstraints;
+	public int getMax() {
+		return type.getMaxInstance();
 	}
 
-	public Set<Field> getFieldList() {
-		return fieldSet;
+	public void editInstanceNumber(int number) {
+		type.editInstanceNumber(number);
 	}
 
-	public Set<Constraint> getConstraintList() {
-		return constraintSet;
+	public int getInstanceNumber() {
+		return type.getInstanceNumber();
+	}
+
+	public void setType(String typeName) {
+		type.setType(typeName);
+	}
+
+	public void setReference(String referenceName) {
+		type.setReference(referenceName);
+	}
+
+	public void removeType() {
+		type.removeType();
+	}
+
+	public String getTypeName() {
+		return type.getName();
+	}
+
+	public boolean hasType() {
+		return type.hasType();
+	}
+
+	public boolean hasRef() {
+		return type.hasRef();
 	}
 
 	@Override
 	public String getEntityTypeName() {
-		Type type = getType();
-		if (type instanceof AnonymousType) {
+		FieldType type = getType();
+		if (type.getName().isBlank()) {
 			return ConstantManager.NODE_ENTITY_NAME;
 		}
 
@@ -114,15 +88,15 @@ public class Node extends Field {
 	@Override
 	public String toString() {
 		String nodeStr = "";
-		if (!fieldSet.isEmpty()) {
+		if (!getFieldSet().isEmpty()) {
 			nodeStr += insideFieldsToString() + ConstantManager.LINE_JUMP;
 		}
 
-		if (!constraintSet.isEmpty()) {
+		if (!getConstraintSet().isEmpty()) {
 			nodeStr += constraintsToString();
 		}
 
-		return NODE_STRING_FORMAT.formatted(super.toString(), nodeStr, getIndentation());
+		return NODE_STRING_FORMAT.formatted(fieldToString(), nodeStr, getIndentation());
 	}
 
 }

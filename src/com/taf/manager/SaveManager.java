@@ -23,6 +23,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 
+import com.taf.event.ProjectClosedEvent;
 import com.taf.exception.ImportException;
 import com.taf.exception.ParseException;
 import com.taf.logic.constraint.Constraint;
@@ -32,12 +33,13 @@ import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Root;
-import com.taf.logic.type.AnonymousType;
+import com.taf.logic.field.Type;
 import com.taf.logic.type.BooleanType;
+import com.taf.logic.type.FieldType;
 import com.taf.logic.type.IntegerType;
+import com.taf.logic.type.NodeType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
-import com.taf.logic.type.Type;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.TypeParameterFactory;
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
@@ -130,13 +132,10 @@ public class SaveManager extends Manager {
 	private static final String TAF_DIRECTORY_NAME = "tafgui";
 	private static final String RUN_DIRECTORY_NAME = "run";
 
-	private static final String SAVE_ARGUMENT_FORMAT = "%s=\"([^\"]+)\"";
+	private static final String SAVE_ARGUMENT_FORMAT = "\\b%s=\"([^\"]+)\""; // Arguments must be separated
 	private static final String ENTITY_ARGUMENT = "entity";
 	private static final String PARENT_ARGUMENT = "parent";
 	private static final String NAME_ARGUMENT = "name";
-	private static final String INSTANCE_ARGUMENT = "nb_instances"; // TODO Move to node
-	private static final String MIN_INSTANCE_ARGUMENT = "min"; // TODO Move to node
-	private static final String MAX_INSTANCE_ARGUMENT = "max"; // TODO Move to node
 	private static final String TYPE_ARGUMENT = "type";
 
 	private static final int ROOT_PARENT = -1;
@@ -145,7 +144,6 @@ public class SaveManager extends Manager {
 	private static final String PARENT_MISSING_ERROR_MESSAGE = "The entity must have a parent!";
 	private static final String PARENT_UNKNWON_FORMAT_ERROR_MESSAGE = "The parent %d does not exist!";
 	private static final String NAME_MISSING_ERROR_MESSAGE = "Entity must have a name!";
-	private static final String INSTANCE_MISSING_ERROR_MESSAGE = "Node must have either an instance number or a minimum and a maximum number";
 	private static final String PARAMETER_TYPE_ERROR_MESSAGE = "Parameter must have a type";
 	private static final String PARAMETER_UNEXPECTED_ERROR_MESSAGE = "Unexpected parameter type value: ";
 	private static final String PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE = "Type %s must have the \"%s\" argument";
@@ -192,7 +190,6 @@ public class SaveManager extends Manager {
 			break;
 		}
 
-		// TODO Tell the user that a directory will be created
 		mainDirectory += File.separator + TAF_DIRECTORY_NAME;
 		mainDirectoryFile = new File(mainDirectory);
 		runDirectory = mainDirectory + File.separator + RUN_DIRECTORY_NAME;
@@ -249,33 +246,34 @@ public class SaveManager extends Manager {
 		this.projectFile = getProjectFileFromName(projectName);
 		Root root = null;
 		int lineNumber = 1;
-		List<Node> nodes = new ArrayList<Node>();
+		List<Type> typeList = new ArrayList<Type>();
 
 		try (BufferedReader reader = new BufferedReader(new FileReader(projectFile))) {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				// If line is empty, skip
 				if (line.isBlank()) {
+					lineNumber++;
 					continue;
 				}
 
 				// Get entity type
 				Optional<String> entityTypeOp = getArgument(line, ENTITY_ARGUMENT);
 				if (entityTypeOp.isEmpty()) {
-					throw new ParseException(ENTITY_MISSING_ERROR_MESSAGE);
+					throw new ParseException(this.getClass(), ENTITY_MISSING_ERROR_MESSAGE);
 				}
 				String entityType = entityTypeOp.get();
 
 				// Get parent id
 				Optional<String> parentIdOp = getArgument(line, PARENT_ARGUMENT);
 				if (parentIdOp.isEmpty()) {
-					throw new ParseException(PARENT_MISSING_ERROR_MESSAGE);
+					throw new ParseException(this.getClass(), PARENT_MISSING_ERROR_MESSAGE);
 				}
 				int parentId = Integer.valueOf(parentIdOp.get());
 
 				// Check if parent exists
-				if (parentId < -1 || parentId >= nodes.size()) {
-					throw new ParseException(PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
+				if (parentId < -1 || parentId >= typeList.size()) {
+					throw new ParseException(this.getClass(), PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
 				}
 
 				// TODO Check if multiple roots
@@ -283,11 +281,24 @@ public class SaveManager extends Manager {
 				// Search for the name
 				Optional<String> entityNameOp = getArgument(line, NAME_ARGUMENT);
 				if (entityNameOp.isEmpty()) {
-					throw new ParseException(NAME_MISSING_ERROR_MESSAGE);
+					throw new ParseException(this.getClass(), NAME_MISSING_ERROR_MESSAGE);
 				}
 				String entityName = entityNameOp.get();
 
 				switch (entityType) {
+				case ConstantManager.TYPE_ENTITY_NAME:
+					Type type = new Type(entityName);
+
+					// Parent id must be 0
+					// TODO send a warning
+
+					typeList.get(0).addEntity(type);
+					typeList.add(type);
+
+					// Add to type manager
+					TypeManager.getInstance().addCustomNodeType(type);
+					break;
+
 				case ConstantManager.NODE_ENTITY_NAME:
 					Node node;
 
@@ -297,95 +308,65 @@ public class SaveManager extends Manager {
 						node = root;
 
 					} else {
-						AnonymousType type = new AnonymousType();
+						// Create a node type and fill parameters
+						NodeType nodeType = new NodeType();
+						addParametersToFieldType(nodeType, line, MinMaxTypeParameterType.INSTANCE);
 
-						// Check if number of instances or min-max, else throw
-						Optional<String> instanceNumberOp = getArgument(line, INSTANCE_ARGUMENT);
-						if (instanceNumberOp.isEmpty()) {
-							Optional<String> minNumberOp = getArgument(line, MIN_INSTANCE_ARGUMENT);
-							Optional<String> maxNumberOp = getArgument(line, MAX_INSTANCE_ARGUMENT);
+						// Create node and add it to its parent
+						node = new Node(entityName, nodeType);
+						typeList.get(parentId).addEntity(node);
 
-							if (minNumberOp.isEmpty() || maxNumberOp.isEmpty()) {
-								throw new ParseException(INSTANCE_MISSING_ERROR_MESSAGE);
-							}
-
-							int minNumber = Integer.valueOf(minNumberOp.get());
-							int maxNumber = Integer.valueOf(maxNumberOp.get());
-							type.addMinMaxInstanceParameter(minNumber, maxNumber);
-
-						} else {
-							int instanceNumber = Integer.valueOf(instanceNumberOp.get());
-							type.editInstanceNumberParameter(instanceNumber);
+						// Add to type manager as a possible reference
+						TypeManager.getInstance().addCustomReference(node);
+						
+						// Check if node has a type. If so, tell it to the type manager
+						if (node.hasType()) {
+							TypeManager.getInstance().setNodeType(node.getTypeName(), node);
+						} else if (node.hasRef()) {
+							TypeManager.getInstance().setNodeRef(node.getTypeName(), node);
 						}
-
-						node = new Node(entityName, type);
-						nodes.get(parentId).addField(node);
 					}
 
-					nodes.add(node);
+					typeList.add(node);
 					break;
 
 				case ConstantManager.PARAMETER_ENTITY_NAME:
 					// Get parameter type
 					Optional<String> typeNameOp = getArgument(line, TYPE_ARGUMENT);
 					if (typeNameOp.isEmpty()) {
-						throw new ParseException(PARAMETER_TYPE_ERROR_MESSAGE);
+						throw new ParseException(this.getClass(), PARAMETER_TYPE_ERROR_MESSAGE);
 					}
 					String typeName = typeNameOp.get();
-					TypeParameterFactory.MinMaxTypeParameterType maxTypeParameterType;
-					Type type = switch (typeName) {
+					TypeParameterFactory.MinMaxTypeParameterType minMaxType;
+					FieldType fieldType = switch (typeName) {
 					case BooleanType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.NONE;
+						minMaxType = MinMaxTypeParameterType.NONE;
 						yield new BooleanType();
 					}
 
 					case IntegerType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.INTEGER;
+						minMaxType = MinMaxTypeParameterType.INTEGER;
 						yield new IntegerType();
 					}
 
 					case RealType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.REAL;
+						minMaxType = MinMaxTypeParameterType.REAL;
 						yield new RealType();
 					}
 
 					case StringType.TYPE_NAME: {
-						maxTypeParameterType = MinMaxTypeParameterType.NONE;
+						minMaxType = MinMaxTypeParameterType.NONE;
 						yield new StringType();
 					}
 
 					default:
-						throw new ParseException(PARAMETER_UNEXPECTED_ERROR_MESSAGE + typeName);
+						throw new ParseException(this.getClass(), PARAMETER_UNEXPECTED_ERROR_MESSAGE + typeName);
 					};
 
-					// Add mandatory parameters
-					for (String mandatoryTypeName : type.getMandatoryParametersName()) {
-						Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
-						if (mandatoryTypeOp.isEmpty()) {
-							throw new ParseException(
-									PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE.formatted(typeName, mandatoryTypeName));
-						}
-						String typeParameterValue = mandatoryTypeOp.get();
+					addParametersToFieldType(fieldType, line, minMaxType);
 
-						TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
-								typeParameterValue, maxTypeParameterType);
-						type.addTypeParameter(typeParameter);
-					}
-
-					// Add optional parameters
-					for (String optionalTypeName : type.getOptionalParametersName()) {
-						Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
-						if (!optionalTypeOp.isEmpty()) {
-							String typeParameterValue = optionalTypeOp.get();
-
-							TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
-									typeParameterValue, maxTypeParameterType);
-							type.addTypeParameter(typeParameter);
-						}
-					}
-
-					Parameter parameter = new Parameter(entityName, type);
-					nodes.get(parentId).addField(parameter);
+					Parameter parameter = new Parameter(entityName, fieldType);
+					typeList.get(parentId).addEntity(parameter);
 					break;
 
 				case ConstantManager.CONSTRAINT_ENTITY_NAME:
@@ -400,7 +381,7 @@ public class SaveManager extends Manager {
 						}
 					}
 
-					nodes.get(parentId).addConstraint(constraint);
+					typeList.get(parentId).addEntity(constraint);
 					break;
 				}
 
@@ -416,6 +397,35 @@ public class SaveManager extends Manager {
 		return root;
 	}
 
+	private void addParametersToFieldType(FieldType fieldType, String line, MinMaxTypeParameterType minMaxType)
+			throws ParseException {
+		// Add mandatory parameters
+		for (String mandatoryTypeName : fieldType.getMandatoryParametersName()) {
+			Optional<String> mandatoryTypeOp = getArgument(line, mandatoryTypeName);
+			if (mandatoryTypeOp.isEmpty()) {
+				throw new ParseException(this.getClass(),
+						PARAMETER_TYPE_MISSING_FORMAT_ERROR_MESSAGE.formatted(fieldType.getName(), mandatoryTypeName));
+			}
+			String typeParameterValue = mandatoryTypeOp.get();
+
+			TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(mandatoryTypeName,
+					typeParameterValue, minMaxType);
+			fieldType.addTypeParameter(typeParameter);
+		}
+
+		// Add optional parameters
+		for (String optionalTypeName : fieldType.getOptionalParametersName()) {
+			Optional<String> optionalTypeOp = getArgument(line, optionalTypeName);
+			if (!optionalTypeOp.isEmpty()) {
+				String typeParameterValue = optionalTypeOp.get();
+
+				TypeParameter typeParameter = TypeParameterFactory.createTypeParameter(optionalTypeName,
+						typeParameterValue, minMaxType);
+				fieldType.addTypeParameter(typeParameter);
+			}
+		}
+	}
+
 	private void writeEntityArguments(BufferedWriter writer, String entityString, int nodeId, String name)
 			throws IOException {
 		writer.write(format.formatted(ENTITY_ARGUMENT, entityString));
@@ -423,43 +433,57 @@ public class SaveManager extends Manager {
 		writer.write(format.formatted(NAME_ARGUMENT, name));
 	}
 
-	private void writeRoot(BufferedWriter writer, String name) throws IOException {
+	private int writeRoot(BufferedWriter writer, String name, Set<Type> typeList) throws IOException {
+		int rootId = ROOT_PARENT + 1;
+		int nodeCount = ROOT_PARENT + 1;
 		writeEntityArguments(writer, ConstantManager.NODE_ENTITY_NAME, ROOT_PARENT, name);
 		writer.write(newLine);
+
+		// Write types first
+		String typeEntityName = ConstantManager.TYPE_ENTITY_NAME;
+		for (Type type : typeList) {
+			// Write type and increase node count
+			writeField(writer, type, typeEntityName, rootId);
+			nodeCount++;
+
+			// Write type components
+			nodeCount = writeNode(writer, type, nodeCount, nodeCount);
+		}
+
+		return nodeCount;
 	}
 
-	private void writeField(BufferedWriter writer, Field field, String entityString, int nodeId) throws IOException {
-		writeEntityArguments(writer, entityString, nodeId, field.getName());
+	private void writeField(BufferedWriter writer, Field field, String entityString, int parentId) throws IOException {
+		writeEntityArguments(writer, entityString, parentId, field.getName());
 		writer.write(field.getType().toString());
 		writer.write(newLine);
 	}
 
-	private int writeNode(BufferedWriter writer, Node node, int nodeId) throws IOException {
-		int numberNodes = nodeId;
-		for (Field field : node.getFieldList()) {
+	private int writeNode(BufferedWriter writer, Type node, int parentId, int nodeCount) throws IOException {
+		for (Field field : node.getFieldSet()) {
 			boolean isNode = field instanceof Node;
 			String entityString = ConstantManager.NODE_ENTITY_NAME;
 			if (!isNode) {
 				entityString = ConstantManager.PARAMETER_ENTITY_NAME;
 			}
 
-			writeField(writer, field, entityString, nodeId);
+			writeField(writer, field, entityString, parentId);
 
 			if (isNode) {
-				Node innerNode = (Node) field;
-				int innerNodeId = numberNodes + 1;
-				numberNodes = writeNode(writer, innerNode, innerNodeId);
-				for (Constraint constraint : innerNode.getConstraintList()) {
+				Type innerNode = (Type) field;
+				int innerNodeId = nodeCount + 1;
+				nodeCount = writeNode(writer, innerNode, innerNodeId, innerNodeId);
+				for (Constraint constraint : innerNode.getConstraintSet()) {
 					writeConstraint(writer, constraint, innerNodeId);
 				}
 			}
 		}
 
-		return numberNodes;
+		return nodeCount;
 	}
 
-	private void writeConstraint(BufferedWriter writer, Constraint constraint, int nodeId) throws IOException {
-		writeEntityArguments(writer, ConstantManager.CONSTRAINT_ENTITY_NAME, nodeId, constraint.getName());
+	private void writeConstraint(BufferedWriter writer, Constraint constraint, int parentId) throws IOException {
+		writeEntityArguments(writer, ConstantManager.CONSTRAINT_ENTITY_NAME, parentId, constraint.getName());
 		writer.write(constraint.parametersToString().strip());
 		writer.write(newLine);
 	}
@@ -467,9 +491,8 @@ public class SaveManager extends Manager {
 	public void saveProject() throws IOException {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
 			// Write root node
-			writeRoot(writer, projectRoot.getName());
-			writer.write(newLine);
-			writeNode(writer, projectRoot, ROOT_PARENT + 1);
+			int nodeCount = writeRoot(writer, projectRoot.getName(), projectRoot.getTypeList());
+			writeNode(writer, projectRoot, ROOT_PARENT + 1, nodeCount);
 		}
 	}
 
@@ -488,13 +511,30 @@ public class SaveManager extends Manager {
 
 		newProjectFile.createNewFile();
 		BufferedWriter writer = new BufferedWriter(new FileWriter(newProjectFile));
-		writeRoot(writer, projectName.substring(0, projectName.length() - ConstantManager.TAF_FILE_EXTENSION.length()));
+		// Write an empty root with no type
+		writeRoot(writer, projectName.substring(0, projectName.length() - ConstantManager.TAF_FILE_EXTENSION.length()),
+				new HashSet<Type>());
 		writer.close();
 
 		// Add to created project
 		projectNames.add(newProjectFile);
 
 		return true;
+	}
+
+	public void closeProject(boolean save) throws IOException {
+		if (save) {
+			saveProject();
+		}
+
+		projectFile = null;
+		projectRoot = null;
+
+		// Remove all custom types
+		TypeManager.getInstance().resetCustomNodeTypes();
+
+		// Send close event
+		EventManager.getInstance().fireEvent(new ProjectClosedEvent());
 	}
 
 	void exportToXML(File xmlFile) throws IOException {
@@ -505,9 +545,13 @@ public class SaveManager extends Manager {
 		}
 	}
 
-	void exportToXML(boolean askCustomLocation) throws IOException {
+	void exportToXML(boolean askCustomLocation, boolean save) throws IOException {
 		if (projectRoot == null || projectFile == null) {
 			return;
+		}
+
+		if (save) {
+			saveProject();
 		}
 
 		String projectFileName = projectFile.getName();
@@ -542,8 +586,8 @@ public class SaveManager extends Manager {
 		exportToXML(exportFile);
 	}
 
-	public void exportToXML() throws IOException {
-		exportToXML(true);
+	public void exportToXML(boolean save) throws IOException {
+		exportToXML(true, save);
 	}
 
 	String getMainDirectoryPath() {
@@ -570,7 +614,8 @@ public class SaveManager extends Manager {
 			Path destination = Paths.get(destinationPath.toString(),
 					source.toString().substring(sourcePath.toString().length()));
 			try {
-				Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
+				Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING,
+						StandardCopyOption.COPY_ATTRIBUTES);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -713,7 +758,7 @@ public class SaveManager extends Manager {
 			if (newTafFile.exists()) {
 				newTafFile.delete();
 			}
-			throw new ImportException(IMPORT_EXCEPTION_ERROR_MESSAGE + e.getMessage());
+			throw new ImportException(SaveManager.class, IMPORT_EXCEPTION_ERROR_MESSAGE + e.getMessage());
 		}
 
 		// Return the new file name
@@ -721,7 +766,7 @@ public class SaveManager extends Manager {
 	}
 
 	private static void throwParseException(String message, int lineNumber) throws ParseException {
-		throw new ParseException(PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE.formatted(message, lineNumber));
+		throw new ParseException(SaveManager.class, PARSE_EXCEPTION_FORMAT_ERROR_MESSAGE.formatted(message, lineNumber));
 	}
 
 	public String[] getProjectNames() {

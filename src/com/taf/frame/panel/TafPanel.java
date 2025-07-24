@@ -21,6 +21,7 @@ public class TafPanel extends JPanel implements EventListener {
 		fieldsPanel = new FieldTreePanel(root);
 		propertyPanel = new PropertyPanel();
 		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fieldsPanel, propertyPanel);
+		splitPane.setResizeWeight(.15);
 		
 		this.add(splitPane);
 	}

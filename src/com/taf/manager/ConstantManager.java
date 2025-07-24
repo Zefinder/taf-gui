@@ -20,11 +20,15 @@ public class ConstantManager extends Manager {
 	public static final String XML_FILE_EXTENSION = ".xml";
 	
 	public static final String PARAMETER_ENTITY_NAME = "parameter";
+	public static final String TYPE_ENTITY_NAME = "type";
 	public static final String NODE_ENTITY_NAME = "node";
 	public static final String CONSTRAINT_ENTITY_NAME = "constraint";
 	
 	public static final String PARAMETER_NAME_LABEL_TEXT = "Parameter name";
 	public static final String PARAMETER_TYPE_LABEL_TEXT = "Parameter type";
+	public static final String NODE_TYPE_LABEL_TEXT = "Node type";
+	public static final String ROOT_NAME_LABEL_TEXT = "Root name";
+	public static final String TYPE_NAME_LABEL_TEXT = "Type name";
 	public static final String NODE_NAME_LABEL_TEXT = "Node name";
 	public static final String CONSTRAINT_NAME_LABEL_TEXT = "Constraint name";
 	
@@ -51,6 +55,7 @@ public class ConstantManager extends Manager {
 	public static final int DEFAULT_MAX_VALUE = 10;
 	
 	public static final int DEFAULT_INSTANCE_NUMBER = 1;
+	public static final int DEFAULT_DEPTH_NUMBER = 1;
 	public static final int DEFAULT_MIN_INSTANCE_NUMBER = 1;
 	public static final int DEFAULT_MAX_INSTANCE_NUMBER = 1;
 	

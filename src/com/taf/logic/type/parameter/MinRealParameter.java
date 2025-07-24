@@ -21,7 +21,7 @@ public class MinRealParameter extends MinParameter {
 		try {			
 			this.value = Double.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException(ERROR_MESSAGE);
+			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}
 }

@@ -37,7 +37,7 @@ public class MeanParameter extends TypeParameter {
 		try {
 			this.mean = Double.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException(ERROR_MESSAGE);
+			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}
 

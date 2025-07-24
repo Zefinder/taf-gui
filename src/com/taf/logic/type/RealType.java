@@ -18,9 +18,6 @@ import com.taf.util.HashSetBuilder;
 public class RealType extends NumericalType {
 
 	public static final String TYPE_NAME = "real";
-	private static final HashSet<Class<? extends TypeParameter>> ALLOWED_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
-			.add(MaxRealParameter.class).add(MinRealParameter.class).build();
-
 	private static final HashSet<String> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<String>()
 			.add(MaxRealParameter.PARAMETER_NAME).add(MinRealParameter.PARAMETER_NAME).build();
 
@@ -95,11 +92,6 @@ public class RealType extends NumericalType {
 	@Override
 	public Set<String> getOptionalParametersName() {
 		return OPTIONAL_TYPE_PARAMETERS;
-	}
-
-	@Override
-	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
-		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());
 	}
 
 	@Override

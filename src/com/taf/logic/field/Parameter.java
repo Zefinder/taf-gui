@@ -1,12 +1,12 @@
 package com.taf.logic.field;
 
-import com.taf.logic.type.Type;
+import com.taf.logic.type.FieldType;
 
 public class Parameter extends Field {
 
 	private static final String PARAMETER_STRING_FORMAT = "<parameter %s/>";
 
-	public Parameter(String name, Type type) {
+	public Parameter(String name, FieldType type) {
 		super(name, type);
 	}
 	

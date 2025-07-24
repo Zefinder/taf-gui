@@ -9,14 +9,15 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
-import com.taf.event.EntitySelectedEvent;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
-import com.taf.event.FieldTypeChangedEvent;
-import com.taf.frame.panel.entity.EntityPrimaryPanelFactory;
-import com.taf.frame.panel.entity.EntityPrimaryPropertyPanel;
-import com.taf.frame.panel.type.EntitySecondaryPanelFactory;
-import com.taf.frame.panel.type.EntitySecondaryPropertyPanel;
+import com.taf.event.entity.EntityDeletedEvent;
+import com.taf.event.entity.EntitySelectedEvent;
+import com.taf.event.entity.FieldTypeChangedEvent;
+import com.taf.frame.panel.primary.EntityPrimaryPanelFactory;
+import com.taf.frame.panel.primary.EntityPrimaryPropertyPanel;
+import com.taf.frame.panel.secondary.EntitySecondaryPanelFactory;
+import com.taf.frame.panel.secondary.EntitySecondaryPropertyPanel;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Field;
@@ -87,21 +88,46 @@ public class PropertyPanel extends JPanel implements EventListener {
 		// removeAll method invalidates
 		this.validate();
 	}
-	
+
 	@Override
 	public void unregisterComponents() {
-		// No inner listeners
+		// Unregister type property panel if it isn't already null
+		if (typePropertyPanel != null) {
+			EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+		}
 	}
 
 	@EventMethod
 	public void onEntitySelected(EntitySelectedEvent event) {
 		this.entity = event.getEntity();
+		// Don't forget to unregister here since the property panel will change
+		if (typePropertyPanel != null) {
+			EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+		}
 		updatePanel();
 	}
 
 	@EventMethod
 	public void onFieldTypeChanged(FieldTypeChangedEvent event) {
+		// The field type changed so the type property panel will also change
+		if (typePropertyPanel != null) {
+			EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+		}
 		updatePanel();
+	}
+
+	@EventMethod
+	public void onEntityDeleted(EntityDeletedEvent event) {
+		// Deselect the current entity and its panels if it is the deleted entity
+		if (entity.equals(event.getEntity())) {
+			entity = null;
+			entityPropertyPanel = null;
+			if (typePropertyPanel != null) {
+				EventManager.getInstance().unregisterEventListener(typePropertyPanel);
+				typePropertyPanel = null;
+			}
+			updatePanel();
+		}
 	}
 
 }

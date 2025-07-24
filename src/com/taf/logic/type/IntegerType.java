@@ -18,8 +18,6 @@ import com.taf.util.HashSetBuilder;
 public class IntegerType extends NumericalType {
 
 	public static final String TYPE_NAME = "integer";
-	private static final HashSet<Class<? extends TypeParameter>> ALLOWED_TYPE_PARAMETERS = new HashSetBuilder<Class<? extends TypeParameter>>()
-			.add(MaxIntegerParameter.class).add(MinIntegerParameter.class).build();
 
 	private static final HashSet<String> MANDATORY_TYPE_PARAMETERS = new HashSetBuilder<String>()
 			.add(MaxIntegerParameter.PARAMETER_NAME).add(MinIntegerParameter.PARAMETER_NAME).build();
@@ -95,11 +93,6 @@ public class IntegerType extends NumericalType {
 	@Override
 	public Set<String> getOptionalParametersName() {
 		return OPTIONAL_TYPE_PARAMETERS;
-	}
-
-	@Override
-	public boolean isAllowedTypeParameter(TypeParameter typeParameter) {
-		return ALLOWED_TYPE_PARAMETERS.contains(typeParameter.getClass());
 	}
 
 }

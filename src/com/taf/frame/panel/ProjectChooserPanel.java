@@ -47,7 +47,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 	private static final String CREATE_PROJECT_BUTTON_TEXT = "Create new project";
 	private static final String OPEN_PROJECT_BUTTON_TEXT = "Open project";
 	private static final String IMPORT_FILE_CHOOSER_BUTTON = "Import";
-	
+
 	private static final String OPEN_PROJECT_ERROR_MESSAGE = "An error occured when opening the project: ";
 
 	private DefaultTableModel tableModel;
@@ -185,8 +185,11 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 			ProjectFrame frame = new ProjectFrame(root);
 			frame.initFrame();
 			EventManager.getInstance().fireEvent(new ProjectOpenedEvent());
-		} catch (IOException | ParseException e1) {
+		} catch (IOException e1) {
 			ConstantManager.showError(OPEN_PROJECT_ERROR_MESSAGE + e1.getMessage());
+			e1.printStackTrace();
+		} catch (ParseException e1) {
+			ConstantManager.showError(OPEN_PROJECT_ERROR_MESSAGE + e1.getShortMessage());
 			e1.printStackTrace();
 		}
 	}
@@ -200,7 +203,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		SaveManager.getInstance().deleteProject(projectName);
 		tableModel.removeRow(projectTable.getSelectedRow());
 	}
-	
+
 	@Override
 	public void unregisterComponents() {
 		// No inner listeners
@@ -238,7 +241,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 				String fileName = SaveManager.getInstance().importProject(chooser.getSelectedFile());
 				tableModel.addRow(new String[] { fileName });
 			} catch (ImportException e) {
-				ConstantManager.showError(e.getMessage());
+				ConstantManager.showError(e.getShortMessage());
 				e.printStackTrace();
 			}
 		}

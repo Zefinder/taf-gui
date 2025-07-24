@@ -9,8 +9,11 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import com.taf.event.Event;
+import com.taf.event.RunLocationChangedEvent;
 import com.taf.frame.dialog.SettingsDialog;
 import com.taf.manager.ConstantManager;
+import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
 import com.taf.manager.SaveManager;
 
@@ -43,6 +46,10 @@ public class RunMenuBar extends JMenuBar {
 					// Remove the run custom location and prepare the run manager
 					SaveManager.getInstance().removeRunCustomLocation(wantCopy);
 					RunManager.getInstance().prepareRunManager();
+					
+					// Send event to tell that location changed
+					Event event = new RunLocationChangedEvent();
+					EventManager.getInstance().fireEvent(event);
 				} catch (IOException e1) {
 					ConstantManager.showError(PREPARATION_ERROR_MESSAGE + e1.getMessage());
 					e1.printStackTrace();
@@ -68,6 +75,10 @@ public class RunMenuBar extends JMenuBar {
 
 						// Prepare the run manager
 						RunManager.getInstance().prepareRunManager();
+						
+						// Send event to tell that location changed
+						Event event = new RunLocationChangedEvent();
+						EventManager.getInstance().fireEvent(event);
 					} catch (IOException e1) {
 						ConstantManager.showError(PREPARATION_ERROR_MESSAGE + e1.getMessage());
 						e1.printStackTrace();

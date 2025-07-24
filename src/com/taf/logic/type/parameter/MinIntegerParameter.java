@@ -21,7 +21,7 @@ public class MinIntegerParameter extends MinParameter {
 		try {			
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {
-			throw new ParseException(ERROR_MESSAGE);
+			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}
 }

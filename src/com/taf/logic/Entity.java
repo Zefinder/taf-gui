@@ -1,6 +1,6 @@
 package com.taf.logic;
 
-import com.taf.logic.field.Node;
+import com.taf.logic.field.Type;
 
 public interface Entity {
 
@@ -10,8 +10,8 @@ public interface Entity {
 	
 	String getEntityTypeName();
 	
-	Node getParent();
+	Type getParent();
 	
-	void setParent(Node parent);
+	void setParent(Type parent);
 	
 }

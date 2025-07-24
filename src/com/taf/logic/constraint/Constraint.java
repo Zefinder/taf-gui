@@ -9,8 +9,8 @@ import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.QuantifiersConstraintParameter;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
-import com.taf.logic.field.Node;
 import com.taf.logic.constraint.parameter.TypesConstraintParameter;
+import com.taf.logic.field.Type;
 import com.taf.manager.ConstantManager;
 
 public class Constraint implements Entity {
@@ -19,7 +19,7 @@ public class Constraint implements Entity {
 			<constraint %s/>""";
 
 	private String name;
-	private Node parent;
+	private Type parent;
 
 	private ExpressionConstraintParameter expressionsConstraintParameter;
 	private QuantifiersConstraintParameter quantifiersConstraintParameter;
@@ -155,12 +155,12 @@ public class Constraint implements Entity {
 	}
 
 	@Override
-	public Node getParent() {
+	public Type getParent() {
 		return parent;
 	}
 	
 	@Override
-	public void setParent(Node parent) {
+	public void setParent(Type parent) {
 		this.parent = parent;
 	}
 	
