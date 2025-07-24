@@ -241,7 +241,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 				String fileName = SaveManager.getInstance().importProject(chooser.getSelectedFile());
 				tableModel.addRow(new String[] { fileName });
 			} catch (ImportException e) {
-				ConstantManager.showError(e.getMessage());
+				ConstantManager.showError(e.getShortMessage());
 				e.printStackTrace();
 			}
 		}

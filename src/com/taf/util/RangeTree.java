@@ -7,7 +7,7 @@ import com.taf.exception.RangeIntersectionException;
 
 public class RangeTree {
 
-	private static final String RANGE_INTERSECTION_ERROR_MESSAGE = "Ranges intersect!";
+	private static final String RANGE_INTERSECTION_ERROR_MESSAGE = "Ranges intersect, abort...";
 
 	private Node rootNode;
 	private int maxNodeId;
@@ -71,7 +71,7 @@ public class RangeTree {
 					// Check if intersects
 					if (child.range.intersects(range)) {
 						// ERROR should not be possible
-						throw new RangeIntersectionException(RANGE_INTERSECTION_ERROR_MESSAGE);
+						throw new RangeIntersectionException(RangeTree.class, RANGE_INTERSECTION_ERROR_MESSAGE);
 					}
 				}
 			}
@@ -118,18 +118,18 @@ public class RangeTree {
 				if (children.size() == 1) {
 					// If only one child, check if parent inside iff the id is not the same
 					Node child = children.get(0);
-					
+
 					if (nodeId == child.nodeId) {
 						return this.nodeId;
 					} else {
 						return child.getParentId(nodeId);
 					}
-					
-				} else {					
+
+				} else {
 					for (int i = 1; i < children.size(); i++) {
 						Node lowChild = children.get(i - 1);
 						Node highChild = children.get(i);
-						
+
 						// Check if one id is equal to either child
 						if (nodeId == lowChild.nodeId || nodeId == highChild.nodeId) {
 							return this.nodeId;
@@ -137,7 +137,7 @@ public class RangeTree {
 							// Else, if the high child has a greater id then it is a child of the low child
 							return lowChild.getParentId(nodeId);
 						}
-						
+
 						// Else continue
 					}
 				}

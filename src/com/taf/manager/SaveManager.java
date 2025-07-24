@@ -255,6 +255,7 @@ public class SaveManager extends Manager {
 			while ((line = reader.readLine()) != null) {
 				// If line is empty, skip
 				if (line.isBlank()) {
+					lineNumber++;
 					continue;
 				}
 
@@ -759,7 +760,7 @@ public class SaveManager extends Manager {
 			if (newTafFile.exists()) {
 				newTafFile.delete();
 			}
-			throw new ImportException(IMPORT_EXCEPTION_ERROR_MESSAGE + e.getMessage());
+			throw new ImportException(SaveManager.class, IMPORT_EXCEPTION_ERROR_MESSAGE + e.getMessage());
 		}
 
 		// Return the new file name

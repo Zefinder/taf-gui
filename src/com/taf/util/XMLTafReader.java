@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,6 +28,8 @@ public class XMLTafReader {
 	private static final String ROOT_PATTERN_STRING = "<root((?s).+?)>((?s).+?)</root>";
 	private static final String NODE_ENTER_PATTERN_STRING = "<node((?s).+?)>";
 	private static final String NODE_EXIT_PATTERN_STRING = "</node>";
+	private static final String TYPE_ENTER_PATTERN_STRING = "<type((?s).+?)>";
+	private static final String TYPE_EXIT_PATTERN_STRING = "</type>";
 	private static final String PARAMETER_CONSTRAINT_PATTERN_STRING = "<(parameter|constraint)((?s).+?)/>";
 	private static final String MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING = "((?s)[\\s]+)";
 
@@ -35,6 +39,8 @@ public class XMLTafReader {
 	private static final Pattern ROOT_PATTERN = Pattern.compile(ROOT_PATTERN_STRING);
 	private static final Pattern NODE_ENTER_PATTERN = Pattern.compile(NODE_ENTER_PATTERN_STRING);
 	private static final Pattern NODE_EXIT_PATTERN = Pattern.compile(NODE_EXIT_PATTERN_STRING);
+	private static final Pattern TYPE_ENTER_PATTERN = Pattern.compile(TYPE_ENTER_PATTERN_STRING);
+	private static final Pattern TYPE_EXIT_PATTERN = Pattern.compile(TYPE_EXIT_PATTERN_STRING);
 	private static final Pattern PARAMETER_CONSTRAINT_PATTERN = Pattern.compile(PARAMETER_CONSTRAINT_PATTERN_STRING);
 
 	private File tafFile;
@@ -54,28 +60,48 @@ public class XMLTafReader {
 				fileLines += line + "\n";
 			}
 		} catch (IOException e) {
-			throw new ImportException(FILE_READ_ERROR_MESSAGE + e.getMessage());
+			throw new ImportException(XMLTafReader.class, FILE_READ_ERROR_MESSAGE + e.getMessage());
 		}
 
 		// Get the root content
 		Matcher m = ROOT_PATTERN.matcher(fileLines);
 		if (!m.find()) {
-			throw new ImportException(NO_ROOT_ERROR_MESSAGE);
+			throw new ImportException(XMLTafReader.class, NO_ROOT_ERROR_MESSAGE);
 		}
 
 		String rootName = m.group(1);
 		String rootContent = m.group(2);
 		convertedLines += SAVE_LINE_FORMAT.formatted(ConstantManager.NODE_ENTITY_NAME, -1, rootName.strip());
 
-		// Register nodes
-		RangeTree tree = registerNodes(rootContent);
+		RangeTree tree = registerTypesAndNodes(rootContent);
+		// Register types and nodes (position, [parameters, isNode])
+		Map<Integer, Pair<String, Boolean>> typeNodesPositionMap = new LinkedHashMap<Integer, Pair<String, Boolean>>();
+		m = TYPE_ENTER_PATTERN.matcher(rootContent);
+		while (m.find()) {
+			int position = m.start();
+			String parameters = m.group(1).replaceAll(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
+			typeNodesPositionMap.put(position, new Pair<String, Boolean>(parameters, false));
+		}
+
 		m = NODE_ENTER_PATTERN.matcher(rootContent);
 		while (m.find()) {
 			int position = m.start();
-			int nodeId = tree.getNodeId(position);
+			System.out.println(position);
 			String parameters = m.group(1).replaceAll(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
-			convertedLines += SAVE_LINE_FORMAT.formatted(ConstantManager.NODE_ENTITY_NAME, tree.getParentId(nodeId),
-					parameters.strip());
+			typeNodesPositionMap.put(position, new Pair<String, Boolean>(parameters, true));
+		}
+System.out.println();
+		for (Map.Entry<Integer, Pair<String, Boolean>> entry : typeNodesPositionMap.entrySet()) {
+			Integer position = entry.getKey();
+			Pair<String, Boolean> info = entry.getValue();
+			String parameters = info.getKey();
+			boolean isNode = info.getValue();
+			
+			System.out.println(position);
+
+			int nodeId = tree.getNodeId(position);
+			String entityName = isNode ? ConstantManager.NODE_ENTITY_NAME : ConstantManager.TYPE_ENTITY_NAME;
+			convertedLines += SAVE_LINE_FORMAT.formatted(entityName, tree.getParentId(nodeId), parameters.strip());
 		}
 
 		m = PARAMETER_CONSTRAINT_PATTERN.matcher(fileLines);
@@ -90,54 +116,81 @@ public class XMLTafReader {
 			}
 			convertedLines += SAVE_LINE_FORMAT.formatted(entity, tree.getNodeId(position), parameters.strip());
 		}
-		
+
 		return convertedLines;
 	}
 
-	private RangeTree registerNodes(String rootContent) throws ImportException {
+	private void registerElements(RangeTree tree, List<Integer> enterPosition, Queue<Integer> exitPosition)
+			throws ImportException {
+		// Check size
+		if (enterPosition.size() != exitPosition.size()) {
+			throw new ImportException(XMLTafReader.class, NODES_ENTER_EXIT_NUMBER_MISSMATCH_ERROR_MESSAGE);
+		}
+
+		while (!exitPosition.isEmpty()) {
+			int end = exitPosition.poll();
+			if (enterPosition.get(0) >= end) {
+				throw new ImportException(XMLTafReader.class, NODES_EXIT_AFTER_ENTER_ERROR_MESSAGE);
+			}
+
+			int index = enterPosition.size() - 1;
+			for (int i = 1; i < enterPosition.size(); i++) {
+				int start = enterPosition.get(i);
+				if (start > end) {
+					// The previous element is the start position
+					index = i - 1;
+					break;
+				}
+			}
+
+			int start = enterPosition.get(index);
+			enterPosition.remove(index);
+			try {
+				tree.addRange(start, end);
+			} catch (RangeIntersectionException e) {
+				throw new ImportException(XMLTafReader.class, RANGE_ERROR_MESSAGE + e.getMessage());
+			}
+		}
+	}
+
+	private RangeTree registerTypesAndNodes(String rootContent) throws ImportException {
+		List<Integer> typeEnterPosition = new ArrayList<Integer>();
+		Queue<Integer> typeExitPosition = new LinkedList<Integer>();
 		List<Integer> nodeEnterPosition = new ArrayList<Integer>();
 		Queue<Integer> nodeExitPosition = new LinkedList<Integer>();
 
+		// Enter types
+		Matcher m = TYPE_ENTER_PATTERN.matcher(rootContent);
+		m.results().forEach(t -> typeEnterPosition.add(t.start()));
+
 		// Enter nodes
-		Matcher m = NODE_ENTER_PATTERN.matcher(rootContent);
+		m = NODE_ENTER_PATTERN.matcher(rootContent);
 		m.results().forEach(t -> nodeEnterPosition.add(t.start()));
+
+		// Exit types
+		m = TYPE_EXIT_PATTERN.matcher(rootContent);
+		m.results().forEach(t -> typeExitPosition.add(t.start()));
 
 		// Exit nodes
 		m = NODE_EXIT_PATTERN.matcher(rootContent);
 		m.results().forEach(t -> nodeExitPosition.add(t.start()));
 
-		// Check size
-		if (nodeEnterPosition.size() != nodeExitPosition.size()) {
-			throw new ImportException(NODES_ENTER_EXIT_NUMBER_MISSMATCH_ERROR_MESSAGE);
-		}
+		System.out.println(typeEnterPosition.toString());
+		System.out.println(typeExitPosition.toString());
+		System.out.println(nodeEnterPosition.toString());
+		System.out.println(nodeExitPosition.toString());
 
 		// Create range tree
 		RangeTree tree = new RangeTree();
-		while (!nodeExitPosition.isEmpty()) {
-			int end = nodeExitPosition.poll();
-			if (nodeEnterPosition.get(0) >= end) {
-				throw new ImportException(NODES_EXIT_AFTER_ENTER_ERROR_MESSAGE);
-			}
 
-			int index = nodeEnterPosition.size() - 1;
-			for (int i = 1; i < nodeEnterPosition.size(); i++) {
-				int start = nodeEnterPosition.get(i);
-				if (start > end) {
-					// The previous element is the start position
-					index = i - 1;
-				}
-			}
+		// Register types
+		registerElements(tree, typeEnterPosition, typeExitPosition);
 
-			int start = nodeEnterPosition.get(index);
-			nodeEnterPosition.remove(index);
-			try {
-				tree.addRange(start, end);
-			} catch (RangeIntersectionException e) {
-				throw new ImportException(RANGE_ERROR_MESSAGE + e.getMessage());
-			}
-		}
+		// Register nodes
+		registerElements(tree, nodeEnterPosition, nodeExitPosition);
 
 		tree.numberTree();
+		System.out.println(tree.toString());
 		return tree;
 	}
 }
