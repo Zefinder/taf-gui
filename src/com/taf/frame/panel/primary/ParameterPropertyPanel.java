@@ -69,7 +69,7 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 		// TODO Add JOptionPane message to confirm you want to change type
 
 		field.setType(type);
-		Event event = new FieldTypeChangedEvent(type);
+		Event event = new FieldTypeChangedEvent(field, type);
 		EventManager.getInstance().fireEvent(event);
 	}
 

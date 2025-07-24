@@ -71,7 +71,10 @@ public class TypeManager extends Manager implements EventListener {
 
 	private void removeCustomReference(String refName) {
 		// Remove ref of associated nodes
-		refToNodeMap.get(refName).forEach(node -> node.removeType());
+		refToNodeMap.get(refName).forEach(node -> {
+			node.removeType();
+			EventManager.getInstance().fireEvent(new NodeTypeChangedEvent(node));
+		});
 		refToNodeMap.remove(refName);
 
 		// Remove from ref set

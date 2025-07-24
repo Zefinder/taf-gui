@@ -6,6 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -50,12 +52,16 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	private DefaultTreeModel treeModel;
 
 	private DefaultMutableTreeNode rootNode;
+	private DefaultMutableTreeNode cachedNode;
+
+	private Map<Entity, DefaultMutableTreeNode> entityToTreeNodeMap;
 
 	public FieldTreePanel(Root root) {
 		this.setLayout(new GridBagLayout());
 		this.setBorder(BorderFactory.createEmptyBorder(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP,
 				ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP));
 		EventManager.getInstance().registerEventListener(this);
+		entityToTreeNodeMap = new HashMap<Entity, DefaultMutableTreeNode>();
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
@@ -103,12 +109,12 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			};
 		});
 		tree.addTreeSelectionListener(e -> {
-			DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-			if (node == null) {
+			cachedNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+			if (cachedNode == null) {
 				return;
 			}
 
-			NodeObject nodeInfo = (NodeObject) node.getUserObject();
+			NodeObject nodeInfo = (NodeObject) cachedNode.getUserObject();
 			if (nodeInfo.isRoot) {
 				System.out.println(nodeInfo.entity.toString());
 			}
@@ -157,9 +163,8 @@ public class FieldTreePanel extends JPanel implements EventListener {
 				if (selRow != -1) {
 					int x = e.getX();
 					int y = e.getY();
-					DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 
-					NodeObject nodeObject = (NodeObject) node.getUserObject();
+					NodeObject nodeObject = (NodeObject) cachedNode.getUserObject();
 					Entity entity = nodeObject.getEntity();
 
 					// Show popup if not root
@@ -181,15 +186,17 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		if (node instanceof Root) {
 			Root root = (Root) node;
 			for (Type type : root.getTypeList()) {
-				DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(type));
+				DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(type), true);
 				parentNode.add(treeNode);
+				entityToTreeNodeMap.put(type, treeNode);
 				initTreeNodes(treeNode, type);
 			}
 		}
 
 		for (Field field : node.getFieldSet()) {
-			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(field));
+			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(field), field instanceof Node);
 			parentNode.add(treeNode);
+			entityToTreeNodeMap.put(field, treeNode);
 
 			if (field instanceof Node) {
 				initTreeNodes(treeNode, (Node) field);
@@ -197,8 +204,9 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 
 		for (Constraint constraint : node.getConstraintSet()) {
-			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(constraint));
+			DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(constraint), false);
 			parentNode.add(treeNode);
+			entityToTreeNodeMap.put(constraint, treeNode);
 		}
 	}
 
@@ -207,21 +215,44 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		return tree.getRowForPath(path);
 	}
 
-	private void addEntity(Entity entity) {
-		// Get tree node and user object
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		NodeObject nodeObject = (NodeObject) node.getUserObject();
-
+	private void addEntity(Type parent, Entity entity) {
 		// Add entity to parent type
-		Type parent = (Type) nodeObject.getEntity();
 		parent.addEntity(entity);
 
 		// Update tree
 		boolean isType = entity instanceof Type;
 		DefaultMutableTreeNode newNode = new DefaultMutableTreeNode(new NodeObject(entity), isType);
-		treeModel.insertNodeInto(newNode, node, node.getChildCount());
-		tree.expandRow(getNodeRow(node));
-		treeModel.nodeChanged(node);
+		treeModel.insertNodeInto(newNode, cachedNode, cachedNode.getChildCount());
+		tree.expandRow(getNodeRow(cachedNode));
+		treeModel.nodeChanged(cachedNode);
+
+		// Add to map
+		entityToTreeNodeMap.put(entity, newNode);
+	}
+
+	private void addEntity(Entity entity) {
+		// We assume that the cached node will be the parent
+		if (cachedNode != null) {
+			NodeObject parentObject = (NodeObject) cachedNode.getUserObject();
+			Entity parent = parentObject.getEntity();
+			if (parent instanceof Type) {
+				addEntity((Type) parent, entity);
+			}
+		}
+	}
+
+	private void removeEntity(Entity entity) {
+		DefaultMutableTreeNode treeNodeToRemove = entityToTreeNodeMap.get(entity);
+		treeModel.removeNodeFromParent(treeNodeToRemove);
+		treeModel.nodeChanged(treeNodeToRemove.getParent());
+
+		// If the cached node is the node to remove, then reset the cached node
+		if (treeNodeToRemove.equals(cachedNode)) {
+			cachedNode = null;
+		}
+
+		// Remove from map
+		entityToTreeNodeMap.remove(entity);
 	}
 
 	@Override
@@ -251,44 +282,31 @@ public class FieldTreePanel extends JPanel implements EventListener {
 
 	@EventMethod
 	public void onEntityNameChanged(EntityNameChangedEvent event) {
-		// Editable node is the selected one
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		NodeObject nodeObject = (NodeObject) node.getUserObject();
+		DefaultMutableTreeNode treeNode = entityToTreeNodeMap.get(event.getEntity());
+		NodeObject nodeObject = (NodeObject) treeNode.getUserObject();
 		nodeObject.refresh();
-		treeModel.nodeChanged(node);
+		treeModel.nodeChanged(cachedNode);
 	}
 
 	@EventMethod
-	public void onTypeNameChanged(FieldTypeChangedEvent event) {
-		// Editable node is the selected one
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		NodeObject nodeObject = (NodeObject) node.getUserObject();
+	public void onFieldTypeChanged(FieldTypeChangedEvent event) {
+		DefaultMutableTreeNode treeNode = entityToTreeNodeMap.get(event.getField());
+		NodeObject nodeObject = (NodeObject) treeNode.getUserObject();
 		nodeObject.refresh();
-		treeModel.nodeChanged(node);
+		treeModel.nodeChanged(treeNode);
 	}
 
 	@EventMethod
 	public void onNodeTypeChanged(NodeTypeChangedEvent event) {
-		// TODO Delete entity must go first before going in here
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		if (node == null) {
-			treeModel.reload();
-		} else {
-			NodeObject nodeObject = (NodeObject) node.getUserObject();
-			Entity entity = nodeObject.entity;
-			if (entity.equals(event.getNode())) {
-				nodeObject.refresh();
-				treeModel.nodeChanged(node);
-			} else {
-				treeModel.reload();
-			}
-		}
+		DefaultMutableTreeNode treeNode = entityToTreeNodeMap.get(event.getNode());
+		NodeObject nodeObject = (NodeObject) treeNode.getUserObject();
+		nodeObject.refresh();
+		treeModel.nodeChanged(treeNode);
 	}
 
 	@EventMethod
 	public void onEntityDeleted(EntityDeletedEvent event) {
-		DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-		treeModel.removeNodeFromParent(node);
+		removeEntity(event.getEntity());
 	}
 
 	private static class NodeObject {
