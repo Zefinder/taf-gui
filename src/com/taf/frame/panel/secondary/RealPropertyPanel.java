@@ -135,11 +135,11 @@ public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements P
 	}
 
 	private void updateMin() {
-		type.editMin(minValue);
+		type.editMinNumber(minValue);
 	}
 
 	private void updateMax() {
-		type.editMax(maxValue);
+		type.editMaxNumber(maxValue);
 	}
 
 	@Override

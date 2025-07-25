@@ -33,7 +33,7 @@ public class IntegerType extends NumericalType {
 	}
 
 	public void editMin(long minValue) {
-		super.editMin(minValue);
+		super.editMinNumber(minValue);
 	}
 
 	public long getMin() {
@@ -41,7 +41,7 @@ public class IntegerType extends NumericalType {
 	}
 
 	public void editMax(long maxValue) {
-		super.editMax(maxValue);
+		super.editMaxNumber(maxValue);
 	}
 
 	public long getMax() {

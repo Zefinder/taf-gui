@@ -32,7 +32,7 @@ public class RealType extends NumericalType {
 	}
 
 	public void editMin(long minValue) {
-		super.editMin(minValue);
+		super.editMinNumber(minValue);
 	}
 
 	public double getMin() {
@@ -40,7 +40,7 @@ public class RealType extends NumericalType {
 	}
 
 	public void editMax(long maxValue) {
-		super.editMax(maxValue);
+		super.editMaxNumber(maxValue);
 	}
 
 	public double getMax() {
@@ -62,9 +62,9 @@ public class RealType extends NumericalType {
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
 		if (typeParameter instanceof MinRealParameter) {
-			editMin(((MinRealParameter) typeParameter).getValue().doubleValue());
+			editMinNumber(((MinRealParameter) typeParameter).getValue().doubleValue());
 		} else if (typeParameter instanceof MaxRealParameter) {
-			editMax(((MaxRealParameter) typeParameter).getValue().doubleValue());
+			editMaxNumber(((MaxRealParameter) typeParameter).getValue().doubleValue());
 		} else if (typeParameter instanceof DistributionParameter) {
 			setDistribution(((DistributionParameter) typeParameter).getDistributionType());
 		} else if (typeParameter instanceof MeanParameter) {

@@ -26,7 +26,7 @@ public class RangesParameter extends TypeParameter {
 	public Range getRange(int index) {
 		return ranges.get(index);
 	}
-	
+
 	public List<Range> getRanges() {
 		return ranges;
 	}
@@ -34,7 +34,7 @@ public class RangesParameter extends TypeParameter {
 	public int size() {
 		return ranges.size();
 	}
-	
+
 	public void editLowerBound(int index, Number lowerBound) {
 		ranges.get(index).lowerBound = lowerBound;
 	}
@@ -42,7 +42,7 @@ public class RangesParameter extends TypeParameter {
 	public void editUpperBound(int index, Number upperBound) {
 		ranges.get(index).upperBound = upperBound;
 	}
-	
+
 	public void removeRange(int index) {
 		ranges.remove(index);
 	}
@@ -80,7 +80,7 @@ public class RangesParameter extends TypeParameter {
 	}
 
 	public static class Range {
-		
+
 		private static final String RANGE_STRING_FORMAT = "[%s, %s]";
 		private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
 
@@ -99,10 +99,20 @@ public class RangesParameter extends TypeParameter {
 		public Number getUpperBound() {
 			return upperBound;
 		}
-		
+
 		@Override
 		public String toString() {
 			return RANGE_STRING_FORMAT.formatted(realFormatter.format(lowerBound), realFormatter.format(upperBound));
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof Range)) {
+				return false;
+			}
+
+			Range other = (Range) obj;
+			return other.lowerBound.equals(lowerBound) && other.upperBound.equals(upperBound);
 		}
 	}
 

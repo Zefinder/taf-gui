@@ -1,4 +1,4 @@
-package com.taf.logic;
+package com.taf.logic.type;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
-import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
 
 class NodeTypeTest {

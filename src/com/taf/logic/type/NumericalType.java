@@ -26,10 +26,10 @@ public abstract class NumericalType extends FieldType {
 		this.typeNameParameter = new TypeNameParameter(typeName);
 		this.min = minParameter;
 		this.max = maxParameter;
-		this.distribution = new DistributionParameter(DistributionType.UNIFORM);
+		this.distribution = new DistributionParameter(ConstantManager.DEFAULT_DISTRIBUTION);
 	}
 
-	public void editMin(Number minValue) {
+	public void editMinNumber(Number minValue) {
 		min.setValue(minValue);
 	}
 
@@ -37,7 +37,7 @@ public abstract class NumericalType extends FieldType {
 		return min.getValue();
 	}
 
-	public void editMax(Number maxValue) {
+	public void editMaxNumber(Number maxValue) {
 		max.setValue(maxValue);
 	}
 
