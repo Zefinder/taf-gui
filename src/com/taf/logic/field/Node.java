@@ -27,30 +27,6 @@ public class Node extends Type {
 		this(name, new NodeType());
 	}
 
-	public void editMin(int minValue) {
-		type.editMinInstance(minValue);
-	}
-
-	public int getMin() {
-		return type.getMinInstance();
-	}
-
-	public void editMax(int maxValue) {
-		type.editMaxInstance(maxValue);
-	}
-
-	public int getMax() {
-		return type.getMaxInstance();
-	}
-
-	public void editInstanceNumber(int number) {
-		type.editInstanceNumber(number);
-	}
-
-	public int getInstanceNumber() {
-		return type.getInstanceNumber();
-	}
-
 	public void setType(String typeName) {
 		type.setType(typeName);
 	}

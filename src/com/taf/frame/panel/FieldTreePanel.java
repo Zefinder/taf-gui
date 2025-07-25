@@ -185,7 +185,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	private void initTreeNodes(DefaultMutableTreeNode parentNode, Type node) {
 		if (node instanceof Root) {
 			Root root = (Root) node;
-			for (Type type : root.getTypeList()) {
+			for (Type type : root.getTypeSet()) {
 				DefaultMutableTreeNode treeNode = new DefaultMutableTreeNode(new NodeObject(type), true);
 				parentNode.add(treeNode);
 				entityToTreeNodeMap.put(type, treeNode);

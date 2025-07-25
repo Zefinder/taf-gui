@@ -63,8 +63,8 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 
 		boolean hasMinMaxInstance = type.hasMinMaxInstance();
 		instanceNumber = type.getInstanceNumber();
-		minInstanceNumber = type.getMinInstance();
-		maxInstanceNumber = type.getMaxInstance();
+		minInstanceNumber = type.getMinInstanceNumber();
+		maxInstanceNumber = type.getMaxInstanceNumber();
 
 		boolean isRecursive = type.isRecursiveNode();
 		boolean hasMinMaxDepth = type.hasMinMaxDepth();
@@ -291,11 +291,11 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 	}
 
 	private void updateMinInstanceNumber() {
-		type.editMinInstance(minInstanceNumber);
+		type.editMinInstanceNumber(minInstanceNumber);
 	}
 
 	private void updateMaxInstanceNumber() {
-		type.editMaxInstance(maxInstanceNumber);
+		type.editMaxInstanceNumber(maxInstanceNumber);
 	}
 
 	private void updateDepthNumber() {

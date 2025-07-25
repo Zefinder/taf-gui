@@ -66,7 +66,7 @@ public abstract class Field implements Entity {
 
 	@Override
 	public String toString() {
-		return ConstantManager.FIELD_STRING_FORMAT.formatted(name, type.toString());
+		return ConstantManager.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
 	}
 
 	@Override

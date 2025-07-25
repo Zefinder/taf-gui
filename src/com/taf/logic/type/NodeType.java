@@ -46,23 +46,23 @@ public class NodeType extends FieldType {
 		minInstance = new MinInstanceParameter(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER);
 		maxInstance = new MaxInstanceParameter(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER);
 		depthNumber = new DepthNumberParameter(ConstantManager.DEFAULT_DEPTH_NUMBER);
-		minDepth = new MinDepthParameter(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER);
-		maxDepth = new MaxDepthParameter(ConstantManager.DEFAULT_MAX_INSTANCE_NUMBER);
+		minDepth = new MinDepthParameter(ConstantManager.DEFAULT_MIN_DEPTH_NUMBER);
+		maxDepth = new MaxDepthParameter(ConstantManager.DEFAULT_MAX_DEPTH_NUMBER);
 	}
 
-	public void editMinInstance(int minValue) {
+	public void editMinInstanceNumber(int minValue) {
 		minInstance.setValue(minValue);
 	}
 
-	public int getMinInstance() {
+	public int getMinInstanceNumber() {
 		return minInstance.getValue().intValue();
 	}
 
-	public void editMaxInstance(int maxValue) {
+	public void editMaxInstanceNumber(int maxValue) {
 		maxInstance.setValue(maxValue);
 	}
 
-	public int getMaxInstance() {
+	public int getMaxInstanceNumber() {
 		return maxInstance.getValue().intValue();
 	}
 

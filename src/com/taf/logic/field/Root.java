@@ -4,7 +4,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.taf.logic.Entity;
-import com.taf.logic.type.NodeType;
 import com.taf.manager.ConstantManager;
 
 public class Root extends Node {
@@ -13,12 +12,13 @@ public class Root extends Node {
 			<root name=\"%s\">
 			%s
 			%s
+			%s
 			</root>""";
 
 	private Set<Type> typeSet;
 
 	public Root(String name) {
-		super(name, new NodeType());
+		super(name);
 		typeSet = new LinkedHashSet<Type>();
 	}
 
@@ -52,8 +52,41 @@ public class Root extends Node {
 		typeSet.remove(type);
 	}
 	
-	public Set<Type> getTypeList() {
+	public Set<Type> getTypeSet() {
 		return typeSet;
+	}
+	
+	@Override
+	public void setType(String typeName) {
+		// A root cannot have a type
+	}
+	
+	@Override
+	public void setReference(String referenceName) {
+		// A root cannot have a reference
+	}
+	
+	@Override
+	public void setParent(Type parent) {
+		// A root has no parent
+	}
+	
+	@Override
+	public boolean hasType() {
+		// A root cannot have a type
+		return false;
+	}
+	
+	@Override
+	public boolean hasRef() {
+		// A root cannot have a reference
+		return false;
+	}
+	
+	@Override
+	public Node getParent() {
+		// A root has no parent
+		return null;
 	}
 	
 	private String insideTypesToString() {
@@ -74,15 +107,8 @@ public class Root extends Node {
 	}
 
 	@Override
-	public Node getParent() {
-		// Root has no parent
-		return null;
-	}
-
-	@Override
 	public String toString() {
-		
-		return ROOT_STRING_FORMAT.formatted(super.getName(), insideTypesToString(), super.insideFieldsToString());
+		return ROOT_STRING_FORMAT.formatted(super.getName(), insideTypesToString(), super.insideFieldsToString(), super.constraintsToString());
 	}
 
 }

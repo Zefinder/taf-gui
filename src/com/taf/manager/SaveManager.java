@@ -491,7 +491,7 @@ public class SaveManager extends Manager {
 	public void saveProject() throws IOException {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(projectFile))) {
 			// Write root node
-			int nodeCount = writeRoot(writer, projectRoot.getName(), projectRoot.getTypeList());
+			int nodeCount = writeRoot(writer, projectRoot.getName(), projectRoot.getTypeSet());
 			writeNode(writer, projectRoot, ROOT_PARENT + 1, nodeCount);
 		}
 	}

@@ -58,6 +58,8 @@ public class ConstantManager extends Manager {
 	public static final int DEFAULT_DEPTH_NUMBER = 1;
 	public static final int DEFAULT_MIN_INSTANCE_NUMBER = 1;
 	public static final int DEFAULT_MAX_INSTANCE_NUMBER = 1;
+	public static final int DEFAULT_MIN_DEPTH_NUMBER = 1;
+	public static final int DEFAULT_MAX_DEPTH_NUMBER = 1;
 	
 	public static final int SMALL_INSET_GAP = 5;
 	public static final int MEDIUM_INSET_GAP = 10;
