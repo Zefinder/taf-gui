@@ -1,4 +1,4 @@
-package com.taf.logic;
+package com.taf.logic.field;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -13,10 +13,6 @@ import java.util.LinkedHashSet;
 import org.junit.jupiter.api.Test;
 
 import com.taf.logic.constraint.Constraint;
-import com.taf.logic.field.Field;
-import com.taf.logic.field.Node;
-import com.taf.logic.field.Parameter;
-import com.taf.logic.field.Type;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.NodeType;
 

@@ -14,14 +14,16 @@ import com.taf.manager.ConstantManager;
 
 class IntegerTypeTest extends NumericalTypeTest {
 
+	private IntegerType integerType;
+	
 	public IntegerTypeTest() {
 		super(new IntegerType());
+		integerType = (IntegerType) type;
 	}
 
 	@Override
 	@Test
 	void testNumericalTypeChangeMinMax() {
-		IntegerType integerType = new IntegerType();
 		integerType.editMin(ConstantManager.DEFAULT_MIN_VALUE + 1);
 		integerType.editMax(ConstantManager.DEFAULT_MAX_VALUE + 1);
 		assertEquals(ConstantManager.DEFAULT_MIN_VALUE + 1, integerType.getMin());
@@ -31,7 +33,6 @@ class IntegerTypeTest extends NumericalTypeTest {
 	@Override
 	@Test
 	void testNumericalTypeAddRange() {
-		IntegerType integerType = new IntegerType();
 		long lowerBound = 1;
 		long upperBound = 2;
 		int weight = 3;
@@ -50,7 +51,6 @@ class IntegerTypeTest extends NumericalTypeTest {
 	@Override
 	@Test
 	void testNumericalTypeEditRange() {
-		IntegerType integerType = new IntegerType();
 		long lowerBound = 1;
 		long upperBound = 2;
 		int weight = 3;
@@ -73,7 +73,6 @@ class IntegerTypeTest extends NumericalTypeTest {
 	@Override
 	@Test
 	void testNumericalTypeRemoveRange() {
-		IntegerType integerType = new IntegerType();
 		long lowerBound = 1;
 		long upperBound = 2;
 		int weight = 3;
