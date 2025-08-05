@@ -41,6 +41,11 @@ public class Type extends Field {
 			addConstraint((Constraint) entity);
 		}
 	}
+	
+	@Override
+	public void setType(FieldType type) {
+		// Cannot change the type of a type!
+	}
 
 	public void removeEntity(Entity entity) {
 		if (entity instanceof Field) {

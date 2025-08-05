@@ -35,6 +35,11 @@ class NodeTest extends TypeTest {
 		assertFalse(node.hasRef());
 	}
 	
+	@Override
+	void testFieldEditTypeImpl() {
+		assertInstanceOf(NodeType.class, node.getType());
+	}
+	
 	@Test
 	void testNodeRecursive() {
 		String typeName = "type";

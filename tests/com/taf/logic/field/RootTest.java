@@ -41,17 +41,9 @@ class RootTest extends TypeTest {
 		assertEquals(0, root.getTypeSet().size());
 	}
 	
-	@Test
-	void testRootRecursive() {
-		// A root cannot be recursive
-		root.setType("type");
-		assertFalse(root.hasType());
-		assertFalse(root.hasRef());
-		
-		root.removeType();
-		root.setReference("ref");
-		assertFalse(root.hasType());
-		assertFalse(root.hasRef());
+	@Override
+	void testFieldEditTypeImpl() {
+		assertInstanceOf(NodeType.class, root.getType());
 	}
 	
 	@Override
@@ -75,6 +67,28 @@ class RootTest extends TypeTest {
 		HashSet<Type> expected = new LinkedHashSet<Type>();
 		expected.add(type);
 		assertIterableEquals(expected, root.getTypeSet());
+	}
+	
+	@Test
+	void testRootRecursive() {
+		// A root cannot be recursive
+		root.setType("type");
+		assertFalse(root.hasType());
+		assertFalse(root.hasRef());
+		
+		root.removeType();
+		root.setReference("ref");
+		assertFalse(root.hasType());
+		assertFalse(root.hasRef());
+	}
+	
+	@Test
+	void testRootRemoveType() {
+		Type type = new Type("type");
+		root.addEntity(type);
+		root.removeEntity(type);
+		
+		assertIterableEquals(new LinkedHashSet<Type>(), root.getTypeSet());
 	}
 	
 	@Test

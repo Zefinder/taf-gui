@@ -26,7 +26,7 @@ public class Node extends Type {
 	public Node(String name) {
 		this(name, new NodeType());
 	}
-
+	
 	public void setType(String typeName) {
 		type.setType(typeName);
 	}
@@ -54,7 +54,7 @@ public class Node extends Type {
 	@Override
 	public String getEntityTypeName() {
 		FieldType type = getType();
-		if (type.getName().isBlank()) {
+		if (getTypeName().isBlank()) {
 			return ConstantManager.NODE_ENTITY_NAME;
 		}
 

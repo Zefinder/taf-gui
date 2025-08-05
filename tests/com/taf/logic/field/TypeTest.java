@@ -18,12 +18,12 @@ import com.taf.manager.ConstantManager;
 class TypeTest extends FieldTest {
 
 	protected Type type;
-	
+
 	public TypeTest() {
 		super(new Type(name));
 		type = (Type) field;
 	}
-	
+
 	@Override
 	void testFieldDefaultValuesImpl() {
 		assertEquals(name, type.getName());
@@ -34,56 +34,93 @@ class TypeTest extends FieldTest {
 		assertEquals(0, type.getConstraintSet().size());
 	}
 
+	@Override
+	void testFieldEditTypeImpl() {
+		assertInstanceOf(DefaultFieldType.class, type.getType());
+	}
+
 	@Test
 	void testTypeAddField() {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
-		
+
 		assertEquals(type, parameter.getParent());
-		
+
 		HashSet<Field> expected = new LinkedHashSet<Field>();
 		expected.add(parameter);
 		assertIterableEquals(expected, type.getFieldSet());
 	}
-	
+
 	@Test
 	void testTypeAddFields() {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
-		
+
 		Field node2 = new Node("node");
 		type.addEntity(node2);
-		
+
 		assertEquals(type, parameter.getParent());
 		assertEquals(type, node2.getParent());
-		
+
 		HashSet<Field> expected = new LinkedHashSet<Field>();
 		expected.add(parameter);
 		expected.add(node2);
 		assertIterableEquals(expected, type.getFieldSet());
 	}
-	
+
 	@Test
 	void testTypeAddConstraint() {
 		Constraint constraint = new Constraint("constr");
 		type.addEntity(constraint);
-		
+
 		assertEquals(type, constraint.getParent());
-		
+
 		HashSet<Constraint> expected = new LinkedHashSet<Constraint>();
 		expected.add(constraint);
 		assertIterableEquals(expected, type.getConstraintSet());
 	}
-	
+
 	@Test
 	void testTypeAddType() {
 		Type type = new Type("type");
 		this.type.addEntity(type);
-		
+
 		assertEquals(null, type.getParent());
 		assertTrue(type.getFieldSet().isEmpty());
 		assertTrue(type.getConstraintSet().isEmpty());
 		assertEquals(0, type.indentationLevel);
 	}
+
+	@Test
+	void testTypeRemoveField() {
+		Field parameter = new Parameter("param", new DefaultFieldType());
+		type.addEntity(parameter);
+		type.removeEntity(parameter);
+
+		assertIterableEquals(new LinkedHashSet<Field>(), type.getFieldSet());
+	}
 	
+	@Test
+	void testTypeRemoveFields() {
+		Field parameter = new Parameter("param", new DefaultFieldType());
+		type.addEntity(parameter);
+
+		Field node2 = new Node("node");
+		type.addEntity(node2);
+
+		type.removeEntity(node2);
+		type.removeEntity(parameter);
+
+		assertIterableEquals(new LinkedHashSet<Field>(), type.getFieldSet());
+	}
+
+	@Test
+	void testTypeRemoveConstraint() {
+		Constraint constraint = new Constraint("constr");
+		type.addEntity(constraint);
+		type.removeEntity(constraint);
+
+		assertIterableEquals(new LinkedHashSet<Constraint>(), type.getConstraintSet());
+	}
+
 }
