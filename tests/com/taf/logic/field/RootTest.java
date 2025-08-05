@@ -15,13 +15,17 @@ import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.NodeType;
 
-class RootTest {
+class RootTest extends FieldTest {
 
-	@Test
-	void testRootEmpty() {
-		String name = "test";
-		Root root = new Root(name);
-
+	private Root root;
+	
+	public RootTest() {
+		super(new Root(name));
+		root = (Root) field;
+	}
+	
+	@Override
+	void testFieldDefaultValuesImpl() {
 		// Everything should be empty and parent null
 		assertEquals(name, root.getName());
 		assertNull(root.getParent());
@@ -35,9 +39,6 @@ class RootTest {
 	@Test
 	void testRootRecursive() {
 		// A root cannot be recursive
-		String name = "test";
-		Root root = new Root(name);
-		
 		root.setType("type");
 		assertFalse(root.hasType());
 		assertFalse(root.hasRef());
@@ -48,10 +49,9 @@ class RootTest {
 		assertFalse(root.hasRef());
 	}
 	
+	@Override
 	@Test
-	void testRootAddParent() {
-		String name = "test";
-		Root root = new Root(name);
+	void testFieldSetParent() {
 		Root root2 = new Root("a");
 		
 		root.setParent(root2);
@@ -60,8 +60,6 @@ class RootTest {
 	
 	@Test
 	void testRootAddField() {
-		String name = "test";
-		Root root = new Root(name);
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		root.addEntity(parameter);
 		
@@ -74,8 +72,6 @@ class RootTest {
 	
 	@Test
 	void testRootAddFields() {
-		String name = "test";
-		Root root = new Root(name);
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		root.addEntity(parameter);
 		
@@ -93,8 +89,6 @@ class RootTest {
 	
 	@Test
 	void testRootAddConstraint() {
-		String name = "test";
-		Root root = new Root(name);
 		Constraint constraint = new Constraint("constr");
 		root.addEntity(constraint);
 		
@@ -107,8 +101,6 @@ class RootTest {
 	
 	@Test
 	void testRootAddType() {
-		String name = "test";
-		Root root = new Root(name);
 		Type type = new Type("type");
 		root.addEntity(type);
 		
@@ -121,8 +113,6 @@ class RootTest {
 	
 	@Test
 	void testRootToString() {
-		String name = "test";
-		Root root = new Root(name);
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		Field node = new Node("node");
 		Type type = new Type("type");
@@ -144,7 +134,6 @@ class RootTest {
 				\t</node>
 				\t<constraint name="constr"/>
 				</root>""";
-		System.out.println(root.toString());
 		assertEquals(expected, root.toString());
 	}
 }

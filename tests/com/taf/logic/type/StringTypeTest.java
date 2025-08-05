@@ -20,8 +20,7 @@ class StringTypeTest extends TypeTest {
 	}
 
 	@Override
-	@Test
-	void testTypeDefaultValues() {
+	void testTypeDefaultValuesImpl() {
 		assertIterableEquals(new LinkedHashSet<Entry<String, Integer>>(), type.getValues());
 	}
 

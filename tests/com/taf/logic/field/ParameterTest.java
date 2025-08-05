@@ -1,0 +1,23 @@
+package com.taf.logic.field;
+
+import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import com.taf.logic.type.DefaultFieldType;
+
+class ParameterTest extends FieldTest {
+
+	private Parameter parameter;
+
+	public ParameterTest() {
+		super(new Parameter(name, new DefaultFieldType()));
+		parameter = (Parameter) field;
+	}
+
+	@Override
+	void testFieldDefaultValuesImpl() {
+		assertEquals(name, parameter.getName());
+		assertNull(parameter.getParent());
+	}
+
+}

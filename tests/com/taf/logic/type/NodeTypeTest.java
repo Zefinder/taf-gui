@@ -17,8 +17,7 @@ class NodeTypeTest extends TypeTest {
 	}
 	
 	@Override
-	@Test
-	void testTypeDefaultValues() {
+	void testTypeDefaultValuesImpl() {
 		assertEquals(ConstantManager.DEFAULT_INSTANCE_NUMBER, nodeType.getInstanceNumber());
 		assertEquals(ConstantManager.DEFAULT_MAX_INSTANCE_NUMBER, nodeType.getMaxInstanceNumber());
 		assertEquals(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER, nodeType.getMinInstanceNumber());

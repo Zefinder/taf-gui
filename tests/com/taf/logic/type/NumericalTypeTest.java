@@ -17,9 +17,8 @@ abstract class NumericalTypeTest extends TypeTest {
 		this.type = type;
 	}
 
-	@Test
 	@Override
-	void testTypeDefaultValues() {
+	void testTypeDefaultValuesImpl() {
 		assertEquals(ConstantManager.DEFAULT_MIN_VALUE, type.getMinNumber());
 		assertEquals(ConstantManager.DEFAULT_MAX_VALUE, type.getMaxNumber());
 		assertEquals(ConstantManager.DEFAULT_DISTRIBUTION, type.getDistribution());
@@ -45,11 +44,31 @@ abstract class NumericalTypeTest extends TypeTest {
 		assertEquals(ConstantManager.DEFAULT_VARIANCE_VALUE + 1.5, type.getVariance());
 	}
 
-	abstract void testNumericalTypeChangeMinMax();
+	@Test
+	void testNumericalTypeChangeMinMax() {
+		testNumericalTypeChangeMinMaxImpl();
+	}
+	
+	@Test
+	void testNumericalTypeAddRange() {
+		testNumericalTypeAddRangeImpl();
+	}
+	
+	@Test
+	void testNumericalTypeEditRange() {
+		testNumericalTypeEditRangeImpl();
+	}
+	
+	@Test
+	void testNumericalTypeRemoveRange() {
+		testNumericalTypeRemoveRangeImpl();
+	}
+	
+	abstract void testNumericalTypeChangeMinMaxImpl();
 
-	abstract void testNumericalTypeAddRange();
+	abstract void testNumericalTypeAddRangeImpl();
 
-	abstract void testNumericalTypeEditRange();
+	abstract void testNumericalTypeEditRangeImpl();
 
-	abstract void testNumericalTypeRemoveRange();
+	abstract void testNumericalTypeRemoveRangeImpl();
 }

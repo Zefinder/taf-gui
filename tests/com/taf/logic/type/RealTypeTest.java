@@ -7,8 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.Test;
-
 import com.taf.logic.type.parameter.RangesParameter.Range;
 import com.taf.manager.ConstantManager;
 
@@ -22,8 +20,7 @@ class RealTypeTest extends NumericalTypeTest{
 	}
 
 	@Override
-	@Test
-	void testNumericalTypeChangeMinMax() {
+	void testNumericalTypeChangeMinMaxImpl() {
 		realType.editMin(ConstantManager.DEFAULT_MIN_VALUE + 1);
 		realType.editMax(ConstantManager.DEFAULT_MAX_VALUE + 1);
 		assertEquals(ConstantManager.DEFAULT_MIN_VALUE + 1, realType.getMin());
@@ -31,8 +28,7 @@ class RealTypeTest extends NumericalTypeTest{
 	}
 
 	@Override
-	@Test
-	void testNumericalTypeAddRange() {
+	void testNumericalTypeAddRangeImpl() {
 		double lowerBound = 1.5;
 		double upperBound = 2.5;
 		int weight = 3;
@@ -49,8 +45,7 @@ class RealTypeTest extends NumericalTypeTest{
 	}
 
 	@Override
-	@Test
-	void testNumericalTypeEditRange() {
+	void testNumericalTypeEditRangeImpl() {
 		double lowerBound = 1.5;
 		double upperBound = 2.5;
 		int weight = 3;
@@ -71,8 +66,7 @@ class RealTypeTest extends NumericalTypeTest{
 	}
 
 	@Override
-	@Test
-	void testNumericalTypeRemoveRange() {
+	void testNumericalTypeRemoveRangeImpl() {
 		double lowerBound = 1.5;
 		double upperBound = 2.5;
 		int weight = 3;

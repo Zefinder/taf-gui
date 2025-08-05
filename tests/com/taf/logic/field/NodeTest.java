@@ -16,13 +16,17 @@ import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.NodeType;
 
-class NodeTest {
+class NodeTest extends FieldTest {
 
-	@Test
-	void testNodeEmpty() {
-		String name = "test";
-		Node node = new Node(name);
-		
+	private Node node;
+	
+	public NodeTest() {
+		super(new Node(name));
+		node = (Node) field;
+	}
+	
+	@Override
+	void testFieldDefaultValuesImpl() {
 		// Everything should be empty and parent null
 		assertEquals(name, node.getName());
 		assertNull(node.getParent());
@@ -35,10 +39,6 @@ class NodeTest {
 	
 	@Test
 	void testNodeRecursive() {
-		// A root cannot be recursive
-		String name = "test";
-		Node node = new Node(name);
-		
 		node.setType("type");
 		assertTrue(node.hasType());
 		assertFalse(node.hasRef());
@@ -53,19 +53,7 @@ class NodeTest {
 	}
 	
 	@Test
-	void testNodeAddParent() {
-		String name = "test";
-		Node node = new Node(name);
-		Node node2 = new Node("a");
-		
-		node.setParent(node2);
-		assertEquals(node2, node.getParent());
-	}
-	
-	@Test
 	void testNodeAddField() {
-		String name = "test";
-		Node node = new Node(name);
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		node.addEntity(parameter);
 		
@@ -78,8 +66,6 @@ class NodeTest {
 	
 	@Test
 	void testNodeAddFields() {
-		String name = "test";
-		Node node = new Node(name);
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		node.addEntity(parameter);
 		
@@ -97,8 +83,6 @@ class NodeTest {
 	
 	@Test
 	void testNodeAddConstraint() {
-		String name = "test";
-		Node node = new Node(name);
 		Constraint constraint = new Constraint("constr");
 		node.addEntity(constraint);
 		
@@ -111,8 +95,6 @@ class NodeTest {
 	
 	@Test
 	void testNodeAddType() {
-		String name = "test";
-		Node node = new Node(name);
 		Type type = new Type("type");
 		node.addEntity(type);
 		

@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 import com.taf.manager.ConstantManager;
 
-public class BooleanTypeTest extends TypeTest {
+class BooleanTypeTest extends TypeTest {
 	
 	private BooleanType type;
 	
@@ -15,8 +15,7 @@ public class BooleanTypeTest extends TypeTest {
 	}
 	
 	@Override
-	@Test
-	void testTypeDefaultValues() {
+	void testTypeDefaultValuesImpl() {
 		assertEquals(ConstantManager.DEFAULT_WEIGHT_VALUE, type.getFalseWeight());
 		assertEquals(ConstantManager.DEFAULT_WEIGHT_VALUE, type.getTrueWeight());
 	}
