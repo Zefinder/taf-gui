@@ -18,6 +18,7 @@ class ParameterTest extends FieldTest {
 	void testFieldDefaultValuesImpl() {
 		assertEquals(name, parameter.getName());
 		assertNull(parameter.getParent());
+		assertEquals(new DefaultFieldType().typeToString(), parameter.getEntityTypeName());
 	}
 
 }

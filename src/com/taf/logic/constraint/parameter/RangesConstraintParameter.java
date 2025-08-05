@@ -32,7 +32,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 	public void editRightRange(int index, String right) {
 		ranges.get(index).setRight(right.strip());
 	}
-	
+
 	public List<Range> getRanges() {
 		return ranges;
 	}
@@ -68,7 +68,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 			}
 		}
 	}
-	
+
 	public static class Range {
 
 		private static final String RANGE_STRING_FORMAT = "[%s, %s]";
@@ -84,7 +84,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 		public String getLeft() {
 			return left;
 		}
-		
+
 		public void setLeft(String left) {
 			this.left = left;
 		}
@@ -92,9 +92,19 @@ public class RangesConstraintParameter extends ConstraintParameter {
 		public String getRight() {
 			return right;
 		}
-		
+
 		public void setRight(String right) {
 			this.right = right;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof Range)) {
+				return false;
+			}
+
+			Range other = (Range) obj;
+			return other.left.equals(left) && other.right.equals(right);
 		}
 
 		@Override

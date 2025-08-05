@@ -14,26 +14,31 @@ import org.junit.jupiter.api.Test;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.NodeType;
+import com.taf.manager.ConstantManager;
 
-class RootTest extends FieldTest {
+class RootTest extends TypeTest {
 
 	private Root root;
 	
 	public RootTest() {
-		super(new Root(name));
-		root = (Root) field;
+		root = new Root(name);
+		
+		// Update hierarchy
+		field = root;
+		type = root;
 	}
 	
 	@Override
 	void testFieldDefaultValuesImpl() {
-		// Everything should be empty and parent null
-		assertEquals(name, root.getName());
-		assertNull(root.getParent());
-		assertInstanceOf(NodeType.class, root.getType());
+		assertEquals(name, type.getName());
+		assertNull(type.getParent());
+		assertInstanceOf(NodeType.class, type.getType());
+		assertEquals(ConstantManager.NODE_ENTITY_NAME, type.getEntityTypeName());
+		assertEquals(0, type.getFieldSet().size());
+		assertEquals(0, type.getConstraintSet().size());
 		assertFalse(root.hasType());
 		assertFalse(root.hasRef());
-		assertEquals(0, root.getFieldSet().size());
-		assertEquals(0, root.getConstraintSet().size());
+		assertEquals(0, root.getTypeSet().size());
 	}
 	
 	@Test
@@ -54,53 +59,14 @@ class RootTest extends FieldTest {
 	void testFieldSetParent() {
 		Root root2 = new Root("a");
 		
-		root.setParent(root2);
+		root2.addEntity(root);
 		assertNull(root.getParent());
+		assertEquals(0, root.indentationLevel);
 	}
 	
+	@Override
 	@Test
-	void testRootAddField() {
-		Field parameter = new Parameter("param", new DefaultFieldType());
-		root.addEntity(parameter);
-		
-		assertEquals(root, parameter.getParent());
-		
-		HashSet<Field> expected = new LinkedHashSet<Field>();
-		expected.add(parameter);
-		assertIterableEquals(expected, root.getFieldSet());
-	}
-	
-	@Test
-	void testRootAddFields() {
-		Field parameter = new Parameter("param", new DefaultFieldType());
-		root.addEntity(parameter);
-		
-		Field node = new Node("node");
-		root.addEntity(node);
-		
-		assertEquals(root, parameter.getParent());
-		assertEquals(root, node.getParent());
-		
-		HashSet<Field> expected = new LinkedHashSet<Field>();
-		expected.add(parameter);
-		expected.add(node);
-		assertIterableEquals(expected, root.getFieldSet());
-	}
-	
-	@Test
-	void testRootAddConstraint() {
-		Constraint constraint = new Constraint("constr");
-		root.addEntity(constraint);
-		
-		assertEquals(root, constraint.getParent());
-		
-		HashSet<Constraint> expected = new LinkedHashSet<Constraint>();
-		expected.add(constraint);
-		assertIterableEquals(expected, root.getConstraintSet());
-	}
-	
-	@Test
-	void testRootAddType() {
+	void testTypeAddType() {
 		Type type = new Type("type");
 		root.addEntity(type);
 		

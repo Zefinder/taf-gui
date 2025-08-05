@@ -16,10 +16,10 @@ abstract class FieldTest {
 	
 	@Test
 	void testFieldSetParent() {
-		Type type = new Type("a");
+		Root root = new Root("a");
 		
-		type.addEntity(field);
-		assertEquals(type, field.getParent());
+		root.addEntity(field);
+		assertEquals(root, field.getParent());
 		assertEquals(1, field.indentationLevel);
 	}
 	

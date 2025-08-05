@@ -33,7 +33,9 @@ public class Type extends Field {
 		if (entity instanceof Field) {
 			// Add field if not a pure type
 			if (entity instanceof Node || entity instanceof Parameter) {
-				addField((Field) entity);
+				if (!(entity instanceof Root)) {
+					addField((Field) entity);
+				}
 			}
 		} else if (entity instanceof Constraint) {
 			addConstraint((Constraint) entity);
