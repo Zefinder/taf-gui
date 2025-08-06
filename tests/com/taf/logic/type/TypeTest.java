@@ -9,6 +9,20 @@ abstract class TypeTest {
 		testTypeDefaultValuesImpl();
 	}
 	
+	@Test
+	void testMandatoryParameters() {
+		testTypeMandatoryParametersImpl();
+	}
+	
+	@Test
+	void testOptionalParameters() {
+		testTypeOptionalParametersImpl();
+	}
+	
 	abstract void testTypeDefaultValuesImpl();
 
+	abstract void testTypeMandatoryParametersImpl();
+	
+	abstract void testTypeOptionalParametersImpl();
+	
 }

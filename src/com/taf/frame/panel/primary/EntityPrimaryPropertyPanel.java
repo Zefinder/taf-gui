@@ -8,8 +8,8 @@ import javax.swing.JTextField;
 import com.taf.event.Event;
 import com.taf.event.entity.EntityNameChangedEvent;
 import com.taf.logic.Entity;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
+import com.taf.util.Consts;
 
 public abstract class EntityPrimaryPropertyPanel extends JPanel {
 
@@ -23,7 +23,7 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 
 		this.name = entity.getName();
 
-		entityName = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		entityName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		entityName.setText(name);
 		entityName.addActionListener(e -> {
 			String text = entityName.getText();

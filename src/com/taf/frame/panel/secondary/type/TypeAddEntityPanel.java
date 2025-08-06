@@ -17,8 +17,8 @@ import com.taf.frame.dialog.ParameterCreationDialog;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
+import com.taf.util.Consts;
 
 public class TypeAddEntityPanel extends JPanel {
 	
@@ -30,7 +30,7 @@ public class TypeAddEntityPanel extends JPanel {
 	public TypeAddEntityPanel() {
 		this.setLayout(new GridBagLayout());
 		
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 1;
@@ -49,7 +49,7 @@ public class TypeAddEntityPanel extends JPanel {
 		});
 		this.add(addNodeButton, c);
 		
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, Consts.MEDIUM_INSET_GAP, 0);
 		c.gridy = 1;
 		JButton addParameterButton = new JButton(ADD_PARAMETER_BUTTON_TEXT);
 		addParameterButton.addActionListener(e -> {

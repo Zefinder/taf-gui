@@ -5,26 +5,50 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
+import com.taf.logic.type.parameter.DistributionParameter;
+import com.taf.logic.type.parameter.MaxRealParameter;
+import com.taf.logic.type.parameter.MeanParameter;
+import com.taf.logic.type.parameter.MinRealParameter;
+import com.taf.logic.type.parameter.RangesParameter;
 import com.taf.logic.type.parameter.RangesParameter.Range;
-import com.taf.manager.ConstantManager;
+import com.taf.logic.type.parameter.VarianceParameter;
+import com.taf.logic.type.parameter.WeightsParameter;
+import com.taf.util.Consts;
+import com.taf.util.HashSetBuilder;
 
-class RealTypeTest extends NumericalTypeTest{
+class RealTypeTest extends NumericalTypeTest {
 
 	private RealType realType;
-	
+
 	public RealTypeTest() {
 		super(new RealType());
 		realType = (RealType) type;
 	}
+	
+	@Override
+	void testTypeMandatoryParametersImpl() {
+		HashSet<String> mandatoryTypeParameters = new HashSetBuilder<String>().add(MaxRealParameter.PARAMETER_NAME)
+				.add(MinRealParameter.PARAMETER_NAME).build();
+		assertIterableEquals(mandatoryTypeParameters, type.getMandatoryParametersName());
+	}
+
+	@Override
+	void testTypeOptionalParametersImpl() {
+		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>().add(DistributionParameter.PARAMETER_NAME)
+				.add(MeanParameter.PARAMETER_NAME).add(VarianceParameter.PARAMETER_NAME)
+				.add(RangesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
+		assertIterableEquals(optionalTypeParameters, type.getOptionalParametersName());
+	}
 
 	@Override
 	void testNumericalTypeChangeMinMaxImpl() {
-		realType.editMin(ConstantManager.DEFAULT_MIN_VALUE + 1);
-		realType.editMax(ConstantManager.DEFAULT_MAX_VALUE + 1);
-		assertEquals(ConstantManager.DEFAULT_MIN_VALUE + 1, realType.getMin());
-		assertEquals(ConstantManager.DEFAULT_MAX_VALUE + 1, realType.getMax());
+		realType.editMin(Consts.DEFAULT_MIN_VALUE + 1);
+		realType.editMax(Consts.DEFAULT_MAX_VALUE + 1);
+		assertEquals(Consts.DEFAULT_MIN_VALUE + 1, realType.getMin());
+		assertEquals(Consts.DEFAULT_MAX_VALUE + 1, realType.getMax());
 	}
 
 	@Override
@@ -73,7 +97,7 @@ class RealTypeTest extends NumericalTypeTest{
 
 		realType.addInterval(lowerBound, upperBound, weight);
 		realType.removeInterval(0);
-		
+
 		assertIterableEquals(new ArrayList<Range>(), realType.getRanges());
 		assertArrayEquals(new int[0], realType.getWeights());
 	}

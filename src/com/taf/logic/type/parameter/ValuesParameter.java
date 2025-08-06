@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.taf.exception.ParseException;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class ValuesParameter extends TypeParameter {
 
@@ -46,7 +46,7 @@ public class ValuesParameter extends TypeParameter {
 	 * @return true if the value was added (if value was not already present)
 	 */
 	public boolean addValue(String value) {
-		return addValue(value, ConstantManager.DEFAULT_WEIGHT_VALUE);
+		return addValue(value, Consts.DEFAULT_WEIGHT_VALUE);
 	}
 
 	/**
@@ -134,7 +134,7 @@ public class ValuesParameter extends TypeParameter {
 
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 
 		for (String value : values) {
@@ -146,7 +146,7 @@ public class ValuesParameter extends TypeParameter {
 
 	@Override
 	public String valueToString() {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String valueStr = "";
 
 		for (String value : valueMap.keySet()) {

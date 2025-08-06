@@ -2,7 +2,7 @@ package com.taf.logic.field;
 
 import com.taf.logic.Entity;
 import com.taf.logic.type.FieldType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public abstract class Field implements Entity {
 
@@ -45,7 +45,7 @@ public abstract class Field implements Entity {
 	}
 
 	protected String getIndentation() {
-		final String tab = ConstantManager.TAB;
+		final String tab = Consts.TAB;
 		String indent = "";
 		for (int i = 0; i < indentationLevel; i++) {
 			indent += tab;
@@ -66,7 +66,7 @@ public abstract class Field implements Entity {
 
 	@Override
 	public String toString() {
-		return ConstantManager.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
+		return Consts.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
 	}
 
 	@Override

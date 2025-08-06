@@ -6,7 +6,7 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 
 import com.taf.logic.field.Type;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class TypePropertyPanel extends EntityPrimaryPropertyPanel {
 
@@ -15,16 +15,16 @@ public class TypePropertyPanel extends EntityPrimaryPropertyPanel {
 	public TypePropertyPanel(Type node) {
 		super(node);
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
 		c.weightx = 0;
 		c.weighty = 0;
-		JLabel nodeLabel = new JLabel(ConstantManager.TYPE_NAME_LABEL_TEXT);
+		JLabel nodeLabel = new JLabel(Consts.TYPE_NAME_LABEL_TEXT);
 		this.add(nodeLabel, c);
 
-		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
+		c.insets = new Insets(0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		this.add(entityName, c);

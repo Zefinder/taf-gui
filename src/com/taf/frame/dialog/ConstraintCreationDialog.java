@@ -7,7 +7,7 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import com.taf.logic.constraint.Constraint;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class ConstraintCreationDialog extends InputInformationDialog {
 
@@ -24,20 +24,20 @@ public class ConstraintCreationDialog extends InputInformationDialog {
 
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.LARGE_INSET_GAP,
-				ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.LARGE_INSET_GAP,
+				Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
 		c.fill = GridBagConstraints.BOTH;
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 0;
-		JLabel constraintLabel = new JLabel(ConstantManager.CONSTRAINT_NAME_LABEL_TEXT);
+		JLabel constraintLabel = new JLabel(Consts.CONSTRAINT_NAME_LABEL_TEXT);
 		addComponent(constraintLabel, c);
 
-		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, ConstantManager.SMALL_INSET_GAP,
-				ConstantManager.SMALL_INSET_GAP, ConstantManager.LARGE_INSET_GAP);
+		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.SMALL_INSET_GAP,
+				Consts.SMALL_INSET_GAP, Consts.LARGE_INSET_GAP);
 		c.gridx = 1;
-		constraintName = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		constraintName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addComponent(constraintName, c);
 	}
 

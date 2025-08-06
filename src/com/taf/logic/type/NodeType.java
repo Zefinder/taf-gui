@@ -12,7 +12,7 @@ import com.taf.logic.type.parameter.MinInstanceParameter;
 import com.taf.logic.type.parameter.ReferenceParameter;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 
 public class NodeType extends FieldType {
@@ -42,12 +42,12 @@ public class NodeType extends FieldType {
 	public NodeType() {
 		typeName = new TypeNameParameter(EMPTY_TYPE_REF_NAME);
 		refName = new ReferenceParameter(EMPTY_TYPE_REF_NAME);
-		instanceNumber = new InstanceNumberParameter(ConstantManager.DEFAULT_INSTANCE_NUMBER);
-		minInstance = new MinInstanceParameter(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER);
-		maxInstance = new MaxInstanceParameter(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER);
-		depthNumber = new DepthNumberParameter(ConstantManager.DEFAULT_DEPTH_NUMBER);
-		minDepth = new MinDepthParameter(ConstantManager.DEFAULT_MIN_DEPTH_NUMBER);
-		maxDepth = new MaxDepthParameter(ConstantManager.DEFAULT_MAX_DEPTH_NUMBER);
+		instanceNumber = new InstanceNumberParameter(Consts.DEFAULT_INSTANCE_NUMBER);
+		minInstance = new MinInstanceParameter(Consts.DEFAULT_MIN_INSTANCE_NUMBER);
+		maxInstance = new MaxInstanceParameter(Consts.DEFAULT_MIN_INSTANCE_NUMBER);
+		depthNumber = new DepthNumberParameter(Consts.DEFAULT_DEPTH_NUMBER);
+		minDepth = new MinDepthParameter(Consts.DEFAULT_MIN_DEPTH_NUMBER);
+		maxDepth = new MaxDepthParameter(Consts.DEFAULT_MAX_DEPTH_NUMBER);
 	}
 
 	public void editMinInstanceNumber(int minValue) {
@@ -194,7 +194,7 @@ public class NodeType extends FieldType {
 
 	@Override
 	public String typeToString() {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
+		final String separator = Consts.PARAMETER_SEPARATOR;
 		String typeStr = "";
 
 		if (hasType) {

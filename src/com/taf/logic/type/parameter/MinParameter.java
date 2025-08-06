@@ -2,13 +2,13 @@ package com.taf.logic.type.parameter;
 
 import java.text.DecimalFormat;
 
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public abstract class MinParameter extends TypeParameter {
 
 	public static final String PARAMETER_NAME = "min";
 
-	private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
+	private final DecimalFormat realFormatter = Consts.REAL_FORMATTER;
 
 	protected Number value;
 	private boolean isReal;

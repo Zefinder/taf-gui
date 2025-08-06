@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.taf.exception.ParseException;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class WeightsParameter extends TypeParameter {
 
@@ -46,7 +46,7 @@ public class WeightsParameter extends TypeParameter {
 
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 		weights = new ArrayList<Integer>();
 
@@ -62,7 +62,7 @@ public class WeightsParameter extends TypeParameter {
 
 	@Override
 	public String valueToString() {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String valueStr = "";
 
 		for (int i = 0; i < weights.size(); i++) {

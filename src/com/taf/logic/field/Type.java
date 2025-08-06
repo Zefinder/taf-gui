@@ -7,7 +7,7 @@ import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.FieldType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class Type extends Field {
 
@@ -75,8 +75,8 @@ public class Type extends Field {
 	}
 
 	protected final String insideFieldsToString() {
-		final String lineJump = ConstantManager.LINE_JUMP;
-		final String indent = getIndentation() + ConstantManager.TAB;
+		final String lineJump = Consts.LINE_JUMP;
+		final String indent = getIndentation() + Consts.TAB;
 
 		String strFields = "";
 		int i = 0;
@@ -92,8 +92,8 @@ public class Type extends Field {
 	}
 
 	protected final String constraintsToString() {
-		final String lineJump = ConstantManager.LINE_JUMP;
-		final String indent = getIndentation() + ConstantManager.TAB;
+		final String lineJump = Consts.LINE_JUMP;
+		final String indent = getIndentation() + Consts.TAB;
 
 		String strConstraints = "";
 		int i = 0;
@@ -121,14 +121,14 @@ public class Type extends Field {
 
 	@Override
 	public String getEntityTypeName() {
-		return ConstantManager.TYPE_ENTITY_NAME;
+		return Consts.TYPE_ENTITY_NAME;
 	}
 
 	@Override
 	public String toString() {
 		String typeStr = "";
 		if (!fieldSet.isEmpty()) {
-			typeStr += insideFieldsToString() + ConstantManager.LINE_JUMP;
+			typeStr += insideFieldsToString() + Consts.LINE_JUMP;
 		}
 
 		if (!constraintSet.isEmpty()) {

@@ -8,6 +8,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.taf.util.Consts;
+
 public class SettingsManager extends Manager {
 
 	private static final SettingsManager instance = new SettingsManager();
@@ -35,7 +37,7 @@ public class SettingsManager extends Manager {
 			try {
 				settingsFile.createNewFile();
 			} catch (IOException e) {
-				ConstantManager.showError(SETTINGS_FILE_CREATION_ERROR + e.getMessage());
+				Consts.showError(SETTINGS_FILE_CREATION_ERROR + e.getMessage());
 				e.printStackTrace();
 			}
 		}
@@ -45,7 +47,7 @@ public class SettingsManager extends Manager {
 		try (BufferedReader reader = new BufferedReader(new FileReader(settingsFile))) {
 			settings.load(reader);
 		} catch (IOException e) {
-			ConstantManager.showError(SETTINGS_FILE_READ_ERROR + e.getMessage());
+			Consts.showError(SETTINGS_FILE_READ_ERROR + e.getMessage());
 			e.printStackTrace();
 		}
 		
@@ -53,6 +55,11 @@ public class SettingsManager extends Manager {
 		if (!settings.containsKey(TAF_PATH_PROPERTY)) {
 			settings.setProperty(TAF_PATH_PROPERTY, DEFAULT_TAF_PATH);
 		}
+	}
+	
+	@Override
+	public void clearManager() {
+		// Nothing to do here
 	}
 
 	public String getTafDirectory() {
@@ -68,7 +75,7 @@ public class SettingsManager extends Manager {
 		try (BufferedWriter writer = new BufferedWriter(new FileWriter(settingsFile))) {
 			settings.store(writer, "");
 		} catch (IOException e) {
-			ConstantManager.showError(SETTINGS_FILE_WRITE_ERROR + e.getMessage());
+			Consts.showError(SETTINGS_FILE_WRITE_ERROR + e.getMessage());
 			e.printStackTrace();
 		}
 	}

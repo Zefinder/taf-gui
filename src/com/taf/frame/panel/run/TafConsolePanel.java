@@ -10,9 +10,9 @@ import javax.swing.JTextPane;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 import com.taf.event.ProcessReadyEvent;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
+import com.taf.util.Consts;
 
 public class TafConsolePanel extends JPanel implements EventListener {
 
@@ -23,7 +23,7 @@ public class TafConsolePanel extends JPanel implements EventListener {
 	public TafConsolePanel() {
 		this.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.fill = GridBagConstraints.BOTH;
@@ -32,7 +32,7 @@ public class TafConsolePanel extends JPanel implements EventListener {
 
 		textPane = new JTextPane();
 		textPane.setEditable(false);
-		textPane.setBackground(ConstantManager.CONSOLE_BACKGROUND_COLOR);
+		textPane.setBackground(Consts.CONSOLE_BACKGROUND_COLOR);
 
 		JScrollPane scrollPane = new JScrollPane(textPane);
 		this.add(scrollPane, c);

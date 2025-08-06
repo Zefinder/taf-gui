@@ -11,7 +11,7 @@ import com.taf.logic.constraint.parameter.RangesConstraintParameter;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
 import com.taf.logic.constraint.parameter.TypesConstraintParameter;
 import com.taf.logic.field.Type;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class Constraint implements Entity {
 
@@ -123,7 +123,7 @@ public class Constraint implements Entity {
 	}
 
 	public String parametersToString() {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
+		final String separator = Consts.PARAMETER_SEPARATOR;
 		String paramStr = "";
 		if (!expressionsConstraintParameter.getExpressions().isEmpty()) {
 			paramStr += separator + expressionsConstraintParameter.toString();
@@ -166,14 +166,14 @@ public class Constraint implements Entity {
 	
 	@Override
 	public String getEntityTypeName() {
-		return ConstantManager.CONSTRAINT_ENTITY_NAME;
+		return Consts.CONSTRAINT_ENTITY_NAME;
 	}
 
 	@Override
 	public String toString() {
 		String paramStr = parametersToString();
 		return CONSTRAINT_STRING_FORMAT
-				.formatted(ConstantManager.FIELD_STRING_FORMAT.formatted(name, paramStr.strip()).stripTrailing());
+				.formatted(Consts.FIELD_STRING_FORMAT.formatted(name, paramStr.strip()).stripTrailing());
 	}
 
 }

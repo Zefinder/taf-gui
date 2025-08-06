@@ -1,7 +1,7 @@
 package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class DistributionParameter extends TypeParameter {
 
@@ -17,8 +17,8 @@ public class DistributionParameter extends TypeParameter {
 
 	public DistributionParameter() {
 		super(PARAMETER_NAME);
-		meanParameter = new MeanParameter(ConstantManager.DEFAULT_MEAN_VALUE);
-		varianceParameter = new VarianceParameter(ConstantManager.DEFAULT_VARIANCE_VALUE);
+		meanParameter = new MeanParameter(Consts.DEFAULT_MEAN_VALUE);
+		varianceParameter = new VarianceParameter(Consts.DEFAULT_VARIANCE_VALUE);
 		rangesParameter = new RangesParameter();
 		weightsParameter = new WeightsParameter();
 	}

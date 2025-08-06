@@ -7,7 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
 import com.taf.logic.type.parameter.DistributionType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 abstract class NumericalTypeTest extends TypeTest {
 
@@ -19,11 +19,11 @@ abstract class NumericalTypeTest extends TypeTest {
 
 	@Override
 	void testTypeDefaultValuesImpl() {
-		assertEquals(ConstantManager.DEFAULT_MIN_VALUE, type.getMinNumber());
-		assertEquals(ConstantManager.DEFAULT_MAX_VALUE, type.getMaxNumber());
-		assertEquals(ConstantManager.DEFAULT_DISTRIBUTION, type.getDistribution());
-		assertEquals(ConstantManager.DEFAULT_MEAN_VALUE, type.getMean());
-		assertEquals(ConstantManager.DEFAULT_VARIANCE_VALUE, type.getVariance());
+		assertEquals(Consts.DEFAULT_MIN_VALUE, type.getMinNumber());
+		assertEquals(Consts.DEFAULT_MAX_VALUE, type.getMaxNumber());
+		assertEquals(Consts.DEFAULT_DISTRIBUTION, type.getDistribution());
+		assertEquals(Consts.DEFAULT_MEAN_VALUE, type.getMean());
+		assertEquals(Consts.DEFAULT_VARIANCE_VALUE, type.getVariance());
 		assertEquals(0, type.getRangeNumber());
 		assertEquals(0, type.getWeights().length);
 	}
@@ -37,11 +37,11 @@ abstract class NumericalTypeTest extends TypeTest {
 
 	@Test
 	void testNumericalTypeChangeMeanVariance() {
-		type.editMean(ConstantManager.DEFAULT_MEAN_VALUE + 1.5);
-		type.editVariance(ConstantManager.DEFAULT_VARIANCE_VALUE + 1.5);
+		type.editMean(Consts.DEFAULT_MEAN_VALUE + 1.5);
+		type.editVariance(Consts.DEFAULT_VARIANCE_VALUE + 1.5);
 
-		assertEquals(ConstantManager.DEFAULT_MEAN_VALUE + 1.5, type.getMean());
-		assertEquals(ConstantManager.DEFAULT_VARIANCE_VALUE + 1.5, type.getVariance());
+		assertEquals(Consts.DEFAULT_MEAN_VALUE + 1.5, type.getMean());
+		assertEquals(Consts.DEFAULT_VARIANCE_VALUE + 1.5, type.getVariance());
 	}
 
 	@Test

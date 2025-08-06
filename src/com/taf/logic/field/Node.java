@@ -2,7 +2,7 @@ package com.taf.logic.field;
 
 import com.taf.logic.type.FieldType;
 import com.taf.logic.type.NodeType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class Node extends Type {
 
@@ -55,7 +55,7 @@ public class Node extends Type {
 	public String getEntityTypeName() {
 		FieldType type = getType();
 		if (getTypeName().isBlank()) {
-			return ConstantManager.NODE_ENTITY_NAME;
+			return Consts.NODE_ENTITY_NAME;
 		}
 
 		return type.getName();
@@ -65,7 +65,7 @@ public class Node extends Type {
 	public String toString() {
 		String nodeStr = "";
 		if (!getFieldSet().isEmpty()) {
-			nodeStr += insideFieldsToString() + ConstantManager.LINE_JUMP;
+			nodeStr += insideFieldsToString() + Consts.LINE_JUMP;
 		}
 
 		if (!getConstraintSet().isEmpty()) {

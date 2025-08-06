@@ -2,6 +2,7 @@ package com.taf.logic.type;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -9,7 +10,10 @@ import java.util.Map.Entry;
 
 import org.junit.jupiter.api.Test;
 
-import com.taf.manager.ConstantManager;
+import com.taf.logic.type.parameter.ValuesParameter;
+import com.taf.logic.type.parameter.WeightsParameter;
+import com.taf.util.Consts;
+import com.taf.util.HashSetBuilder;
 
 class StringTypeTest extends TypeTest {
 
@@ -22,6 +26,18 @@ class StringTypeTest extends TypeTest {
 	@Override
 	void testTypeDefaultValuesImpl() {
 		assertIterableEquals(new LinkedHashSet<Entry<String, Integer>>(), type.getValues());
+	}
+	
+	@Override
+	void testTypeMandatoryParametersImpl() {
+		assertIterableEquals(new HashSet<String>(), type.getMandatoryParametersName());
+	}
+
+	@Override
+	void testTypeOptionalParametersImpl() {
+		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>()
+				.add(ValuesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
+		assertIterableEquals(optionalTypeParameters, type.getOptionalParametersName());
 	}
 
 	@Test
@@ -38,7 +54,7 @@ class StringTypeTest extends TypeTest {
 	@Test
 	void testAddValueWithoutWeight() {
 		String text = "value";
-		int weight = ConstantManager.DEFAULT_WEIGHT_VALUE;
+		int weight = Consts.DEFAULT_WEIGHT_VALUE;
 		type.addValue(text);
 
 		Map<String, Integer> expectedMap = new LinkedHashMap<String, Integer>();
@@ -50,7 +66,7 @@ class StringTypeTest extends TypeTest {
 	void testEditValueName() {
 		String oldName = "value";
 		String newName = "newValue";
-		int weight = ConstantManager.DEFAULT_WEIGHT_VALUE;
+		int weight = Consts.DEFAULT_WEIGHT_VALUE;
 		type.addValue(oldName);
 		type.editValueName(oldName, newName);
 
@@ -62,7 +78,7 @@ class StringTypeTest extends TypeTest {
 	@Test
 	void testEditValueWeight() {
 		String text = "value";
-		int newWeight = ConstantManager.DEFAULT_WEIGHT_VALUE + 1;
+		int newWeight = Consts.DEFAULT_WEIGHT_VALUE + 1;
 		type.addValue(text);
 		type.setWeight(text, newWeight);
 

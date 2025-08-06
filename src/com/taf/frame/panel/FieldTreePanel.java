@@ -41,8 +41,8 @@ import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Root;
 import com.taf.logic.field.Type;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
+import com.taf.util.Consts;
 
 public class FieldTreePanel extends JPanel implements EventListener {
 
@@ -58,8 +58,8 @@ public class FieldTreePanel extends JPanel implements EventListener {
 
 	public FieldTreePanel(Root root) {
 		this.setLayout(new GridBagLayout());
-		this.setBorder(BorderFactory.createEmptyBorder(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP,
-				ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP));
+		this.setBorder(BorderFactory.createEmptyBorder(Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
+				Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP));
 		EventManager.getInstance().registerEventListener(this);
 		entityToTreeNodeMap = new HashMap<Entity, DefaultMutableTreeNode>();
 

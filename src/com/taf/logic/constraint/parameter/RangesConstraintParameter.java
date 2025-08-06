@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class RangesConstraintParameter extends ConstraintParameter {
 
@@ -43,7 +43,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 			return "";
 		}
 
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String res = ranges.get(0).toString();
 		for (int i = 1; i < ranges.size(); i++) {
 			res += separator + ranges.get(i).toString();
@@ -54,12 +54,12 @@ public class RangesConstraintParameter extends ConstraintParameter {
 
 	@Override
 	void stringToValue(String stringValue) {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 
 		for (String value : values) {
 			if (!value.isBlank()) {
-				Matcher m = ConstantManager.RANGE_PATTERN.matcher(value);
+				Matcher m = Consts.RANGE_PATTERN.matcher(value);
 				if (m.find()) {
 					String left = m.group(1).stripLeading();
 					String right = m.group(2).stripLeading();

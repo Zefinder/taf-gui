@@ -7,7 +7,7 @@ import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
 import com.taf.logic.type.parameter.WeightsParameter;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 
 public class BooleanType extends FieldType {
@@ -25,24 +25,24 @@ public class BooleanType extends FieldType {
 	public BooleanType() {
 		typeName = new TypeNameParameter(TYPE_NAME);
 		values = new ValuesParameter();
-		values.addValue(ConstantManager.FALSE_VALUE);
-		values.addValue(ConstantManager.TRUE_VALUE);
+		values.addValue(Consts.FALSE_VALUE);
+		values.addValue(Consts.TRUE_VALUE);
 	}
 	
 	public void editFalseWeight(int weight) {
-		values.setWeight(ConstantManager.FALSE_VALUE, weight);
+		values.setWeight(Consts.FALSE_VALUE, weight);
 	}
 	
 	public int getFalseWeight() {
-		return values.getWeight(ConstantManager.FALSE_VALUE);
+		return values.getWeight(Consts.FALSE_VALUE);
 	}
 	
 	public void editTrueWeight(int weight) {
-		values.setWeight(ConstantManager.TRUE_VALUE, weight);
+		values.setWeight(Consts.TRUE_VALUE, weight);
 	}
 
 	public int getTrueWeight() {
-		return values.getWeight(ConstantManager.TRUE_VALUE);
+		return values.getWeight(Consts.TRUE_VALUE);
 	}
 	
 	@Override

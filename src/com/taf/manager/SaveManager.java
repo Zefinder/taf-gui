@@ -43,6 +43,7 @@ import com.taf.logic.type.StringType;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.TypeParameterFactory;
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
+import com.taf.util.Consts;
 import com.taf.util.OSValidator;
 import com.taf.util.XMLTafReader;
 
@@ -121,9 +122,9 @@ public class SaveManager extends Manager {
 
 	private static final String XML_HEADER = "<?xml version=\"1.0\"?>\n\n\n";
 
-	private static final String separator = ConstantManager.PARAMETER_SEPARATOR;
-	private static final String newLine = ConstantManager.LINE_JUMP;
-	private static final String format = ConstantManager.PARAMETER_STRING_FORMAT + separator;
+	private static final String separator = Consts.PARAMETER_SEPARATOR;
+	private static final String newLine = Consts.LINE_JUMP;
+	private static final String format = Consts.PARAMETER_STRING_FORMAT + separator;
 
 	private static final String WINDOWS_USER_BASE_MAIN_DIR = System.getenv("APPDATA");
 	private static final String UNIX_MAC_USER_BASE_MAIN_DIR = System.getProperty("user.home");
@@ -201,6 +202,11 @@ public class SaveManager extends Manager {
 		// Register all project files
 		initProjectFiles();
 	}
+	
+	@Override
+	public void clearManager() {
+		// Nothing to do here
+	}
 
 	private void initCreation() {
 		if (!mainDirectoryFile.exists()) {
@@ -213,7 +219,7 @@ public class SaveManager extends Manager {
 	}
 
 	private void initProjectFiles() {
-		File[] tafFiles = mainDirectoryFile.listFiles((dir, name) -> name.endsWith(ConstantManager.TAF_FILE_EXTENSION));
+		File[] tafFiles = mainDirectoryFile.listFiles((dir, name) -> name.endsWith(Consts.TAF_FILE_EXTENSION));
 		for (File tafFile : tafFiles) {
 			projectNames.add(tafFile);
 		}
@@ -286,7 +292,7 @@ public class SaveManager extends Manager {
 				String entityName = entityNameOp.get();
 
 				switch (entityType) {
-				case ConstantManager.TYPE_ENTITY_NAME:
+				case Consts.TYPE_ENTITY_NAME:
 					Type type = new Type(entityName);
 
 					// Parent id must be 0
@@ -299,7 +305,7 @@ public class SaveManager extends Manager {
 					TypeManager.getInstance().addCustomNodeType(type);
 					break;
 
-				case ConstantManager.NODE_ENTITY_NAME:
+				case Consts.NODE_ENTITY_NAME:
 					Node node;
 
 					if (parentId == -1) {
@@ -330,7 +336,7 @@ public class SaveManager extends Manager {
 					typeList.add(node);
 					break;
 
-				case ConstantManager.PARAMETER_ENTITY_NAME:
+				case Consts.PARAMETER_ENTITY_NAME:
 					// Get parameter type
 					Optional<String> typeNameOp = getArgument(line, TYPE_ARGUMENT);
 					if (typeNameOp.isEmpty()) {
@@ -369,7 +375,7 @@ public class SaveManager extends Manager {
 					typeList.get(parentId).addEntity(parameter);
 					break;
 
-				case ConstantManager.CONSTRAINT_ENTITY_NAME:
+				case Consts.CONSTRAINT_ENTITY_NAME:
 					Constraint constraint = new Constraint(entityName);
 					for (String constraintParameterName : ConstraintParameter.getConstraintParameterNames()) {
 						Optional<String> optionalConstraintParameterOp = getArgument(line, constraintParameterName);
@@ -436,11 +442,11 @@ public class SaveManager extends Manager {
 	private int writeRoot(BufferedWriter writer, String name, Set<Type> typeList) throws IOException {
 		int rootId = ROOT_PARENT + 1;
 		int nodeCount = ROOT_PARENT + 1;
-		writeEntityArguments(writer, ConstantManager.NODE_ENTITY_NAME, ROOT_PARENT, name);
+		writeEntityArguments(writer, Consts.NODE_ENTITY_NAME, ROOT_PARENT, name);
 		writer.write(newLine);
 
 		// Write types first
-		String typeEntityName = ConstantManager.TYPE_ENTITY_NAME;
+		String typeEntityName = Consts.TYPE_ENTITY_NAME;
 		for (Type type : typeList) {
 			// Write type and increase node count
 			writeField(writer, type, typeEntityName, rootId);
@@ -462,9 +468,9 @@ public class SaveManager extends Manager {
 	private int writeNode(BufferedWriter writer, Type node, int parentId, int nodeCount) throws IOException {
 		for (Field field : node.getFieldSet()) {
 			boolean isNode = field instanceof Node;
-			String entityString = ConstantManager.NODE_ENTITY_NAME;
+			String entityString = Consts.NODE_ENTITY_NAME;
 			if (!isNode) {
-				entityString = ConstantManager.PARAMETER_ENTITY_NAME;
+				entityString = Consts.PARAMETER_ENTITY_NAME;
 			}
 
 			writeField(writer, field, entityString, parentId);
@@ -483,7 +489,7 @@ public class SaveManager extends Manager {
 	}
 
 	private void writeConstraint(BufferedWriter writer, Constraint constraint, int parentId) throws IOException {
-		writeEntityArguments(writer, ConstantManager.CONSTRAINT_ENTITY_NAME, parentId, constraint.getName());
+		writeEntityArguments(writer, Consts.CONSTRAINT_ENTITY_NAME, parentId, constraint.getName());
 		writer.write(constraint.parametersToString().strip());
 		writer.write(newLine);
 	}
@@ -500,7 +506,7 @@ public class SaveManager extends Manager {
 		projectName = projectName.strip();
 
 		// Name must finish by .taf
-		if (!projectName.endsWith(ConstantManager.TAF_FILE_EXTENSION)) {
+		if (!projectName.endsWith(Consts.TAF_FILE_EXTENSION)) {
 			return false;
 		}
 
@@ -512,7 +518,7 @@ public class SaveManager extends Manager {
 		newProjectFile.createNewFile();
 		BufferedWriter writer = new BufferedWriter(new FileWriter(newProjectFile));
 		// Write an empty root with no type
-		writeRoot(writer, projectName.substring(0, projectName.length() - ConstantManager.TAF_FILE_EXTENSION.length()),
+		writeRoot(writer, projectName.substring(0, projectName.length() - Consts.TAF_FILE_EXTENSION.length()),
 				new HashSet<Type>());
 		writer.close();
 
@@ -556,8 +562,8 @@ public class SaveManager extends Manager {
 
 		String projectFileName = projectFile.getName();
 		String projectName = projectFileName.substring(0,
-				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
-		String xmlFileName = projectName + ConstantManager.XML_FILE_EXTENSION;
+				projectFileName.length() - Consts.TAF_FILE_EXTENSION.length());
+		String xmlFileName = projectName + Consts.XML_FILE_EXTENSION;
 
 		File homeFile = FileSystemView.getFileSystemView().getHomeDirectory();
 		File predictedFile = new File(homeFile.getAbsolutePath() + File.separator + xmlFileName);
@@ -600,7 +606,7 @@ public class SaveManager extends Manager {
 			String newLocationPath = reader.readLine();
 			File newLocation = new File(newLocationPath);
 			if (!newLocation.exists()) {
-				ConstantManager.showError("Custom location does not exist, using default location...");
+				Consts.showError("Custom location does not exist, using default location...");
 			} else {
 				newLocationFile = newLocation;
 			}
@@ -625,7 +631,7 @@ public class SaveManager extends Manager {
 	File getProjectRunFolder() {
 		String projectFileName = projectFile.getName();
 		String projectName = projectFile.getName().substring(0,
-				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+				projectFileName.length() - Consts.TAF_FILE_EXTENSION.length());
 		File projectRunFolder = new File(runDirectory + File.separator + projectName);
 		File customLocationFile = new File(projectRunFolder.getAbsolutePath() + File.separator + "custom_location.txt");
 
@@ -652,7 +658,7 @@ public class SaveManager extends Manager {
 					try (BufferedWriter writer = new BufferedWriter(new FileWriter(customLocationFile))) {
 						writer.write(newLocation.getAbsolutePath());
 					} catch (IOException e) {
-						ConstantManager.showError(
+						Consts.showError(
 								"An error occured when creating the custom location file: " + e.getMessage());
 						e.printStackTrace();
 					}
@@ -665,7 +671,7 @@ public class SaveManager extends Manager {
 			try {
 				projectRunFolder = getCustomLocation(customLocationFile);
 			} catch (IOException e) {
-				ConstantManager.showError(
+				Consts.showError(
 						"An error occured when reading the custom location file. Using default location instead\n"
 								+ e.getMessage());
 				e.printStackTrace();
@@ -678,7 +684,7 @@ public class SaveManager extends Manager {
 	public void removeRunCustomLocation(boolean wantCopy) throws IOException {
 		String projectFileName = projectFile.getName();
 		String projectName = projectFile.getName().substring(0,
-				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+				projectFileName.length() - Consts.TAF_FILE_EXTENSION.length());
 		File projectRunFolder = new File(runDirectory + File.separator + projectName);
 		File customLocationFile = new File(projectRunFolder.getAbsolutePath() + File.separator + "custom_location.txt");
 
@@ -696,7 +702,7 @@ public class SaveManager extends Manager {
 	public void changeRunCustomLocation(String customLocationPath, boolean wantCopy) throws IOException {
 		String projectFileName = projectFile.getName();
 		String projectName = projectFile.getName().substring(0,
-				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
+				projectFileName.length() - Consts.TAF_FILE_EXTENSION.length());
 		File projectRunFolder = new File(runDirectory + File.separator + projectName);
 		File customLocationFile = new File(projectRunFolder.getAbsolutePath() + File.separator + "custom_location.txt");
 
@@ -719,8 +725,8 @@ public class SaveManager extends Manager {
 	String getRunXMLFileName() {
 		String projectFileName = projectFile.getName();
 		String projectName = projectFile.getName().substring(0,
-				projectFileName.length() - ConstantManager.TAF_FILE_EXTENSION.length());
-		String xmlFileName = projectName + ConstantManager.XML_FILE_EXTENSION;
+				projectFileName.length() - Consts.TAF_FILE_EXTENSION.length());
+		String xmlFileName = projectName + Consts.XML_FILE_EXTENSION;
 		return xmlFileName;
 	}
 
@@ -737,8 +743,8 @@ public class SaveManager extends Manager {
 
 	public String importProject(File xmlTafFile) throws ImportException {
 		// TODO Check if associated taf file exist
-		String newTafFileName = xmlTafFile.getName().replace(ConstantManager.XML_FILE_EXTENSION,
-				ConstantManager.TAF_FILE_EXTENSION);
+		String newTafFileName = xmlTafFile.getName().replace(Consts.XML_FILE_EXTENSION,
+				Consts.TAF_FILE_EXTENSION);
 		File newTafFile = getProjectFileFromName(newTafFileName);
 
 		XMLTafReader xmlReader = new XMLTafReader(xmlTafFile);

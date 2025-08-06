@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
 
 import com.taf.logic.type.NodeType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 class NodeTest extends TypeTest {
 
@@ -28,7 +28,7 @@ class NodeTest extends TypeTest {
 		assertEquals(name, type.getName());
 		assertNull(type.getParent());
 		assertInstanceOf(NodeType.class, type.getType());
-		assertEquals(ConstantManager.NODE_ENTITY_NAME, type.getEntityTypeName());
+		assertEquals(Consts.NODE_ENTITY_NAME, type.getEntityTypeName());
 		assertEquals(0, type.getFieldSet().size());
 		assertEquals(0, type.getConstraintSet().size());
 		assertFalse(node.hasType());
@@ -53,7 +53,7 @@ class NodeTest extends TypeTest {
 		node.removeType();
 		assertFalse(node.hasType());
 		assertFalse(node.hasRef());
-		assertEquals(ConstantManager.NODE_ENTITY_NAME, node.getEntityTypeName());
+		assertEquals(Consts.NODE_ENTITY_NAME, node.getEntityTypeName());
 		
 		node.setReference(refName);
 		assertFalse(node.hasType());

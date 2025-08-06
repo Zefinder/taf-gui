@@ -1,4 +1,4 @@
-package com.taf.manager;
+package com.taf.util;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
@@ -11,9 +11,7 @@ import javax.swing.JOptionPane;
 
 import com.taf.logic.type.parameter.DistributionType;
 
-public class ConstantManager extends Manager {
-
-	private static final ConstantManager instance = new ConstantManager();
+public class Consts {
 
 	public static final DecimalFormat REAL_FORMATTER = new DecimalFormat("0.###",
 			DecimalFormatSymbols.getInstance(Locale.US));
@@ -110,16 +108,7 @@ public class ConstantManager extends Manager {
 		JOptionPane.showMessageDialog(null, errorMessage, ERROR_DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
 	}
 
-	private ConstantManager() {
+	private Consts() {
 	}
-
-	@Override
-	public void initManager() {
-		// Nothing to do here...
-	}
-
-	public static ConstantManager getInstance() {
-		return instance;
-	}
-
+	
 }

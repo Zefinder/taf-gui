@@ -12,10 +12,10 @@ import com.taf.event.ProjectRunOpenedEvent;
 import com.taf.frame.MainMenuFrame;
 import com.taf.frame.RunFrame;
 import com.taf.frame.dialog.SettingsDialog;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
 import com.taf.manager.SaveManager;
+import com.taf.util.Consts;
 
 public class TafProjectMenuBar extends JMenuBar {
 
@@ -66,7 +66,7 @@ public class TafProjectMenuBar extends JMenuBar {
 		try {
 			SaveManager.getInstance().saveProject();
 		} catch (IOException e) {
-			ConstantManager.showError(ERROR_SAVE_DIALOG_TEXT + e.getMessage());
+			Consts.showError(ERROR_SAVE_DIALOG_TEXT + e.getMessage());
 		}
 	}
 
@@ -85,7 +85,7 @@ public class TafProjectMenuBar extends JMenuBar {
 		try {
 			SaveManager.getInstance().exportToXML(save == JOptionPane.YES_OPTION);
 		} catch (IOException e) {
-			ConstantManager.showError(ERROR_EXPORT_DIALOG_TEXT + e.getMessage());
+			Consts.showError(ERROR_EXPORT_DIALOG_TEXT + e.getMessage());
 		}
 	}
 

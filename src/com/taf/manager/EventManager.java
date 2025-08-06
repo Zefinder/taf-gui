@@ -17,7 +17,7 @@ public class EventManager extends Manager {
 
 	private final Map<Class<? extends Event>, Set<ListenerObject>> eventListenerMap;
 	private final Map<EventListener, Set<ListenerObject>> listenerToObjectMap;
-
+	
 	private EventManager() {
 		eventListenerMap = new HashMap<Class<? extends Event>, Set<ListenerObject>>();
 		listenerToObjectMap = new HashMap<EventListener, Set<ListenerObject>>();
@@ -81,7 +81,15 @@ public class EventManager extends Manager {
 		// Remove also components
 		listener.unregisterComponents();
 	}
-
+	
+	public boolean hasEventListeners() {
+		return !eventListenerMap.isEmpty();
+	}
+	
+	public boolean hasEventListeners(Class<? extends Event> eventClazz) {
+		return eventListenerMap.containsKey(eventClazz) && !eventListenerMap.get(eventClazz).isEmpty();
+	}
+	
 	public static EventManager getInstance() {
 		return instance;
 	}
@@ -89,6 +97,13 @@ public class EventManager extends Manager {
 	@Override
 	public void initManager() {
 		// Nothing to do here
+	}
+	
+	@Override
+	public void clearManager() {
+		// Clear all lists and listeners
+		eventListenerMap.clear();
+		listenerToObjectMap.clear();
 	}
 
 	private static class ListenerObject {

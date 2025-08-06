@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 
 import com.taf.exception.ParseException;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class RangesParameter extends TypeParameter {
 
@@ -53,7 +53,7 @@ public class RangesParameter extends TypeParameter {
 			return "";
 		}
 
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String res = ranges.get(0).toString();
 		for (int i = 1; i < ranges.size(); i++) {
 			res += separator + ranges.get(i).toString();
@@ -64,12 +64,12 @@ public class RangesParameter extends TypeParameter {
 
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 
 		for (String value : values) {
 			if (!value.isBlank()) {
-				Matcher m = ConstantManager.RANGE_PATTERN.matcher(value);
+				Matcher m = Consts.RANGE_PATTERN.matcher(value);
 				if (m.find()) {
 					double lowerBound = Double.valueOf(m.group(1).stripLeading());
 					double upperBound = Double.valueOf(m.group(2).stripLeading());
@@ -82,7 +82,7 @@ public class RangesParameter extends TypeParameter {
 	public static class Range {
 
 		private static final String RANGE_STRING_FORMAT = "[%s, %s]";
-		private final DecimalFormat realFormatter = ConstantManager.REAL_FORMATTER;
+		private final DecimalFormat realFormatter = Consts.REAL_FORMATTER;
 
 		private Number lowerBound;
 		private Number upperBound;

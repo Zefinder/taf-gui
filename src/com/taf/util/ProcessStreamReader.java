@@ -13,7 +13,6 @@ import javax.swing.text.StyledDocument;
 
 import com.taf.event.ProjectRunSpecialErrorEvent;
 import com.taf.event.ProjectRunSpecialErrorEvent.ErrorType;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 
 public class ProcessStreamReader {
@@ -85,7 +84,7 @@ public class ProcessStreamReader {
 			try {
 				writeIn(in);
 			} catch (IOException | BadLocationException e) {
-				ConstantManager.showError("Something went wrong when trying to read the process input stream, abort!");
+				Consts.showError("Something went wrong when trying to read the process input stream, abort!");
 				running.set(false);
 				return;
 			}
@@ -110,7 +109,7 @@ public class ProcessStreamReader {
 			try {
 				writeErr(err);
 			} catch (IOException | BadLocationException e) {
-				ConstantManager.showError("Something went wrong when trying to read the process error stream, abort!");
+				Consts.showError("Something went wrong when trying to read the process error stream, abort!");
 				running.set(false);
 				return;
 			}
@@ -168,7 +167,7 @@ public class ProcessStreamReader {
 	private synchronized void writeErr(InputStream err) throws IOException, BadLocationException {
 		if (err.available() != 0) {
 			// Print in red in the document
-			String input = ConstantManager.LINE_JUMP + this.readLine(err);
+			String input = Consts.LINE_JUMP + this.readLine(err);
 			
 			// Check for special messages on the error stream
 			ProjectRunSpecialErrorEvent event;
@@ -201,75 +200,75 @@ public class ProcessStreamReader {
 	private void setStyle(ConsoleStyle consoleStyle) {
 		switch (consoleStyle) {
 		case FG_BLACK:
-			StyleConstants.setForeground(style, ConstantManager.BLACK_COLOR);
+			StyleConstants.setForeground(style, Consts.BLACK_COLOR);
 			break;
 
 		case FG_RED:
-			StyleConstants.setForeground(style, ConstantManager.RED_COLOR);
+			StyleConstants.setForeground(style, Consts.RED_COLOR);
 			break;
 
 		case FG_GREEN:
-			StyleConstants.setForeground(style, ConstantManager.GREEN_COLOR);
+			StyleConstants.setForeground(style, Consts.GREEN_COLOR);
 			break;
 
 		case FG_YELLOW:
-			StyleConstants.setForeground(style, ConstantManager.YELLOW_COLOR);
+			StyleConstants.setForeground(style, Consts.YELLOW_COLOR);
 			break;
 
 		case FG_BLUE:
-			StyleConstants.setForeground(style, ConstantManager.BLUE_COLOR);
+			StyleConstants.setForeground(style, Consts.BLUE_COLOR);
 			break;
 
 		case FG_MAGENTA:
-			StyleConstants.setForeground(style, ConstantManager.MAGENTA_COLOR);
+			StyleConstants.setForeground(style, Consts.MAGENTA_COLOR);
 			break;
 
 		case FG_CYAN:
-			StyleConstants.setForeground(style, ConstantManager.CYAN_COLOR);
+			StyleConstants.setForeground(style, Consts.CYAN_COLOR);
 			break;
 
 		case FG_WHITE:
-			StyleConstants.setForeground(style, ConstantManager.WHITE_COLOR);
+			StyleConstants.setForeground(style, Consts.WHITE_COLOR);
 			break;
 
 		case FG_RESET:
-			StyleConstants.setForeground(style, ConstantManager.CONSOLE_FOREGROUND_COLOR);
+			StyleConstants.setForeground(style, Consts.CONSOLE_FOREGROUND_COLOR);
 			break;
 
 		case BG_BLACK:
-			StyleConstants.setBackground(style, ConstantManager.BLACK_COLOR);
+			StyleConstants.setBackground(style, Consts.BLACK_COLOR);
 			break;
 
 		case BG_RED:
-			StyleConstants.setBackground(style, ConstantManager.RED_COLOR);
+			StyleConstants.setBackground(style, Consts.RED_COLOR);
 			break;
 
 		case BG_GREEN:
-			StyleConstants.setBackground(style, ConstantManager.GREEN_COLOR);
+			StyleConstants.setBackground(style, Consts.GREEN_COLOR);
 			break;
 
 		case BG_YELLOW:
-			StyleConstants.setBackground(style, ConstantManager.YELLOW_COLOR);
+			StyleConstants.setBackground(style, Consts.YELLOW_COLOR);
 			break;
 
 		case BG_BLUE:
-			StyleConstants.setBackground(style, ConstantManager.BLUE_COLOR);
+			StyleConstants.setBackground(style, Consts.BLUE_COLOR);
 			break;
 
 		case BG_MAGENTA:
-			StyleConstants.setBackground(style, ConstantManager.MAGENTA_COLOR);
+			StyleConstants.setBackground(style, Consts.MAGENTA_COLOR);
 			break;
 
 		case BG_CYAN:
-			StyleConstants.setBackground(style, ConstantManager.CYAN_COLOR);
+			StyleConstants.setBackground(style, Consts.CYAN_COLOR);
 			break;
 
 		case BG_WHITE:
-			StyleConstants.setBackground(style, ConstantManager.WHITE_COLOR);
+			StyleConstants.setBackground(style, Consts.WHITE_COLOR);
 			break;
 
 		case BG_RESET:
-			StyleConstants.setBackground(style, ConstantManager.CONSOLE_BACKGROUND_COLOR);
+			StyleConstants.setBackground(style, Consts.CONSOLE_BACKGROUND_COLOR);
 			break;
 
 		case UNDERLINED:
@@ -277,8 +276,8 @@ public class ProcessStreamReader {
 			break;
 
 		case RESET_ALL:
-			StyleConstants.setForeground(style, ConstantManager.CONSOLE_FOREGROUND_COLOR);
-			StyleConstants.setBackground(style, ConstantManager.CONSOLE_BACKGROUND_COLOR);
+			StyleConstants.setForeground(style, Consts.CONSOLE_FOREGROUND_COLOR);
+			StyleConstants.setBackground(style, Consts.CONSOLE_BACKGROUND_COLOR);
 			StyleConstants.setUnderline(style, false);
 
 		default:

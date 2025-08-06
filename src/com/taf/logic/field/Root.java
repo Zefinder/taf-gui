@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.taf.logic.Entity;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class Root extends Node {
 
@@ -90,8 +90,8 @@ public class Root extends Node {
 	}
 	
 	private String insideTypesToString() {
-		final String lineJump = ConstantManager.LINE_JUMP;
-		final String indent = getIndentation() + ConstantManager.TAB;
+		final String lineJump = Consts.LINE_JUMP;
+		final String indent = getIndentation() + Consts.TAB;
 
 		String strFields = "";
 		int i = 0;

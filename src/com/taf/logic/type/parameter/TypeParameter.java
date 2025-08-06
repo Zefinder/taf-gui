@@ -1,7 +1,7 @@
 package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 /**
  * Class that represents a type parameter. Every class that extends it must
@@ -21,7 +21,7 @@ public abstract class TypeParameter {
 
 	@Override
 	public String toString() {
-		return ConstantManager.PARAMETER_STRING_FORMAT.formatted(name, valueToString());
+		return Consts.PARAMETER_STRING_FORMAT.formatted(name, valueToString());
 	}
 
 	@Override
@@ -36,7 +36,7 @@ public abstract class TypeParameter {
 
 	@Override
 	public int hashCode() {
-		return (this.getClass().toString() + ConstantManager.HASH_SEPARATOR + name + valueToString()).hashCode();
+		return (this.getClass().toString() + Consts.HASH_SEPARATOR + name + valueToString()).hashCode();
 	}
 
 }

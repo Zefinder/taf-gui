@@ -13,7 +13,7 @@ import org.junit.jupiter.api.Test;
 
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 class TypeTest extends FieldTest {
 
@@ -29,7 +29,7 @@ class TypeTest extends FieldTest {
 		assertEquals(name, type.getName());
 		assertNull(type.getParent());
 		assertInstanceOf(DefaultFieldType.class, type.getType());
-		assertEquals(ConstantManager.TYPE_ENTITY_NAME, type.getEntityTypeName());
+		assertEquals(Consts.TYPE_ENTITY_NAME, type.getEntityTypeName());
 		assertEquals(0, type.getFieldSet().size());
 		assertEquals(0, type.getConstraintSet().size());
 	}

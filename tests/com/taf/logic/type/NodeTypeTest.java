@@ -3,54 +3,81 @@ package com.taf.logic.type;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+
+import java.util.HashSet;
 
 import org.junit.jupiter.api.Test;
 
-import com.taf.manager.ConstantManager;
+import com.taf.logic.type.parameter.DepthNumberParameter;
+import com.taf.logic.type.parameter.InstanceNumberParameter;
+import com.taf.logic.type.parameter.MaxDepthParameter;
+import com.taf.logic.type.parameter.MaxInstanceParameter;
+import com.taf.logic.type.parameter.MinDepthParameter;
+import com.taf.logic.type.parameter.MinInstanceParameter;
+import com.taf.logic.type.parameter.ReferenceParameter;
+import com.taf.logic.type.parameter.TypeNameParameter;
+import com.taf.util.Consts;
+import com.taf.util.HashSetBuilder;
 
 class NodeTypeTest extends TypeTest {
 
 	private NodeType nodeType;
-	
+
 	public NodeTypeTest() {
 		nodeType = new NodeType();
 	}
-	
+
 	@Override
 	void testTypeDefaultValuesImpl() {
-		assertEquals(ConstantManager.DEFAULT_INSTANCE_NUMBER, nodeType.getInstanceNumber());
-		assertEquals(ConstantManager.DEFAULT_MAX_INSTANCE_NUMBER, nodeType.getMaxInstanceNumber());
-		assertEquals(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER, nodeType.getMinInstanceNumber());
-		assertEquals(ConstantManager.DEFAULT_DEPTH_NUMBER, nodeType.getDepthNumber());
-		assertEquals(ConstantManager.DEFAULT_MAX_DEPTH_NUMBER, nodeType.getMaxDepth());
-		assertEquals(ConstantManager.DEFAULT_MIN_DEPTH_NUMBER, nodeType.getMinDepth());
+		assertEquals(Consts.DEFAULT_INSTANCE_NUMBER, nodeType.getInstanceNumber());
+		assertEquals(Consts.DEFAULT_MAX_INSTANCE_NUMBER, nodeType.getMaxInstanceNumber());
+		assertEquals(Consts.DEFAULT_MIN_INSTANCE_NUMBER, nodeType.getMinInstanceNumber());
+		assertEquals(Consts.DEFAULT_DEPTH_NUMBER, nodeType.getDepthNumber());
+		assertEquals(Consts.DEFAULT_MAX_DEPTH_NUMBER, nodeType.getMaxDepth());
+		assertEquals(Consts.DEFAULT_MIN_DEPTH_NUMBER, nodeType.getMinDepth());
 		assertFalse(nodeType.hasMinMaxInstance());
 		assertFalse(nodeType.hasMinMaxDepth());
 		assertFalse(nodeType.isRecursiveNode());
 	}
+	
+	@Override
+	void testTypeMandatoryParametersImpl() {
+		assertIterableEquals(new HashSet<String>(), nodeType.getMandatoryParametersName());
+	}
+
+	@Override
+	void testTypeOptionalParametersImpl() {
+		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>()
+				.add(InstanceNumberParameter.PARAMETER_NAME).add(MinInstanceParameter.PARAMETER_NAME)
+				.add(MaxInstanceParameter.PARAMETER_NAME).add(TypeNameParameter.PARAMETER_NAME)
+				.add(ReferenceParameter.PARAMETER_NAME).add(DepthNumberParameter.PARAMETER_NAME)
+				.add(MinDepthParameter.PARAMETER_NAME).add(MaxDepthParameter.PARAMETER_NAME).build();
+		assertIterableEquals(optionalTypeParameters, nodeType.getOptionalParametersName());
+	}
 
 	@Test
 	void testNodeTypeChangeInstanceNumber() {
-		nodeType.editInstanceNumber(ConstantManager.DEFAULT_INSTANCE_NUMBER + 1);
-		assertEquals(ConstantManager.DEFAULT_INSTANCE_NUMBER + 1, nodeType.getInstanceNumber());
+		nodeType.editInstanceNumber(Consts.DEFAULT_INSTANCE_NUMBER + 1);
+		assertEquals(Consts.DEFAULT_INSTANCE_NUMBER + 1, nodeType.getInstanceNumber());
 
-		nodeType.editMinInstanceNumber(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER + 1);
-		assertEquals(ConstantManager.DEFAULT_MIN_INSTANCE_NUMBER + 1, nodeType.getMinInstanceNumber());
+		nodeType.editMinInstanceNumber(Consts.DEFAULT_MIN_INSTANCE_NUMBER + 1);
+		assertEquals(Consts.DEFAULT_MIN_INSTANCE_NUMBER + 1, nodeType.getMinInstanceNumber());
 
-		nodeType.editMaxInstanceNumber(ConstantManager.DEFAULT_MAX_INSTANCE_NUMBER + 1);
-		assertEquals(ConstantManager.DEFAULT_MAX_INSTANCE_NUMBER + 1, nodeType.getMaxInstanceNumber());
+		nodeType.editMaxInstanceNumber(Consts.DEFAULT_MAX_INSTANCE_NUMBER + 1);
+		assertEquals(Consts.DEFAULT_MAX_INSTANCE_NUMBER + 1, nodeType.getMaxInstanceNumber());
 	}
 
 	@Test
 	void testNodeTypeChangeDepthNumber() {
-		nodeType.editDepthNumber(ConstantManager.DEFAULT_DEPTH_NUMBER + 1);
-		assertEquals(ConstantManager.DEFAULT_DEPTH_NUMBER + 1, nodeType.getDepthNumber());
+		nodeType.editDepthNumber(Consts.DEFAULT_DEPTH_NUMBER + 1);
+		assertEquals(Consts.DEFAULT_DEPTH_NUMBER + 1, nodeType.getDepthNumber());
 
-		nodeType.editMinDepth(ConstantManager.DEFAULT_MIN_DEPTH_NUMBER + 1);
-		assertEquals(ConstantManager.DEFAULT_MIN_DEPTH_NUMBER + 1, nodeType.getMinDepth());
+		nodeType.editMinDepth(Consts.DEFAULT_MIN_DEPTH_NUMBER + 1);
+		assertEquals(Consts.DEFAULT_MIN_DEPTH_NUMBER + 1, nodeType.getMinDepth());
 
-		nodeType.editMaxDepth(ConstantManager.DEFAULT_MAX_DEPTH_NUMBER + 1);
-		assertEquals(ConstantManager.DEFAULT_MAX_DEPTH_NUMBER + 1, nodeType.getMaxDepth());
+		nodeType.editMaxDepth(Consts.DEFAULT_MAX_DEPTH_NUMBER + 1);
+		assertEquals(Consts.DEFAULT_MAX_DEPTH_NUMBER + 1, nodeType.getMaxDepth());
 	}
 
 	@Test
@@ -100,5 +127,5 @@ class NodeTypeTest extends TypeTest {
 		assertFalse(nodeType.isRecursiveNode());
 		assertTrue(nodeType.getName().isEmpty());
 	}
-
+	
 }

@@ -3,7 +3,7 @@ package com.taf.logic.type;
 import java.util.Set;
 
 import com.taf.logic.type.parameter.TypeParameter;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public abstract class FieldType {
 
@@ -39,7 +39,7 @@ public abstract class FieldType {
 
 	@Override
 	public int hashCode() {
-		return (this.getClass().toString() + ConstantManager.HASH_SEPARATOR + getName() + toString()).hashCode();
+		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + toString()).hashCode();
 	}
 
 }

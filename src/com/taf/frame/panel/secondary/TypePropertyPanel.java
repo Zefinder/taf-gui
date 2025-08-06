@@ -3,14 +3,14 @@ package com.taf.frame.panel.secondary;
 import java.awt.GridBagConstraints;
 
 import com.taf.frame.panel.secondary.type.TypeAddEntityPanel;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class TypePropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = 3296878396678633310L;
 
 	public TypePropertyPanel() {
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;

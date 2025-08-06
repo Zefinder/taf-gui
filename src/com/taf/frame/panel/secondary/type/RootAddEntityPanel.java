@@ -9,8 +9,8 @@ import com.taf.event.Event;
 import com.taf.event.entity.creation.TypeCreatedEvent;
 import com.taf.frame.dialog.TypeCreationDialog;
 import com.taf.logic.field.Type;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
+import com.taf.util.Consts;
 
 public class RootAddEntityPanel extends TypeAddEntityPanel {
 
@@ -21,10 +21,10 @@ public class RootAddEntityPanel extends TypeAddEntityPanel {
 	public RootAddEntityPanel() {
 		super();
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, 0, 0);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;

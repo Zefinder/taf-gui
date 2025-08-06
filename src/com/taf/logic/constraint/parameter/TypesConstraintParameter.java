@@ -3,7 +3,7 @@ package com.taf.logic.constraint.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class TypesConstraintParameter extends ConstraintParameter {
 
@@ -34,7 +34,7 @@ public class TypesConstraintParameter extends ConstraintParameter {
 
 	@Override
 	void stringToValue(String stringValue) {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 
 		for (String value : values) {
@@ -51,7 +51,7 @@ public class TypesConstraintParameter extends ConstraintParameter {
 			return "";
 		}
 
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String res = types.get(0).getValue();
 		for (int i = 1; i < types.size(); i++) {
 			res += separator + types.get(i).getValue();

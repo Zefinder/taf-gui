@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 
 import com.taf.exception.ImportException;
 import com.taf.exception.RangeIntersectionException;
-import com.taf.manager.ConstantManager;
 
 public class XMLTafReader {
 
@@ -71,7 +70,7 @@ public class XMLTafReader {
 
 		String rootName = m.group(1);
 		String rootContent = m.group(2);
-		convertedLines += SAVE_LINE_FORMAT.formatted(ConstantManager.NODE_ENTITY_NAME, -1, rootName.strip());
+		convertedLines += SAVE_LINE_FORMAT.formatted(Consts.NODE_ENTITY_NAME, -1, rootName.strip());
 
 		RangeTree tree = registerTypesAndNodes(rootContent);
 		// Register types and nodes (position, [parameters, isNode])
@@ -100,7 +99,7 @@ System.out.println();
 			System.out.println(position);
 
 			int nodeId = tree.getNodeId(position);
-			String entityName = isNode ? ConstantManager.NODE_ENTITY_NAME : ConstantManager.TYPE_ENTITY_NAME;
+			String entityName = isNode ? Consts.NODE_ENTITY_NAME : Consts.TYPE_ENTITY_NAME;
 			convertedLines += SAVE_LINE_FORMAT.formatted(entityName, tree.getParentId(nodeId), parameters.strip());
 		}
 
