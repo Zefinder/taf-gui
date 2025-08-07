@@ -12,7 +12,7 @@ public class MinInstanceParameter extends MinParameter {
 		super(PARAMETER_NAME);
 	}
 
-	public MinInstanceParameter(Integer value) {
+	public MinInstanceParameter(int value) {
 		super(PARAMETER_NAME, value, false);
 	}
 	

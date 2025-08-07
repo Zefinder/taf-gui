@@ -19,8 +19,6 @@ abstract class NumericalTypeTest extends TypeTest {
 
 	@Override
 	void testTypeDefaultValuesImpl() {
-		assertEquals(Consts.DEFAULT_MIN_VALUE, type.getMinNumber());
-		assertEquals(Consts.DEFAULT_MAX_VALUE, type.getMaxNumber());
 		assertEquals(Consts.DEFAULT_DISTRIBUTION, type.getDistribution());
 		assertEquals(Consts.DEFAULT_MEAN_VALUE, type.getMean());
 		assertEquals(Consts.DEFAULT_VARIANCE_VALUE, type.getVariance());

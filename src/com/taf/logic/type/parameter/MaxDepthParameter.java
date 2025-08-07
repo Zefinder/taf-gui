@@ -12,7 +12,7 @@ public class MaxDepthParameter extends MaxParameter {
 		super(PARAMETER_NAME);
 	}
 
-	public MaxDepthParameter(Integer value) {
+	public MaxDepthParameter(int value) {
 		super(PARAMETER_NAME, value, false);
 	}
 

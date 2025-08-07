@@ -12,7 +12,7 @@ public class MinRealParameter extends MinParameter {
 		super(PARAMETER_NAME);
 	}
 	
-	public MinRealParameter(Number value) {
+	public MinRealParameter(double value) {
 		super(PARAMETER_NAME, value, true);
 	}
 	

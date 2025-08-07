@@ -28,7 +28,7 @@ public abstract class MinParameter extends TypeParameter {
 	}
 
 	public Number getValue() {
-		return value;
+		return isReal ? value.doubleValue() : value;
 	}
 	
 	@Override

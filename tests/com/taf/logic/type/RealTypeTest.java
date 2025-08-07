@@ -29,6 +29,13 @@ class RealTypeTest extends NumericalTypeTest {
 	}
 	
 	@Override
+	void testTypeDefaultValuesImpl() {
+		super.testTypeDefaultValuesImpl();
+		assertEquals((double) Consts.DEFAULT_MIN_VALUE, type.getMinNumber());
+		assertEquals((double) Consts.DEFAULT_MAX_VALUE, type.getMaxNumber());
+	}
+	
+	@Override
 	void testTypeMandatoryParametersImpl() {
 		HashSet<String> mandatoryTypeParameters = new HashSetBuilder<String>().add(MaxRealParameter.PARAMETER_NAME)
 				.add(MinRealParameter.PARAMETER_NAME).build();

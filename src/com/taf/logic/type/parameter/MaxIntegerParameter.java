@@ -12,7 +12,7 @@ public class MaxIntegerParameter extends MaxParameter {
 		super(PARAMETER_NAME);
 	}
 	
-	public MaxIntegerParameter(Number value) {
+	public MaxIntegerParameter(int value) {
 		super(PARAMETER_NAME, value, false);
 	}
 	

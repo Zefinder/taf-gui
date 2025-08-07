@@ -12,7 +12,7 @@ public class MinIntegerParameter extends MinParameter {
 		super(PARAMETER_NAME);
 	}
 	
-	public MinIntegerParameter(Number value) {
+	public MinIntegerParameter(int value) {
 		super(PARAMETER_NAME, value, false);
 	}
 	

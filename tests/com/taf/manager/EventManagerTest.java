@@ -59,11 +59,14 @@ class EventManagerTest extends ManagerTest {
 		}
 		
 		InnerListener inner = new InnerListener();
+		EventManager.getInstance().fireEvent(new DummyEvent());
+		assertEquals(1, inner.executionCounter);
+		assertEquals(1, inner.dummy.executionCounter);
 		EventManager.getInstance().unregisterEventListener(inner);
 		EventManager.getInstance().fireEvent(new DummyEvent());
 		assertFalse(EventManager.getInstance().hasEventListeners(DummyEvent.class));
-		assertEquals(0, inner.executionCounter);
-		assertEquals(0, inner.dummy.executionCounter);
+		assertEquals(1, inner.executionCounter);
+		assertEquals(1, inner.dummy.executionCounter);
 	}
 	
 	@Test

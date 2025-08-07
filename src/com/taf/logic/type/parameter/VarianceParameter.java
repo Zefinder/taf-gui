@@ -1,6 +1,7 @@
 package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
+import com.taf.util.Consts;
 
 public class VarianceParameter extends TypeParameter {
 
@@ -14,7 +15,7 @@ public class VarianceParameter extends TypeParameter {
 		super(PARAMETER_NAME);
 	}
 	
-	VarianceParameter(double variance) {
+	public VarianceParameter(double variance) {
 		this();
 		this.variance = variance;
 	}
@@ -29,7 +30,7 @@ public class VarianceParameter extends TypeParameter {
 
 	@Override
 	public String valueToString() {
-		return String.valueOf(variance);
+		return Consts.REAL_FORMATTER.format(variance);
 	}
 
 	@Override

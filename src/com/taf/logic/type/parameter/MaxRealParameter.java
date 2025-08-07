@@ -12,7 +12,7 @@ public class MaxRealParameter extends MaxParameter {
 		super(PARAMETER_NAME);
 	}
 	
-	public MaxRealParameter(Number value) {
+	public MaxRealParameter(double value) {
 		super(PARAMETER_NAME, value, true);
 	}
 	

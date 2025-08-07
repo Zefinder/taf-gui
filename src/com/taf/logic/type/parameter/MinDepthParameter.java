@@ -12,7 +12,7 @@ public class MinDepthParameter extends MinParameter {
 		super(PARAMETER_NAME);
 	}
 
-	public MinDepthParameter(Integer value) {
+	public MinDepthParameter(int value) {
 		super(PARAMETER_NAME, value, false);
 	}
 

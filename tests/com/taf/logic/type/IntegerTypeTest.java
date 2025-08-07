@@ -29,6 +29,13 @@ class IntegerTypeTest extends NumericalTypeTest {
 	}
 
 	@Override
+	void testTypeDefaultValuesImpl() {
+		super.testTypeDefaultValuesImpl();
+		assertEquals(Consts.DEFAULT_MIN_VALUE, type.getMinNumber());
+		assertEquals(Consts.DEFAULT_MAX_VALUE, type.getMaxNumber());
+	}
+	
+	@Override
 	void testTypeMandatoryParametersImpl() {
 		HashSet<String> mandatoryTypeParameters = new HashSetBuilder<String>().add(MaxIntegerParameter.PARAMETER_NAME)
 				.add(MinIntegerParameter.PARAMETER_NAME).build();

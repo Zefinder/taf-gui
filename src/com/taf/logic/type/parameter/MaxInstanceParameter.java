@@ -12,7 +12,7 @@ public class MaxInstanceParameter extends MaxParameter {
 		super(PARAMETER_NAME);
 	}
 	
-	public MaxInstanceParameter(Integer value) {
+	public MaxInstanceParameter(int value) {
 		super(PARAMETER_NAME, value, false);
 	}
 	

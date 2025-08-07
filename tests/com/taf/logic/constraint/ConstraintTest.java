@@ -12,6 +12,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
+import com.taf.util.Consts;
 
 class ConstraintTest {
 
@@ -26,11 +27,20 @@ class ConstraintTest {
 	@Test
 	void testEmptyConstraint() {
 		assertEquals(name, constraint.getName());
+		assertEquals(Consts.CONSTRAINT_ENTITY_NAME, constraint.getEntityTypeName());
 		assertEquals(null, constraint.getParent());
 		assertIterableEquals(new ArrayList<String>(), constraint.getExpressions());
 		assertIterableEquals(new ArrayList<String>(), constraint.getQuantifiers());
 		assertIterableEquals(new ArrayList<Range>(), constraint.getRanges());
 		assertIterableEquals(new ArrayList<QuantifierType>(), constraint.getTypes());
+	}
+	
+	@Test
+	void testFieldEditName() {
+		String newName = name + "a";
+		constraint.setName(newName);
+		
+		assertEquals(newName, constraint.getName());
 	}
 
 	@Test
@@ -147,4 +157,26 @@ class ConstraintTest {
 		assertIterableEquals(expectedQuantifierTypeList, constraint.getTypes());
 	}
 
+	@Test
+	void testRemoveExpression() {
+		String expression = "AAAAAAA";
+		constraint.addExpression(expression);
+		constraint.removeExpression(0);
+		
+		assertIterableEquals(new ArrayList<String>(), constraint.getExpressions());
+	}
+	
+	@ParameterizedTest
+	@EnumSource(value = QuantifierType.class)
+	void testRemoveQuantifier(QuantifierType quantifierType) {
+		String quantifierName = "i";
+		String leftRange = "0";
+		String rightRange = "AAAAAAA";
+		constraint.addQuantifier(quantifierName, leftRange, rightRange, quantifierType);
+		constraint.removeQuantifier(0);
+		
+		assertIterableEquals(new ArrayList<String>(), constraint.getQuantifiers());
+		assertIterableEquals(new ArrayList<Range>(), constraint.getRanges());
+		assertIterableEquals(new ArrayList<QuantifierType>(), constraint.getTypes());
+	}
 }

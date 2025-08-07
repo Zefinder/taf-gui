@@ -23,7 +23,9 @@ public abstract class Field implements Entity {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		if (!name.isBlank()) {
+			this.name = name;
+		}
 	}
 
 	public FieldType getType() {

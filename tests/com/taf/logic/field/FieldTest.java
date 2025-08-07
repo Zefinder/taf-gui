@@ -31,6 +31,9 @@ abstract class FieldTest {
 		field.setName(newName);
 		
 		assertEquals(newName, field.getName());
+		
+		field.setName(""); // Should be ignored
+		assertEquals(newName, field.getName());
 	}
 	
 	@Test
