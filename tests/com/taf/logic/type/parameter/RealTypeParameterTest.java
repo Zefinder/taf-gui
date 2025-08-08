@@ -1,8 +1,10 @@
 package com.taf.logic.type.parameter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.stream.Stream;
 
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
+import com.taf.util.Pair;
 
 abstract class RealTypeParameterTest extends TypeParameterTest {
 
@@ -16,11 +18,18 @@ abstract class RealTypeParameterTest extends TypeParameterTest {
 	}
 	
 	@Override
-	void testTypeParameterValueImpl() {
-		assertTypeParameterValue("3.0", "3");
-		assertTypeParameterValue("-5.0", "-5");
-		assertTypeParameterValue("2.3");
-		assertBadTypeParameterValue("a");
+	Stream<Pair<String, String>> valueProvider() {
+		return Stream.of(
+				new Pair<String, String>("3", "3"), 
+				new Pair<String, String>("-5", "-5"), 
+				new Pair<String, String>("0", "0"),
+				new Pair<String, String>("2.3", "2.3")
+			);
+	}
+
+	@Override
+	Stream<String> badValueProvider() {
+		return Stream.of("a", "", null);
 	}
 	
 	private static final TypeParameter createTypeParameter(Class<? extends TypeParameter> typeParameterClass)

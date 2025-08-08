@@ -1,9 +1,10 @@
 package com.taf.logic.type.parameter;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.stream.Stream;
 
-import com.taf.exception.ParseException;
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
+import com.taf.util.Pair;
 
 abstract class IntegerTypeParameterTest extends TypeParameterTest {
 
@@ -17,11 +18,17 @@ abstract class IntegerTypeParameterTest extends TypeParameterTest {
 	}
 
 	@Override
-	void testTypeParameterValueImpl() throws ParseException {
-		assertTypeParameterValue("3");
-		assertTypeParameterValue("-5");
-		assertBadTypeParameterValue("2.3");
-		assertBadTypeParameterValue("a");
+	Stream<Pair<String, String>> valueProvider() {
+		return Stream.of(
+				new Pair<String, String>("3", "3"), 
+				new Pair<String, String>("-5", "-5"), 
+				new Pair<String, String>("0", "0")
+			);
+	}
+
+	@Override
+	Stream<String> badValueProvider() {
+		return Stream.of("2.3", "a", "", null);
 	}
 
 	private static final TypeParameter createTypeParameter(Class<? extends TypeParameter> typeParameterClass)

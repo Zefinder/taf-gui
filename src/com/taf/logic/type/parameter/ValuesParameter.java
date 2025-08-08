@@ -18,6 +18,13 @@ public class ValuesParameter extends TypeParameter {
 		super(PARAMETER_NAME);
 		valueMap = new LinkedHashMap<String, Integer>();
 	}
+	
+	public ValuesParameter(String... values) {
+		this();
+		for (String value : values) {
+			addValue(value);
+		}
+	}
 
 	/**
 	 * Adds the value to the parameter iff the value is not already present. Returns
@@ -136,6 +143,7 @@ public class ValuesParameter extends TypeParameter {
 	void stringToValue(String stringValue) throws ParseException {
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
+		valueMap.clear();
 
 		for (String value : values) {
 			if (!value.isBlank()) {

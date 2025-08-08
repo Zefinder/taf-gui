@@ -4,11 +4,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.DynamicTest;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestFactory;
 
 import com.taf.exception.ParseException;
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
 import com.taf.util.Consts;
+import com.taf.util.Pair;
 
 abstract class TypeParameterTest {
 
@@ -32,16 +37,36 @@ abstract class TypeParameterTest {
 	}
 
 	@Test
-	void testTypeParameterValue() throws ParseException {
-		testTypeParameterValueImpl();
-	}
-
-	@Test
 	void testTypeParameterToString() {
 		assertEquals(formatTypeParameter(typeParameter.name, typeParameter.valueToString()), typeParameter.toString());
 	}
 
-	abstract void testTypeParameterValueImpl() throws ParseException;
+	@TestFactory
+	Iterable<DynamicTest> testTypeParameterValue() {
+		return valueProvider().<DynamicTest>map(pair -> DynamicTest.dynamicTest(createTestName(pair.getValue()),
+				() -> assertTypeParameterValue(pair.getKey(), pair.getValue()))).toList();
+	}
+
+	@TestFactory
+	Iterable<DynamicTest> testTypeParameterBadValue() {
+		return badValueProvider().<DynamicTest>map(
+				value -> DynamicTest.dynamicTest(createTestName(value), () -> assertBadTypeParameterValue(value)))
+				.toList();
+	}
+
+	/**
+	 * Provider for values and expected values to put in
+	 * {@link TypeParameter#stringToValue(String)}. The order in the pair is
+	 * important: first the value to input and second the expected value.
+	 */
+	abstract Stream<Pair<String, String>> valueProvider();
+
+	/**
+	 * Same as {@link #valueProvider()} but with inputs throwing
+	 * {@link ParseException}. The provider only needs the value since it is
+	 * expected to throw an exception.
+	 */
+	abstract Stream<String> badValueProvider();
 
 	protected void assertTypeParameterValue(String value) {
 		try {
@@ -49,10 +74,10 @@ abstract class TypeParameterTest {
 		} catch (ParseException e) {
 			fail("The value couldn't be parsed!");
 		}
-		
+
 		assertEquals(value, typeParameter.valueToString());
 	}
-	
+
 	protected void assertTypeParameterValue(String value, String expected) {
 		try {
 			typeParameter.stringToValue(value);
@@ -65,6 +90,17 @@ abstract class TypeParameterTest {
 
 	protected void assertBadTypeParameterValue(String value) {
 		assertThrows(ParseException.class, () -> typeParameter.stringToValue(value));
+	}
+
+	protected String createTestName(String name) {
+		String testName = name;
+		if (testName == null) {
+			testName = "<null>";
+		} else if (testName.isBlank()) {
+			testName = "<empty>";
+		}
+
+		return testName;
 	}
 
 	private String formatTypeParameter(String typeParameterName, String value) {

@@ -66,6 +66,7 @@ public class RangesParameter extends TypeParameter {
 	void stringToValue(String stringValue) throws ParseException {
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
+		ranges.clear();
 
 		for (String value : values) {
 			if (!value.isBlank()) {

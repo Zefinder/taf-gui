@@ -20,7 +20,7 @@ public class MaxRealParameter extends MaxParameter {
 	void stringToValue(String stringValue) throws ParseException {
 		try {			
 			this.value = Double.valueOf(stringValue);
-		} catch (NumberFormatException e) {
+		} catch (NumberFormatException | NullPointerException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}
