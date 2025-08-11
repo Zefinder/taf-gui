@@ -126,12 +126,12 @@ public class SaveManager extends Manager {
 	private static final String newLine = Consts.LINE_JUMP;
 	private static final String format = Consts.PARAMETER_STRING_FORMAT + separator;
 
-	private static final String WINDOWS_USER_BASE_MAIN_DIR = System.getenv("APPDATA");
-	private static final String UNIX_MAC_USER_BASE_MAIN_DIR = System.getProperty("user.home");
-	private static final String OTHER_USER_BASE_MAIN_DIR = ".";
+	static final String WINDOWS_USER_BASE_MAIN_DIR = System.getenv("APPDATA");
+	static final String UNIX_MAC_USER_BASE_MAIN_DIR = System.getProperty("user.home");
+	static final String OTHER_USER_BASE_MAIN_DIR = ".";
 
-	private static final String TAF_DIRECTORY_NAME = "tafgui";
-	private static final String RUN_DIRECTORY_NAME = "run";
+	static final String TAF_DIRECTORY_NAME = "tafgui";
+	static final String RUN_DIRECTORY_NAME = "run";
 
 	private static final String SAVE_ARGUMENT_FORMAT = "\\b%s=\"([^\"]+)\""; // Arguments must be separated
 	private static final String ENTITY_ARGUMENT = "entity";

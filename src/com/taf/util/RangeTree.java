@@ -140,6 +140,9 @@ public class RangeTree {
 
 						// Else continue
 					}
+					
+					// If nothing was found, it means that it is in the last child
+					return children.get(children.size() - 1).getParentId(nodeId);
 				}
 			}
 

@@ -21,7 +21,37 @@ import com.taf.logic.type.StringType;
 import com.taf.logic.type.parameter.DistributionType;
 import com.taf.util.Consts;
 
-class RootTest extends TypeTest {
+public class RootTest extends TypeTest {
+	
+	public static final Root COMPLETE_ROOT = buildCompleteRoot(); 
+	public static final String COMPLETE_ROOT_XML = """
+			<root name="test">
+			\t<type name="empty_type">
+			
+			\t</type>
+			\t<type name="filled_type">
+			\t\t<node name="empty_type_node" nb_instances="1">
+			
+			\t\t</node>
+			\t\t<constraint name="empty_type_constraint"/>
+			\t</type>
+			\t<node name="filled_node" nb_instances="1">
+			\t\t<parameter name="boolean_parameter" type="boolean" values="False;True" weights="1;1"/>
+			\t\t<parameter name="integer_parameter" type="integer" min="0" max="10" distribution="u"/>
+			\t\t<parameter name="integer_normal_parameter" type="integer" min="0" max="10" distribution="n" mean="0" variance="0"/>
+			\t\t<parameter name="integer_interval_parameter" type="integer" min="0" max="10" distribution="i" ranges="" weights=""/>
+			\t\t<parameter name="real_parameter" type="real" min="0" max="10" distribution="u"/>
+			\t\t<parameter name="string_parameter" type="string" values="" weights=""/>
+			\t\t<constraint name="filled_constraint" expressions="i + j < 10" quantifiers="i;j" ranges="[0, 10];[0, filled_node.nb_instances]" types="forall;exists"/>
+			\t</node>
+			\t<node name="typed_node" type="empty_type" nb_instances="1" depth="1">
+			\t\t<node name="ref_node" ref="filled_node" nb_instances="1" depth="1">
+			
+			\t\t</node>
+			
+			\t</node>
+			
+			</root>""";
 
 	private Root root;
 	
@@ -98,6 +128,11 @@ class RootTest extends TypeTest {
 	
 	@Test
 	void testRootToString() {
+		assertEquals(COMPLETE_ROOT_XML, COMPLETE_ROOT.toString());
+	}
+	
+	private static final Root buildCompleteRoot() {
+		Root root = new Root("test");
 		Type emptyType = new Type("empty_type");
 		Type filledType = new Type("filled_type");
 		Node emptyTypeNode = new Node("empty_type_node");
@@ -141,34 +176,6 @@ class RootTest extends TypeTest {
 		
 		typedNode.addEntity(refNode);
 		
-		String expected = """
-				<root name="test">
-				\t<type name="empty_type">
-				
-				\t</type>
-				\t<type name="filled_type">
-				\t\t<node name="empty_type_node" nb_instances="1">
-				
-				\t\t</node>
-				\t\t<constraint name="empty_type_constraint"/>
-				\t</type>
-				\t<node name="filled_node" nb_instances="1">
-				\t\t<parameter name="boolean_parameter" type="boolean" values="False;True" weights="1;1"/>
-				\t\t<parameter name="integer_parameter" type="integer" min="0" max="10" distribution="u"/>
-				\t\t<parameter name="integer_normal_parameter" type="integer" min="0" max="10" distribution="n" mean="0" variance="0"/>
-				\t\t<parameter name="integer_interval_parameter" type="integer" min="0" max="10" distribution="i" ranges="" weights=""/>
-				\t\t<parameter name="real_parameter" type="real" min="0" max="10" distribution="u"/>
-				\t\t<parameter name="string_parameter" type="string" values="" weights=""/>
-				\t\t<constraint name="filled_constraint" expressions="i + j < 10" quantifiers="i;j" ranges="[0, 10];[0, filled_node.nb_instances]" types="forall;exists"/>
-				\t</node>
-				\t<node name="typed_node" type="empty_type" nb_instances="1" depth="1">
-				\t\t<node name="ref_node" ref="filled_node" nb_instances="1" depth="1">
-				
-				\t\t</node>
-				
-				\t</node>
-				
-				</root>""";
-		assertEquals(expected, root.toString());
+		return root;
 	}
 }
