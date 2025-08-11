@@ -24,22 +24,22 @@ class RealTypeTest extends NumericalTypeTest {
 	private RealType realType;
 
 	public RealTypeTest() {
-		super(new RealType());
-		realType = (RealType) type;
+		super(new RealType(), "real");
+		realType = (RealType) numericalType;
 	}
 	
 	@Override
 	void testTypeDefaultValuesImpl() {
 		super.testTypeDefaultValuesImpl();
-		assertEquals((double) Consts.DEFAULT_MIN_VALUE, type.getMinNumber());
-		assertEquals((double) Consts.DEFAULT_MAX_VALUE, type.getMaxNumber());
+		assertEquals((double) Consts.DEFAULT_MIN_VALUE, numericalType.getMinNumber());
+		assertEquals((double) Consts.DEFAULT_MAX_VALUE, numericalType.getMaxNumber());
 	}
 	
 	@Override
 	void testTypeMandatoryParametersImpl() {
 		HashSet<String> mandatoryTypeParameters = new HashSetBuilder<String>().add(MaxRealParameter.PARAMETER_NAME)
 				.add(MinRealParameter.PARAMETER_NAME).build();
-		assertIterableEquals(mandatoryTypeParameters, type.getMandatoryParametersName());
+		assertIterableEquals(mandatoryTypeParameters, numericalType.getMandatoryParametersName());
 	}
 
 	@Override
@@ -47,7 +47,7 @@ class RealTypeTest extends NumericalTypeTest {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>().add(DistributionParameter.PARAMETER_NAME)
 				.add(MeanParameter.PARAMETER_NAME).add(VarianceParameter.PARAMETER_NAME)
 				.add(RangesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
-		assertIterableEquals(optionalTypeParameters, type.getOptionalParametersName());
+		assertIterableEquals(optionalTypeParameters, numericalType.getOptionalParametersName());
 	}
 
 	@Override

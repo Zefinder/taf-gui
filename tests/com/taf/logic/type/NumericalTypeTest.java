@@ -11,35 +11,36 @@ import com.taf.util.Consts;
 
 abstract class NumericalTypeTest extends TypeTest {
 
-	protected NumericalType type;
+	protected NumericalType numericalType;
 
-	public NumericalTypeTest(NumericalType type) {
-		this.type = type;
+	public NumericalTypeTest(NumericalType type, String name) {
+		super(type, name);
+		this.numericalType = (NumericalType) fieldType;
 	}
 
 	@Override
 	void testTypeDefaultValuesImpl() {
-		assertEquals(Consts.DEFAULT_DISTRIBUTION, type.getDistribution());
-		assertEquals(Consts.DEFAULT_MEAN_VALUE, type.getMean());
-		assertEquals(Consts.DEFAULT_VARIANCE_VALUE, type.getVariance());
-		assertEquals(0, type.getRangeNumber());
-		assertEquals(0, type.getWeights().length);
+		assertEquals(Consts.DEFAULT_DISTRIBUTION, numericalType.getDistribution());
+		assertEquals(Consts.DEFAULT_MEAN_VALUE, numericalType.getMean());
+		assertEquals(Consts.DEFAULT_VARIANCE_VALUE, numericalType.getVariance());
+		assertEquals(0, numericalType.getRangeNumber());
+		assertEquals(0, numericalType.getWeights().length);
 	}
 
 	@ParameterizedTest
 	@EnumSource(value = DistributionType.class)
 	void testNumericalTypeChangeDistribution(DistributionType distributionType) {
-		type.setDistribution(distributionType);
-		assertEquals(distributionType, type.getDistribution());
+		numericalType.setDistribution(distributionType);
+		assertEquals(distributionType, numericalType.getDistribution());
 	}
 
 	@Test
 	void testNumericalTypeChangeMeanVariance() {
-		type.editMean(Consts.DEFAULT_MEAN_VALUE + 1.5);
-		type.editVariance(Consts.DEFAULT_VARIANCE_VALUE + 1.5);
+		numericalType.editMean(Consts.DEFAULT_MEAN_VALUE + 1.5);
+		numericalType.editVariance(Consts.DEFAULT_VARIANCE_VALUE + 1.5);
 
-		assertEquals(Consts.DEFAULT_MEAN_VALUE + 1.5, type.getMean());
-		assertEquals(Consts.DEFAULT_VARIANCE_VALUE + 1.5, type.getVariance());
+		assertEquals(Consts.DEFAULT_MEAN_VALUE + 1.5, numericalType.getMean());
+		assertEquals(Consts.DEFAULT_VARIANCE_VALUE + 1.5, numericalType.getVariance());
 	}
 
 	@Test

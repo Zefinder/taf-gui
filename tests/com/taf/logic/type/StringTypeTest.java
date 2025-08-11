@@ -17,49 +17,50 @@ import com.taf.util.HashSetBuilder;
 
 class StringTypeTest extends TypeTest {
 
-	private StringType type;
+	private StringType stringType;
 
 	public StringTypeTest() {
-		type = new StringType();
+		super(new StringType(), "string");
+		stringType = (StringType) fieldType;
 	}
 
 	@Override
 	void testTypeDefaultValuesImpl() {
-		assertIterableEquals(new LinkedHashSet<Entry<String, Integer>>(), type.getValues());
+		assertIterableEquals(new LinkedHashSet<Entry<String, Integer>>(), stringType.getValues());
 	}
 	
 	@Override
 	void testTypeMandatoryParametersImpl() {
-		assertIterableEquals(new HashSet<String>(), type.getMandatoryParametersName());
+		assertIterableEquals(new HashSet<String>(), stringType.getMandatoryParametersName());
 	}
 
 	@Override
 	void testTypeOptionalParametersImpl() {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>()
 				.add(ValuesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
-		assertIterableEquals(optionalTypeParameters, type.getOptionalParametersName());
+		assertIterableEquals(optionalTypeParameters, stringType.getOptionalParametersName());
 	}
 
 	@Test
 	void testAddValueWithWeight() {
 		String text = "value";
 		int weight = 10;
-		type.addValue(text, weight);
+		stringType.addValue(text, weight);
 
 		Map<String, Integer> expectedMap = new LinkedHashMap<String, Integer>();
 		expectedMap.put(text, weight);
-		assertIterableEquals(expectedMap.entrySet(), type.getValues());
+		assertIterableEquals(expectedMap.entrySet(), stringType.getValues());
 	}
 
 	@Test
 	void testAddValueWithoutWeight() {
 		String text = "value";
 		int weight = Consts.DEFAULT_WEIGHT_VALUE;
-		type.addValue(text);
+		stringType.addValue(text);
 
 		Map<String, Integer> expectedMap = new LinkedHashMap<String, Integer>();
 		expectedMap.put(text, weight);
-		assertIterableEquals(expectedMap.entrySet(), type.getValues());
+		assertIterableEquals(expectedMap.entrySet(), stringType.getValues());
 	}
 
 	@Test
@@ -67,33 +68,33 @@ class StringTypeTest extends TypeTest {
 		String oldName = "value";
 		String newName = "newValue";
 		int weight = Consts.DEFAULT_WEIGHT_VALUE;
-		type.addValue(oldName);
-		type.editValueName(oldName, newName);
+		stringType.addValue(oldName);
+		stringType.editValueName(oldName, newName);
 
 		Map<String, Integer> expectedMap = new LinkedHashMap<String, Integer>();
 		expectedMap.put(newName, weight);
-		assertIterableEquals(expectedMap.entrySet(), type.getValues());
+		assertIterableEquals(expectedMap.entrySet(), stringType.getValues());
 	}
 
 	@Test
 	void testEditValueWeight() {
 		String text = "value";
 		int newWeight = Consts.DEFAULT_WEIGHT_VALUE + 1;
-		type.addValue(text);
-		type.setWeight(text, newWeight);
+		stringType.addValue(text);
+		stringType.setWeight(text, newWeight);
 
 		Map<String, Integer> expectedMap = new LinkedHashMap<String, Integer>();
 		expectedMap.put(text, newWeight);
-		assertIterableEquals(expectedMap.entrySet(), type.getValues());
+		assertIterableEquals(expectedMap.entrySet(), stringType.getValues());
 	}
 
 	@Test
 	void testAddRemoveValue() {
 		String text = "value";
-		type.addValue(text);
-		type.removeValue(text);
+		stringType.addValue(text);
+		stringType.removeValue(text);
 
-		assertIterableEquals(new LinkedHashSet<Entry<String, Integer>>(), type.getValues());
+		assertIterableEquals(new LinkedHashSet<Entry<String, Integer>>(), stringType.getValues());
 	}
 
 }

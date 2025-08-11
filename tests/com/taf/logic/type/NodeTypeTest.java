@@ -25,7 +25,8 @@ class NodeTypeTest extends TypeTest {
 	private NodeType nodeType;
 
 	public NodeTypeTest() {
-		nodeType = new NodeType();
+		super(new NodeType(), "");
+		nodeType = (NodeType) fieldType;
 	}
 
 	@Override

@@ -24,22 +24,22 @@ class IntegerTypeTest extends NumericalTypeTest {
 	private IntegerType integerType;
 
 	public IntegerTypeTest() {
-		super(new IntegerType());
-		integerType = (IntegerType) type;
+		super(new IntegerType(), "integer");
+		integerType = (IntegerType) numericalType;
 	}
 
 	@Override
 	void testTypeDefaultValuesImpl() {
 		super.testTypeDefaultValuesImpl();
-		assertEquals(Consts.DEFAULT_MIN_VALUE, type.getMinNumber());
-		assertEquals(Consts.DEFAULT_MAX_VALUE, type.getMaxNumber());
+		assertEquals(Consts.DEFAULT_MIN_VALUE, numericalType.getMinNumber());
+		assertEquals(Consts.DEFAULT_MAX_VALUE, numericalType.getMaxNumber());
 	}
 	
 	@Override
 	void testTypeMandatoryParametersImpl() {
 		HashSet<String> mandatoryTypeParameters = new HashSetBuilder<String>().add(MaxIntegerParameter.PARAMETER_NAME)
 				.add(MinIntegerParameter.PARAMETER_NAME).build();
-		assertIterableEquals(mandatoryTypeParameters, type.getMandatoryParametersName());
+		assertIterableEquals(mandatoryTypeParameters, numericalType.getMandatoryParametersName());
 	}
 
 	@Override
@@ -47,7 +47,7 @@ class IntegerTypeTest extends NumericalTypeTest {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>().add(DistributionParameter.PARAMETER_NAME)
 				.add(MeanParameter.PARAMETER_NAME).add(VarianceParameter.PARAMETER_NAME)
 				.add(RangesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
-		assertIterableEquals(optionalTypeParameters, type.getOptionalParametersName());
+		assertIterableEquals(optionalTypeParameters, numericalType.getOptionalParametersName());
 	}
 	
 	@Override

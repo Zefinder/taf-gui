@@ -14,37 +14,38 @@ import com.taf.util.HashSetBuilder;
 
 class BooleanTypeTest extends TypeTest {
 	
-	private BooleanType type;
+	private BooleanType booleanType;
 	
 	public BooleanTypeTest() {
-		type = new BooleanType();
+		super(new BooleanType(), "boolean");
+		booleanType = (BooleanType) fieldType;
 	}
 	
 	@Override
 	void testTypeDefaultValuesImpl() {
-		assertEquals(Consts.DEFAULT_WEIGHT_VALUE, type.getFalseWeight());
-		assertEquals(Consts.DEFAULT_WEIGHT_VALUE, type.getTrueWeight());
+		assertEquals(Consts.DEFAULT_WEIGHT_VALUE, booleanType.getFalseWeight());
+		assertEquals(Consts.DEFAULT_WEIGHT_VALUE, booleanType.getTrueWeight());
 	}
 	
 	@Override
 	void testTypeMandatoryParametersImpl() {
-		assertIterableEquals(new HashSet<String>(), type.getMandatoryParametersName());
+		assertIterableEquals(new HashSet<String>(), booleanType.getMandatoryParametersName());
 	}
 
 	@Override
 	void testTypeOptionalParametersImpl() {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>()
 				.add(ValuesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
-		assertIterableEquals(optionalTypeParameters, type.getOptionalParametersName());
+		assertIterableEquals(optionalTypeParameters, booleanType.getOptionalParametersName());
 	}
 	
 	@Test
 	void testEditTrueFalseWeights() {
-		type.editFalseWeight(Consts.DEFAULT_WEIGHT_VALUE + 1);
-		assertEquals(Consts.DEFAULT_WEIGHT_VALUE + 1, type.getFalseWeight());
+		booleanType.editFalseWeight(Consts.DEFAULT_WEIGHT_VALUE + 1);
+		assertEquals(Consts.DEFAULT_WEIGHT_VALUE + 1, booleanType.getFalseWeight());
 		
-		type.editTrueWeight(Consts.DEFAULT_WEIGHT_VALUE + 1);
-		assertEquals(Consts.DEFAULT_WEIGHT_VALUE + 1, type.getTrueWeight());
+		booleanType.editTrueWeight(Consts.DEFAULT_WEIGHT_VALUE + 1);
+		assertEquals(Consts.DEFAULT_WEIGHT_VALUE + 1, booleanType.getTrueWeight());
 	}
 
 }

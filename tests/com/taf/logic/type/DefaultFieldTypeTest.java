@@ -6,10 +6,8 @@ import java.util.HashSet;
 
 class DefaultFieldTypeTest extends TypeTest {
 
-	private DefaultFieldType defaultType;
-
 	public DefaultFieldTypeTest() {
-		defaultType = new DefaultFieldType();
+		super(new DefaultFieldType(), "");
 	}
 
 	@Override
@@ -19,12 +17,12 @@ class DefaultFieldTypeTest extends TypeTest {
 
 	@Override
 	void testTypeMandatoryParametersImpl() {
-		assertIterableEquals(new HashSet<String>(), defaultType.getMandatoryParametersName());
+		assertIterableEquals(new HashSet<String>(), fieldType.getMandatoryParametersName());
 	}
 
 	@Override
 	void testTypeOptionalParametersImpl() {
-		assertIterableEquals(new HashSet<String>(), defaultType.getOptionalParametersName());
+		assertIterableEquals(new HashSet<String>(), fieldType.getOptionalParametersName());
 	}
 
 }
