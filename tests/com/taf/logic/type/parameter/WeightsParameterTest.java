@@ -1,8 +1,12 @@
 package com.taf.logic.type.parameter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+
+import org.junit.jupiter.api.Test;
 
 class WeightsParameterTest extends ListTypeParameterTest<Integer> {
 
@@ -39,5 +43,16 @@ class WeightsParameterTest extends ListTypeParameterTest<Integer> {
 		return values -> {
 			values.forEach(value -> weightsParameter.removeWeight(0));
 		};
+	}
+	
+	@Test
+	void testWeightsParameterVarArgsConstructor() {
+		int[] values = {1, 3, 4, 1, 2};
+		for (int value : values) {
+			weightsParameter.addWeight(value);
+		}
+		
+		WeightsParameter newParameter = new WeightsParameter(values);
+		assertEquals(weightsParameter, newParameter);
 	}
 }

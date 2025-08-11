@@ -12,6 +12,9 @@ public class RangesParameter extends TypeParameter {
 
 	public static final String PARAMETER_NAME = "ranges";
 
+	private static final String NULL_ERROR_MESSAGE = "Ranges must not be null!";
+	private static final String ERROR_MESSAGE = "A range must have a valid representation: [a,b]";
+	
 	private List<Range> ranges;
 
 	RangesParameter() {
@@ -64,6 +67,13 @@ public class RangesParameter extends TypeParameter {
 
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			// No weight to put
+			return;
+		}
+		
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 		ranges.clear();
@@ -75,6 +85,8 @@ public class RangesParameter extends TypeParameter {
 					double lowerBound = Double.valueOf(m.group(1).stripLeading());
 					double upperBound = Double.valueOf(m.group(2).stripLeading());
 					addRange(lowerBound, upperBound);
+				} else {
+					throw new ParseException(this.getClass(), ERROR_MESSAGE);
 				}
 			}
 		}

@@ -11,7 +11,9 @@ import com.taf.util.Consts;
 public class ValuesParameter extends TypeParameter {
 
 	public static final String PARAMETER_NAME = "values";
-
+	
+	private static final String NULL_ERROR_MESSAGE = "Weights must not be null!";
+	
 	private final HashMap<String, Integer> valueMap;
 
 	public ValuesParameter() {
@@ -141,6 +143,13 @@ public class ValuesParameter extends TypeParameter {
 
 	@Override
 	void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			// No weight to put
+			return;
+		}
+		
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 		valueMap.clear();

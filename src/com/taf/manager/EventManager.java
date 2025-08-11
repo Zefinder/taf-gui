@@ -82,10 +82,6 @@ public class EventManager extends Manager {
 		listener.unregisterComponents();
 	}
 	
-	public boolean hasEventListeners() {
-		return !eventListenerMap.isEmpty();
-	}
-	
 	public boolean hasEventListeners(Class<? extends Event> eventClazz) {
 		return eventListenerMap.containsKey(eventClazz) && !eventListenerMap.get(eventClazz).isEmpty();
 	}
