@@ -3,12 +3,15 @@ package com.taf.logic.constraint.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.taf.exception.ParseException;
 import com.taf.util.Consts;
 
 public class TypesConstraintParameter extends ConstraintParameter {
 
 	static final String CONSTRAINT_PARAMETER_NAME = "types";
 
+	private static final String NULL_ERROR_MESSAGE = "Quantifier types must not be null!";
+	
 	private List<QuantifierType> types;
 
 	public TypesConstraintParameter() {
@@ -33,10 +36,17 @@ public class TypesConstraintParameter extends ConstraintParameter {
 	}
 
 	@Override
-	public void stringToValue(String stringValue) {
+	public void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			return;
+		}
+		
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
-
+		types.clear();
+		
 		for (String value : values) {
 			if (!value.isBlank()) {
 				QuantifierType type = QuantifierType.fromString(value);

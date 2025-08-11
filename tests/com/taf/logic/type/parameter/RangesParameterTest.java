@@ -17,7 +17,7 @@ class RangesParameterTest extends ListTypeParameterTest<Range> {
 
 	@Override
 	public Stream<String> badValueProvider() {
-		return Stream.of("a", "1;4;e", "1,2", "1;;3", "[1,5", "1,5]", "1,5;[0,2]", "[0;4]", null);
+		return Stream.of("a", "1;4;e", "1,2", "1;;3", "[1,5", "1,5]", "1,5;[0,2]", "[0;4]", "[a, 2]", null);
 	}
 
 	@Override

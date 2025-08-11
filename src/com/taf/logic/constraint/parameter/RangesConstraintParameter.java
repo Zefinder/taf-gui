@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
+import com.taf.exception.ParseException;
 import com.taf.util.Consts;
 
 public class RangesConstraintParameter extends ConstraintParameter {
 
 	static final String CONSTRAINT_PARAMETER_NAME = "ranges";
+	
+	private static final String NULL_ERROR_MESSAGE = "Ranges must not be null!";
+	private static final String ERROR_MESSAGE = "A range must have a valid representation: [a,b]";
 
 	private List<Range> ranges;
 
@@ -53,9 +57,16 @@ public class RangesConstraintParameter extends ConstraintParameter {
 	}
 
 	@Override
-	public void stringToValue(String stringValue) {
+	public void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			return;
+		}
+		
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
+		ranges.clear();
 
 		for (String value : values) {
 			if (!value.isBlank()) {
@@ -64,6 +75,8 @@ public class RangesConstraintParameter extends ConstraintParameter {
 					String left = m.group(1).stripLeading();
 					String right = m.group(2).stripLeading();
 					addRange(left, right);
+				} else {
+					throw new ParseException(this.getClass(), ERROR_MESSAGE);
 				}
 			}
 		}
