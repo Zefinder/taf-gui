@@ -11,8 +11,8 @@ public class ConstraintParameterFactory {
 
 	public static ConstraintParameter createConstraintParameter(String name, String stringValue) throws ParseException {
 		ConstraintParameter parameter = switch (name) {
-		case ExpressionConstraintParameter.CONSTRAINT_PARAMETER_NAME:
-			yield new ExpressionConstraintParameter();
+		case ExpressionsConstraintParameter.CONSTRAINT_PARAMETER_NAME:
+			yield new ExpressionsConstraintParameter();
 
 		case QuantifiersConstraintParameter.CONSTRAINT_PARAMETER_NAME:
 			yield new QuantifiersConstraintParameter();

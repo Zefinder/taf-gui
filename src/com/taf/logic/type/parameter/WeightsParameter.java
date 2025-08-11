@@ -39,20 +39,21 @@ public class WeightsParameter extends TypeParameter {
 	public void removeWeight(int index) {
 		weights.remove(index);
 	}
-	
+
 	public void editWeight(int index, int weight) {
 		weights.set(index, weight);
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		if (stringValue == null) {
 			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
-		} if (stringValue.isBlank()) {
+		}
+		if (stringValue.isBlank()) {
 			// No weight to put
 			return;
 		}
-		
+
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 		weights.clear();

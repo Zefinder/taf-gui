@@ -66,7 +66,7 @@ public class RangesParameter extends TypeParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		if (stringValue == null) {
 			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
 		} if (stringValue.isBlank()) {

@@ -28,7 +28,7 @@ public class InstanceNumberParameter extends TypeParameter {
 	}
 	
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		try {			
 			this.instanceNumber = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

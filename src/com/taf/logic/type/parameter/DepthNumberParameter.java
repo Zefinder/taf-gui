@@ -28,7 +28,7 @@ public class DepthNumberParameter extends TypeParameter {
 	}
 	
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		try {			
 			this.depthNumber = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

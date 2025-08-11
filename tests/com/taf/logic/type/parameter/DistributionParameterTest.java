@@ -28,14 +28,14 @@ class DistributionParameterTest extends TypeParameterTest {
 	}
 
 	@Override
-	Stream<Pair<String, String>> valueProvider() {
+	public Stream<Pair<String, String>> valueProvider() {
 		return Stream.of(new Pair<String, String>("u", "u"), new Pair<String, String>("i", "i"),
 				new Pair<String, String>("u", "u"), new Pair<String, String>("i", "i"),
 				new Pair<String, String>("boom", "u"));
 	}
 
 	@Override
-	Stream<String> badValueProvider() {
+	public Stream<String> badValueProvider() {
 		return Stream.of((String) null);
 	}
 

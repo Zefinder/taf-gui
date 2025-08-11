@@ -3,15 +3,18 @@ package com.taf.logic.constraint.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.taf.exception.ParseException;
 import com.taf.util.Consts;
 
-public class ExpressionConstraintParameter extends ConstraintParameter {
+public class ExpressionsConstraintParameter extends ConstraintParameter {
 
 	static final String CONSTRAINT_PARAMETER_NAME = "expressions";
 	
+	private static final String NULL_ERROR_MESSAGE = "Expressions must not be null!";
+	
 	private List<String> expressions;
 	
-	public ExpressionConstraintParameter() {
+	public ExpressionsConstraintParameter() {
 		super(CONSTRAINT_PARAMETER_NAME);
 		expressions = new ArrayList<String>();
 	}
@@ -48,10 +51,17 @@ public class ExpressionConstraintParameter extends ConstraintParameter {
 	}
 	
 	@Override
-	void stringToValue(String stringValue) {
+	public void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			return;
+		}
+		
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
-
+		expressions.clear();
+		
 		for (String value : values) {
 			if (!value.isBlank()) {
 				addExpression(value);

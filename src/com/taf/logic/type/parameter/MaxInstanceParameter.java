@@ -22,7 +22,7 @@ public class MaxInstanceParameter extends MaxParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		try {			
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

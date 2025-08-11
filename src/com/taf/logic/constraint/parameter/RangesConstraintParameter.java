@@ -53,7 +53,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) {
+	public void stringToValue(String stringValue) {
 		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
 

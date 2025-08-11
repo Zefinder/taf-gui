@@ -108,7 +108,11 @@ public class Consts {
 		JOptionPane.showMessageDialog(null, errorMessage, ERROR_DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
 	}
 
+	public static final String formatParameter(String name, String value) {
+		return PARAMETER_STRING_FORMAT.formatted(name, value);
+	}
+
 	private Consts() {
 	}
-	
+
 }

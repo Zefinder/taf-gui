@@ -96,7 +96,7 @@ public class DistributionParameter extends TypeParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		distributionType = DistributionType.fromDistributionString(stringValue);
 	}
 

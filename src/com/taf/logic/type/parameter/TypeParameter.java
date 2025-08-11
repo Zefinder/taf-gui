@@ -1,13 +1,13 @@
 package com.taf.logic.type.parameter;
 
-import com.taf.exception.ParseException;
+import com.taf.logic.Parsable;
 import com.taf.util.Consts;
 
 /**
  * Class that represents a type parameter. Every class that extends it must
  * contain an empty constructor.
  */
-public abstract class TypeParameter {
+public abstract class TypeParameter implements Parsable {
 
 	protected final String name;
 
@@ -15,13 +15,9 @@ public abstract class TypeParameter {
 		this.name = name;
 	}
 
-	public abstract String valueToString();
-
-	abstract void stringToValue(String stringValue) throws ParseException;
-
 	@Override
 	public String toString() {
-		return Consts.PARAMETER_STRING_FORMAT.formatted(name, valueToString());
+		return Consts.formatParameter(name, valueToString());
 	}
 
 	@Override

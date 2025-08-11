@@ -22,7 +22,7 @@ public class MinDepthParameter extends MinParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		try {
 			this.value = Integer.valueOf(stringValue);
 		} catch (NumberFormatException e) {

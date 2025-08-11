@@ -18,7 +18,7 @@ abstract class IntegerTypeParameterTest extends TypeParameterTest {
 	}
 
 	@Override
-	Stream<Pair<String, String>> valueProvider() {
+	public Stream<Pair<String, String>> valueProvider() {
 		return Stream.of(
 				new Pair<String, String>("3", "3"), 
 				new Pair<String, String>("-5", "-5"), 
@@ -27,7 +27,7 @@ abstract class IntegerTypeParameterTest extends TypeParameterTest {
 	}
 
 	@Override
-	Stream<String> badValueProvider() {
+	public Stream<String> badValueProvider() {
 		return Stream.of("2.3", "a", "", null);
 	}
 

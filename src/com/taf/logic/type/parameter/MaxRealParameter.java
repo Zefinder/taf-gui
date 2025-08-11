@@ -17,7 +17,7 @@ public class MaxRealParameter extends MaxParameter {
 	}
 	
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		try {			
 			this.value = Double.valueOf(stringValue);
 		} catch (NumberFormatException | NullPointerException e) {

@@ -18,12 +18,12 @@ class WeightsParameterTest extends ListTypeParameterTest<Integer> {
 	}
 
 	@Override
-	Stream<String> badValueProvider() {
+	public Stream<String> badValueProvider() {
 		return Stream.of("a", "1;4;e", "1,2", "1;;3", null);
 	}
 
 	@Override
-	Stream<List<Integer>> listProvider() {
+	public Stream<List<Integer>> listProvider() {
 		return Stream.of(
 				List.<Integer>of(0),
 				List.<Integer>of(2, 3, 4), 
@@ -32,14 +32,14 @@ class WeightsParameterTest extends ListTypeParameterTest<Integer> {
 	}
 
 	@Override
-	Consumer<List<Integer>> listProviderConsumer() {
+	public Consumer<List<Integer>> listProviderConsumer() {
 		return values -> {
 			values.forEach(value -> weightsParameter.addWeight(value));
 		};
 	}
 	
 	@Override
-	Consumer<List<Integer>> valuesRemover() {
+	public Consumer<List<Integer>> valuesRemover() {
 		return values -> {
 			values.forEach(value -> weightsParameter.removeWeight(0));
 		};

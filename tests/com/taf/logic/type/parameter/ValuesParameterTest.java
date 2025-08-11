@@ -23,12 +23,12 @@ class ValuesParameterTest extends ListTypeParameterTest<String> {
 	}
 
 	@Override
-	Stream<String> badValueProvider() {
+	public Stream<String> badValueProvider() {
 		return Stream.of((String) null);
 	}
 
 	@Override
-	Stream<List<String>> listProvider() {
+	public Stream<List<String>> listProvider() {
 		return Stream.of(
 				List.<String>of("a"),
 				List.<String>of("b", "v", "c"), 
@@ -38,14 +38,14 @@ class ValuesParameterTest extends ListTypeParameterTest<String> {
 	}
 
 	@Override
-	Consumer<List<String>> listProviderConsumer() {
+	public Consumer<List<String>> listProviderConsumer() {
 		return values -> {
 			values.forEach(value -> valuesParameter.addValue(value));
 		};
 	}
 
 	@Override
-	Consumer<List<String>> valuesRemover() {
+	public Consumer<List<String>> valuesRemover() {
 		return values -> {
 			values.forEach(value -> valuesParameter.removeValue(value));
 		};

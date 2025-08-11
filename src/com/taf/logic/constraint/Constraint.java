@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.parameter.ConstraintParameter;
-import com.taf.logic.constraint.parameter.ExpressionConstraintParameter;
+import com.taf.logic.constraint.parameter.ExpressionsConstraintParameter;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.QuantifiersConstraintParameter;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter;
@@ -21,14 +21,14 @@ public class Constraint implements Entity {
 	private String name;
 	private Type parent;
 
-	private ExpressionConstraintParameter expressionsConstraintParameter;
+	private ExpressionsConstraintParameter expressionsConstraintParameter;
 	private QuantifiersConstraintParameter quantifiersConstraintParameter;
 	private RangesConstraintParameter rangesConstraintParameter;
 	private TypesConstraintParameter typesConstraintParameter;
 
 	public Constraint(String name) {
 		this.name = name;
-		expressionsConstraintParameter = new ExpressionConstraintParameter();
+		expressionsConstraintParameter = new ExpressionsConstraintParameter();
 		quantifiersConstraintParameter = new QuantifiersConstraintParameter();
 		rangesConstraintParameter = new RangesConstraintParameter();
 		typesConstraintParameter = new TypesConstraintParameter();
@@ -36,8 +36,8 @@ public class Constraint implements Entity {
 
 	public void addConstraintParameter(ConstraintParameter parameter) {
 		// We assume that the parameters arrive in that order
-		if (parameter instanceof ExpressionConstraintParameter) {
-			for (String expression : ((ExpressionConstraintParameter) parameter).getExpressions()) {
+		if (parameter instanceof ExpressionsConstraintParameter) {
+			for (String expression : ((ExpressionsConstraintParameter) parameter).getExpressions()) {
 				expressionsConstraintParameter.addExpression(expression);
 			}
 			

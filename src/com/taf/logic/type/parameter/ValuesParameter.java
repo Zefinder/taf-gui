@@ -12,7 +12,7 @@ public class ValuesParameter extends TypeParameter {
 
 	public static final String PARAMETER_NAME = "values";
 	
-	private static final String NULL_ERROR_MESSAGE = "Weights must not be null!";
+	private static final String NULL_ERROR_MESSAGE = "Values must not be null!";
 	
 	private final HashMap<String, Integer> valueMap;
 
@@ -142,11 +142,10 @@ public class ValuesParameter extends TypeParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		if (stringValue == null) {
 			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
 		} if (stringValue.isBlank()) {
-			// No weight to put
 			return;
 		}
 		

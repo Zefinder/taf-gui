@@ -16,12 +16,12 @@ class RangesParameterTest extends ListTypeParameterTest<Range> {
 	}
 
 	@Override
-	Stream<String> badValueProvider() {
+	public Stream<String> badValueProvider() {
 		return Stream.of("a", "1;4;e", "1,2", "1;;3", "[1,5", "1,5]", "1,5;[0,2]", "[0;4]", null);
 	}
 
 	@Override
-	Stream<List<Range>> listProvider() {
+	public Stream<List<Range>> listProvider() {
 		return Stream.of(
 				List.of(new Range(0, 2)),
 				List.of(new Range(0, 2), new Range(5, 42)),
@@ -30,14 +30,14 @@ class RangesParameterTest extends ListTypeParameterTest<Range> {
 	}
 
 	@Override
-	Consumer<List<Range>> listProviderConsumer() {
+	public Consumer<List<Range>> listProviderConsumer() {
 		return values -> {
 			values.forEach(value -> rangesParameter.addRange(value.getLowerBound(), value.getUpperBound()));
 		};
 	}
 
 	@Override
-	Consumer<List<Range>> valuesRemover() {
+	public Consumer<List<Range>> valuesRemover() {
 		return values -> {
 			values.forEach(value -> rangesParameter.removeRange(0));
 		};
