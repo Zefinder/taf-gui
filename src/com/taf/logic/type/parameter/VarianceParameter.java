@@ -36,7 +36,7 @@ public class VarianceParameter extends TypeParameter {
 	@Override
 	public void stringToValue(String stringValue) throws ParseException {
 		try {			
-			this.variance = Double.valueOf(stringValue);
+			setVariance(Double.valueOf(stringValue));
 		} catch (NumberFormatException | NullPointerException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}

@@ -13,7 +13,7 @@ public class MinInstanceParameter extends MinParameter {
 	}
 
 	public MinInstanceParameter(int value) {
-		super(PARAMETER_NAME, value, false);
+		super(PARAMETER_NAME, value < 0 ? 0 : value, false);
 	}
 	
 	@Override
@@ -24,7 +24,7 @@ public class MinInstanceParameter extends MinParameter {
 	@Override
 	public void stringToValue(String stringValue) throws ParseException {
 		try {
-			this.value = Integer.valueOf(stringValue);
+			setValue(Integer.valueOf(stringValue));
 		} catch (NumberFormatException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}

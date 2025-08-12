@@ -35,7 +35,8 @@ abstract class TypeParameterTest extends FactoryTest {
 
 	@Test
 	void testTypeParameterToString() {
-		assertEquals(Consts.formatParameter(typeParameter.name, typeParameter.valueToString()), typeParameter.toString());
+		assertEquals(Consts.formatParameter(typeParameter.name, typeParameter.valueToString()),
+				typeParameter.toString());
 	}
 
 	@TestFactory
@@ -49,6 +50,12 @@ abstract class TypeParameterTest extends FactoryTest {
 		return badValueProvider().<DynamicTest>map(
 				value -> DynamicTest.dynamicTest(createTestName(value), () -> assertBadTypeParameterValue(value)))
 				.toList();
+	}
+
+	@Test
+	void testTypeParameterHashCode() {
+		assertEquals((typeParameter.getClass().toString() + Consts.HASH_SEPARATOR + typeParameter.name
+				+ typeParameter.valueToString()).hashCode(), typeParameter.hashCode());
 	}
 
 	protected void assertTypeParameterValue(String value) {

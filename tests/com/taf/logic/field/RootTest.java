@@ -35,17 +35,19 @@ public class RootTest extends TypeTest {
 			\t\t</node>
 			\t\t<constraint name="empty_type_constraint"/>
 			\t</type>
-			\t<node name="filled_node" nb_instances="1">
+			\t<node name="filled_node" min="1" max="1">
 			\t\t<parameter name="boolean_parameter" type="boolean" values="False;True" weights="1;1"/>
 			\t\t<parameter name="integer_parameter" type="integer" min="0" max="10" distribution="u"/>
 			\t\t<parameter name="integer_normal_parameter" type="integer" min="0" max="10" distribution="n" mean="0" variance="0"/>
-			\t\t<parameter name="integer_interval_parameter" type="integer" min="0" max="10" distribution="i" ranges="" weights=""/>
+			\t\t<parameter name="integer_interval_parameter" type="integer" min="0" max="10" distribution="i" ranges="[0, 10]" weights="1"/>
 			\t\t<parameter name="real_parameter" type="real" min="0" max="10" distribution="u"/>
-			\t\t<parameter name="string_parameter" type="string" values="" weights=""/>
+			\t\t<parameter name="real_normal_parameter" type="real" min="0" max="10" distribution="n" mean="0" variance="0"/>
+			\t\t<parameter name="real_interval_parameter" type="real" min="0" max="10" distribution="i" ranges="[0, 10]" weights="1"/>
+			\t\t<parameter name="string_parameter" type="string" values="a;b" weights="1;2"/>
 			\t\t<constraint name="filled_constraint" expressions="i + j < 10" quantifiers="i;j" ranges="[0, 10];[0, filled_node.nb_instances]" types="forall;exists"/>
 			\t</node>
 			\t<node name="typed_node" type="empty_type" nb_instances="1" depth="1">
-			\t\t<node name="ref_node" ref="filled_node" nb_instances="1" depth="1">
+			\t\t<node name="ref_node" ref="filled_node" nb_instances="1" min_depth="1" max_depth="1">
 			
 			\t\t</node>
 			
@@ -138,15 +140,28 @@ public class RootTest extends TypeTest {
 		Node emptyTypeNode = new Node("empty_type_node");
 		Constraint emptyTypeConstraint = new Constraint("empty_type_constraint");
 		
-		Node filledNode = new Node("filled_node");
+		NodeType filledNodeType = new NodeType();
+		filledNodeType.setMinMaxInstance(true);
+		Node filledNode = new Node("filled_node", filledNodeType);
 		Parameter booleanParameter = new Parameter("boolean_parameter", new BooleanType());
 		Parameter integerParameter = new Parameter("integer_parameter", new IntegerType());
 		Parameter integerNormalParameter = new Parameter("integer_normal_parameter", new IntegerType());
 		((IntegerType) integerNormalParameter.getType()).setDistribution(DistributionType.NORMAL);
-		Parameter integerIntervalParameter = new Parameter("integer_interval_parameter", new IntegerType());
-		((IntegerType) integerIntervalParameter.getType()).setDistribution(DistributionType.INTERVAL);
+		IntegerType integerRangesType = new IntegerType();
+		integerRangesType.setDistribution(DistributionType.INTERVAL);
+		integerRangesType.addInterval(0, 10, 1);
+		Parameter integerIntervalParameter = new Parameter("integer_interval_parameter", integerRangesType);
 		Parameter realParameter = new Parameter("real_parameter", new RealType());
-		Parameter stringParameter = new Parameter("string_parameter", new StringType());
+		Parameter realNormalParameter = new Parameter("real_normal_parameter", new RealType());
+		((RealType) realNormalParameter.getType()).setDistribution(DistributionType.NORMAL);
+		RealType realRangesType = new RealType();
+		realRangesType.setDistribution(DistributionType.INTERVAL);
+		realRangesType.addInterval(0, 10, 1);
+		Parameter realIntervalParameter = new Parameter("real_interval_parameter", realRangesType);
+		StringType stringType = new StringType();
+		stringType.addValue("a", 1);
+		stringType.addValue("b", 2);
+		Parameter stringParameter = new Parameter("string_parameter", stringType);
 		
 		Constraint filledConstraint = new Constraint("filled_constraint");
 		filledConstraint.addExpression("i + j < 10");
@@ -155,7 +170,9 @@ public class RootTest extends TypeTest {
 		
 		Node typedNode = new Node("typed_node");
 		typedNode.setType("empty_type");
-		Node refNode = new Node("ref_node");
+		NodeType refNodeType = new NodeType();
+		refNodeType.setMinMaxDepth(true);
+		Node refNode = new Node("ref_node", refNodeType);
 		refNode.setReference("filled_node");
 		
 		root.addEntity(emptyType);
@@ -171,6 +188,8 @@ public class RootTest extends TypeTest {
 		filledNode.addEntity(integerNormalParameter);
 		filledNode.addEntity(integerIntervalParameter);
 		filledNode.addEntity(realParameter);
+		filledNode.addEntity(realNormalParameter);
+		filledNode.addEntity(realIntervalParameter);
 		filledNode.addEntity(stringParameter);
 		filledNode.addEntity(filledConstraint);
 		

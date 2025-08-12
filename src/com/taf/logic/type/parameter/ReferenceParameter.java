@@ -31,7 +31,7 @@ public class ReferenceParameter extends TypeParameter {
 		}
 
 		if (!stringValue.isBlank()) {
-			this.refName = stringValue;
+			setReferenceName(stringValue);
 		} else {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}

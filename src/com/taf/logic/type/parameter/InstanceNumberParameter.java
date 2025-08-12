@@ -16,11 +16,11 @@ public class InstanceNumberParameter extends TypeParameter {
 	
 	public InstanceNumberParameter(int instanceNumber) {
 		this();
-		this.instanceNumber = instanceNumber;
+		setInstanceNumber(instanceNumber);
 	}
 	
 	public void setInstanceNumber(int instanceNumber) {
-		this.instanceNumber = instanceNumber;
+		this.instanceNumber = instanceNumber < 0 ? 0 : instanceNumber;
 	}
 	
 	public int getInstanceNumber() {
@@ -30,7 +30,7 @@ public class InstanceNumberParameter extends TypeParameter {
 	@Override
 	public void stringToValue(String stringValue) throws ParseException {
 		try {			
-			this.instanceNumber = Integer.valueOf(stringValue);
+			setInstanceNumber(Integer.valueOf(stringValue));
 		} catch (NumberFormatException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}

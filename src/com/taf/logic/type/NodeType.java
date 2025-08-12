@@ -44,7 +44,7 @@ public class NodeType extends FieldType {
 		refName = new ReferenceParameter(EMPTY_TYPE_REF_NAME);
 		instanceNumber = new InstanceNumberParameter(Consts.DEFAULT_INSTANCE_NUMBER);
 		minInstance = new MinInstanceParameter(Consts.DEFAULT_MIN_INSTANCE_NUMBER);
-		maxInstance = new MaxInstanceParameter(Consts.DEFAULT_MIN_INSTANCE_NUMBER);
+		maxInstance = new MaxInstanceParameter(Consts.DEFAULT_MAX_INSTANCE_NUMBER);
 		depthNumber = new DepthNumberParameter(Consts.DEFAULT_DEPTH_NUMBER);
 		minDepth = new MinDepthParameter(Consts.DEFAULT_MIN_DEPTH_NUMBER);
 		maxDepth = new MaxDepthParameter(Consts.DEFAULT_MAX_DEPTH_NUMBER);

@@ -36,7 +36,7 @@ public class MeanParameter extends TypeParameter {
 	@Override
 	public void stringToValue(String stringValue) throws ParseException {
 		try {
-			this.mean = Double.valueOf(stringValue);
+			setMean(Double.valueOf(stringValue));
 		} catch (NumberFormatException | NullPointerException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}

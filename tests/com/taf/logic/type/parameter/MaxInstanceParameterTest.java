@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.taf.logic.type.parameter.TypeParameterFactory.MinMaxTypeParameterType;
 
-class MaxInstanceParameterTest extends IntegerTypeParameterTest {
+class MaxInstanceParameterTest extends PositiveTypeParameterTest {
 
 	public MaxInstanceParameterTest() throws InstantiationException, IllegalAccessException, IllegalArgumentException,
 			InvocationTargetException, NoSuchMethodException, SecurityException {

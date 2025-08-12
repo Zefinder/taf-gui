@@ -31,7 +31,7 @@ public class TypeNameParameter extends TypeParameter {
 		}
 		
 		if (!stringValue.isBlank()) {
-			this.typeName = stringValue;
+			setTypeName(stringValue);
 		} else {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}

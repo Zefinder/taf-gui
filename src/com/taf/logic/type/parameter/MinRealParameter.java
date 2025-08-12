@@ -19,7 +19,7 @@ public class MinRealParameter extends MinParameter {
 	@Override
 	public void stringToValue(String stringValue) throws ParseException {
 		try {
-			this.value = Double.valueOf(stringValue);
+			setValue(Double.valueOf(stringValue));
 		} catch (NumberFormatException | NullPointerException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}

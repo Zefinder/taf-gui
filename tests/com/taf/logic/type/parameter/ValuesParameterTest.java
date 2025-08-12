@@ -1,6 +1,7 @@
 package com.taf.logic.type.parameter;
 
 import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
@@ -105,6 +106,26 @@ class ValuesParameterTest extends ListTypeParameterTest<String> {
 
 		ValuesParameter newParameter = new ValuesParameter(values);
 		assertEquals(valuesParameter, newParameter);
+	}
+	
+	@Test
+	void testValuesParameterEditUnknownValue() {
+		assertFalse(valuesParameter.editValueName("a", "b"));
+	}
+	
+	@Test
+	void testValuesParameterRemoveUnknownValue() {
+		assertFalse(valuesParameter.removeValue("a"));
+	}
+	
+	@Test
+	void testValuesParameterEditUnknownValueWeight() {
+		assertFalse(valuesParameter.setWeight("a", 2));
+	}
+	
+	@Test
+	void testValuesParameterGetUnknownValueWeight() {
+		assertEquals(-1, valuesParameter.getWeight("a"));
 	}
 
 }

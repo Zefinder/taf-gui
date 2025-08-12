@@ -3,6 +3,7 @@ package com.taf.util;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.taf.exception.RangeException;
 import com.taf.exception.RangeIntersectionException;
 
 public class RangeTree {
@@ -16,19 +17,28 @@ public class RangeTree {
 		rootNode = new Node(0);
 	}
 
-	public void addRange(int start, int end) throws RangeIntersectionException {
+	public void addRange(int start, int end) throws RangeException {
 		Range range = new Range(start, end);
 		rootNode.addRange(range, maxNodeId++);
 	}
 
-	public int getParentId(int nodeId) {
-		return rootNode.getParentId(nodeId);
+	public int getParentId(int rangeId) {
+		return rootNode.getParentId(rangeId);
 	}
 
-	public int getNodeId(int position) {
-		return rootNode.getNodeId(position);
+	/**
+	 * Returns the id of the range containing the input number n, or -1 if no range
+	 * contains it.
+	 * 
+	 * @return the id of the range containing the input number n, or -1.
+	 */
+	public int getRangeId(int n) {
+		return rootNode.getNodeId(n);
 	}
 
+	/**
+	 * Numbers the tree in a DFS style (starting with 1). Id 0 is reserved for the root
+	 */
 	public void numberTree() {
 		rootNode.numberNode(0);
 	}
@@ -140,7 +150,7 @@ public class RangeTree {
 
 						// Else continue
 					}
-					
+
 					// If nothing was found, it means that it is in the last child
 					return children.get(children.size() - 1).getParentId(nodeId);
 				}
@@ -171,16 +181,22 @@ public class RangeTree {
 	}
 
 	private static class Range {
+		private static final String RANGE_BOUNDS_ERROR_MESSAGE = "Error in range creation: start > end!";
+
 		private int start;
 		private int end;
 
 		/**
-		 * Represents the range [start; end]
+		 * Represents the range [start; end]. Start must be lower or equal to end
 		 * 
 		 * @param start
 		 * @param end
+		 * @throws RangeException if start > end
 		 */
-		public Range(int start, int end) {
+		public Range(int start, int end) throws RangeException {
+			if (start > end) {
+				throw new RangeException(Range.class, RANGE_BOUNDS_ERROR_MESSAGE);
+			}
 			this.start = start;
 			this.end = end;
 		}

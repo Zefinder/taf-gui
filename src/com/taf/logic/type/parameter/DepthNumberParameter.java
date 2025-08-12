@@ -16,11 +16,11 @@ public class DepthNumberParameter extends TypeParameter {
 	
 	public DepthNumberParameter(int depthNumber) {
 		this();
-		this.depthNumber = depthNumber;
+		setDepthNumber(depthNumber);
 	}
 	
 	public void setDepthNumber(int depthNumber) {
-		this.depthNumber = depthNumber;
+		this.depthNumber = depthNumber < 0 ? 0 : depthNumber;
 	}
 	
 	public int getDepthNumber() {
@@ -30,7 +30,7 @@ public class DepthNumberParameter extends TypeParameter {
 	@Override
 	public void stringToValue(String stringValue) throws ParseException {
 		try {			
-			this.depthNumber = Integer.valueOf(stringValue);
+			setDepthNumber(Integer.valueOf(stringValue));
 		} catch (NumberFormatException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
