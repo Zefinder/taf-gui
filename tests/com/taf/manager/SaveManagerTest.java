@@ -9,20 +9,13 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Comparator;
-import java.util.stream.Stream;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.taf.exception.ImportException;
 import com.taf.exception.ParseException;
 import com.taf.logic.field.RootTest;
 import com.taf.util.Consts;
-import com.taf.util.OSValidator;
 
 class SaveManagerTest extends ManagerTest {
 
@@ -45,37 +38,6 @@ class SaveManagerTest extends ManagerTest {
 			entity="parameter" parent="4" name="string_parameter" type="string" values="a;b" weights="1;2"
 			entity="constraint" parent="4" name="filled_constraint" expressions="i + j < 10" quantifiers="i;j" ranges="[0, 10];[0, filled_node.nb_instances]" types="forall;exists"
 			""";
-
-	private static boolean initFail = false;
-
-	private String mainDirectory;
-
-	@BeforeEach
-	void setupSaveManagerEnvironment() {
-		OSValidator OS = OSValidator.getOS();
-		switch (OS) {
-		case WINDOWS:
-			mainDirectory = SaveManager.WINDOWS_USER_BASE_MAIN_DIR;
-			break;
-
-		case UNIX:
-		case MAC:
-			mainDirectory = SaveManager.UNIX_MAC_USER_BASE_MAIN_DIR;
-			break;
-
-		default:
-			mainDirectory = SaveManager.OTHER_USER_BASE_MAIN_DIR;
-		}
-		mainDirectory += File.separator + SaveManager.TAF_DIRECTORY_NAME;
-
-		File mainDirectoryFile = new File(mainDirectory);
-		if (mainDirectoryFile.exists()) {
-			mainDirectoryFile.renameTo(new File(mainDirectory + "_tmp"));
-		}
-
-		mainDirectoryFile.mkdir();
-		initFail = false;
-	}
 
 	@Test
 	void testSaveManagerImportSaveExport() throws IOException {
@@ -131,20 +93,4 @@ class SaveManagerTest extends ManagerTest {
 		tmpFile.delete();
 	}
 
-	@AfterEach
-	void cleanSaveManagerEnvironment() throws IOException {
-		if (initFail) {
-			return;
-		}
-
-		// Delete the test files
-		File mainDirectoryFile = new File(mainDirectory);
-		try (Stream<Path> paths = Files.walk(mainDirectoryFile.toPath())) {
-			paths.sorted(Comparator.reverseOrder()).map(Path::toFile).forEach(File::delete);
-		}
-
-		// Replace the old one
-		mainDirectoryFile = new File(mainDirectory + "_tmp");
-		mainDirectoryFile.renameTo(new File(mainDirectory));
-	}
 }
