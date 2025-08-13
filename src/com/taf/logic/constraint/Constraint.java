@@ -4,14 +4,14 @@ import java.util.List;
 
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.parameter.ConstraintParameter;
-import com.taf.logic.constraint.parameter.ExpressionConstraintParameter;
+import com.taf.logic.constraint.parameter.ExpressionsConstraintParameter;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.QuantifiersConstraintParameter;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
 import com.taf.logic.constraint.parameter.TypesConstraintParameter;
 import com.taf.logic.field.Type;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class Constraint implements Entity {
 
@@ -21,14 +21,14 @@ public class Constraint implements Entity {
 	private String name;
 	private Type parent;
 
-	private ExpressionConstraintParameter expressionsConstraintParameter;
+	private ExpressionsConstraintParameter expressionsConstraintParameter;
 	private QuantifiersConstraintParameter quantifiersConstraintParameter;
 	private RangesConstraintParameter rangesConstraintParameter;
 	private TypesConstraintParameter typesConstraintParameter;
 
 	public Constraint(String name) {
 		this.name = name;
-		expressionsConstraintParameter = new ExpressionConstraintParameter();
+		expressionsConstraintParameter = new ExpressionsConstraintParameter();
 		quantifiersConstraintParameter = new QuantifiersConstraintParameter();
 		rangesConstraintParameter = new RangesConstraintParameter();
 		typesConstraintParameter = new TypesConstraintParameter();
@@ -36,8 +36,8 @@ public class Constraint implements Entity {
 
 	public void addConstraintParameter(ConstraintParameter parameter) {
 		// We assume that the parameters arrive in that order
-		if (parameter instanceof ExpressionConstraintParameter) {
-			for (String expression : ((ExpressionConstraintParameter) parameter).getExpressions()) {
+		if (parameter instanceof ExpressionsConstraintParameter) {
+			for (String expression : ((ExpressionsConstraintParameter) parameter).getExpressions()) {
 				expressionsConstraintParameter.addExpression(expression);
 			}
 			
@@ -123,7 +123,7 @@ public class Constraint implements Entity {
 	}
 
 	public String parametersToString() {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
+		final String separator = Consts.PARAMETER_SEPARATOR;
 		String paramStr = "";
 		if (!expressionsConstraintParameter.getExpressions().isEmpty()) {
 			paramStr += separator + expressionsConstraintParameter.toString();
@@ -166,14 +166,14 @@ public class Constraint implements Entity {
 	
 	@Override
 	public String getEntityTypeName() {
-		return ConstantManager.CONSTRAINT_ENTITY_NAME;
+		return Consts.CONSTRAINT_ENTITY_NAME;
 	}
 
 	@Override
 	public String toString() {
 		String paramStr = parametersToString();
 		return CONSTRAINT_STRING_FORMAT
-				.formatted(ConstantManager.FIELD_STRING_FORMAT.formatted(name, paramStr.strip()).stripTrailing());
+				.formatted(Consts.FIELD_STRING_FORMAT.formatted(name, paramStr.strip()).stripTrailing());
 	}
 
 }

@@ -12,15 +12,15 @@ public class MinRealParameter extends MinParameter {
 		super(PARAMETER_NAME);
 	}
 	
-	public MinRealParameter(Number value) {
+	public MinRealParameter(double value) {
 		super(PARAMETER_NAME, value, true);
 	}
 	
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
-		try {			
-			this.value = Double.valueOf(stringValue);
-		} catch (NumberFormatException e) {
+	public void stringToValue(String stringValue) throws ParseException {
+		try {
+			setValue(Double.valueOf(stringValue));
+		} catch (NumberFormatException | NullPointerException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}

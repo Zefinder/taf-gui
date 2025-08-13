@@ -12,10 +12,10 @@ import javax.swing.JOptionPane;
 import com.taf.event.Event;
 import com.taf.event.RunLocationChangedEvent;
 import com.taf.frame.dialog.SettingsDialog;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
 import com.taf.manager.SaveManager;
+import com.taf.util.Consts;
 
 public class RunMenuBar extends JMenuBar {
 
@@ -51,7 +51,7 @@ public class RunMenuBar extends JMenuBar {
 					Event event = new RunLocationChangedEvent();
 					EventManager.getInstance().fireEvent(event);
 				} catch (IOException e1) {
-					ConstantManager.showError(PREPARATION_ERROR_MESSAGE + e1.getMessage());
+					Consts.showError(PREPARATION_ERROR_MESSAGE + e1.getMessage());
 					e1.printStackTrace();
 				}
 			} else if (answer == JOptionPane.NO_OPTION) {
@@ -80,7 +80,7 @@ public class RunMenuBar extends JMenuBar {
 						Event event = new RunLocationChangedEvent();
 						EventManager.getInstance().fireEvent(event);
 					} catch (IOException e1) {
-						ConstantManager.showError(PREPARATION_ERROR_MESSAGE + e1.getMessage());
+						Consts.showError(PREPARATION_ERROR_MESSAGE + e1.getMessage());
 						e1.printStackTrace();
 					}
 				} else {

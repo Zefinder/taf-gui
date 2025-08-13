@@ -1,6 +1,7 @@
 package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
+import com.taf.util.Consts;
 
 public class MeanParameter extends TypeParameter {
 
@@ -14,7 +15,7 @@ public class MeanParameter extends TypeParameter {
 		super(PARAMETER_NAME);
 	}
 
-	MeanParameter(double mean) {
+	public MeanParameter(double mean) {
 		this();
 		this.mean = mean;
 	}
@@ -29,14 +30,14 @@ public class MeanParameter extends TypeParameter {
 
 	@Override
 	public String valueToString() {
-		return String.valueOf(mean);
+		return Consts.REAL_FORMATTER.format(mean);
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		try {
-			this.mean = Double.valueOf(stringValue);
-		} catch (NumberFormatException e) {
+			setMean(Double.valueOf(stringValue));
+		} catch (NumberFormatException | NullPointerException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
 	}

@@ -18,7 +18,7 @@ import com.taf.event.EventMethod;
 import com.taf.event.entity.NodeTypeChangedEvent;
 import com.taf.frame.panel.secondary.type.TypeAddEntityPanel;
 import com.taf.logic.type.NodeType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
@@ -63,8 +63,8 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 
 		boolean hasMinMaxInstance = type.hasMinMaxInstance();
 		instanceNumber = type.getInstanceNumber();
-		minInstanceNumber = type.getMinInstance();
-		maxInstanceNumber = type.getMaxInstance();
+		minInstanceNumber = type.getMinInstanceNumber();
+		maxInstanceNumber = type.getMaxInstanceNumber();
 
 		boolean isRecursive = type.isRecursiveNode();
 		boolean hasMinMaxDepth = type.hasMinMaxDepth();
@@ -72,7 +72,7 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		minDepthNumber = type.getMinDepth();
 		maxDepthNumber = type.getMaxDepth();
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.weightx = 1;
@@ -116,14 +116,14 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		this.add(createMinMaxDepthPanel(isRecursive, hasMinMaxDepth), c);
 
 		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, 0, 0);
 		c.gridy = 8;
 		JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
 		this.add(separator, c);
 
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.HUGE_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(Consts.HUGE_INSET_GAP, 0, 0, 0);
 		c.weightx = 0;
 		c.weighty = 1;
 		c.gridx = 0;
@@ -144,10 +144,10 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.MEDIUM_INSET_GAP, Consts.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -156,10 +156,10 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		panel.add(instanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, ConstantManager.LARGE_INSET_GAP, 0);
+		c.insets = new Insets(0, 0, Consts.LARGE_INSET_GAP, 0);
 		instanceField = new JFormattedTextField(instanceNumber);
 		instanceField.setEnabled(!hasMinMax);
-		instanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		instanceField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		instanceField.setColumns(MAX_COLUMN_NUMBER);
 		panel.add(instanceField, c);
 
@@ -170,10 +170,10 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -182,24 +182,24 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		panel.add(minInstanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, 0);
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, 0);
 		minInstanceField = new JFormattedTextField(minInstanceNumber);
 		minInstanceField.setColumns(MAX_COLUMN_NUMBER);
-		minInstanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		minInstanceField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		minInstanceField.setEnabled(hasMinMax);
 		panel.add(minInstanceField, c);
 
-		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.MEDIUM_INSET_GAP, Consts.MEDIUM_INSET_GAP);
 		c.gridx = 0;
 		c.gridy = 1;
 		JLabel maxInstanceLabel = new JLabel(MAX_INSTANCE_LABEL_TEXT);
 		panel.add(maxInstanceLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
+		c.insets = new Insets(0, 0, Consts.MEDIUM_INSET_GAP, 0);
 		maxInstanceField = new JFormattedTextField(maxInstanceNumber);
 		maxInstanceField.setColumns(MAX_COLUMN_NUMBER);
-		maxInstanceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		maxInstanceField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		maxInstanceField.setEnabled(hasMinMax);
 		panel.add(maxInstanceField, c);
 
@@ -210,10 +210,10 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.MEDIUM_INSET_GAP, Consts.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -222,10 +222,10 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		panel.add(depthLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, ConstantManager.LARGE_INSET_GAP, 0);
+		c.insets = new Insets(0, 0, Consts.LARGE_INSET_GAP, 0);
 		depthField = new JFormattedTextField(depthNumber);
 		depthField.setEnabled(isRecusrive && !hasMinMax);
-		depthField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		depthField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		depthField.setColumns(MAX_COLUMN_NUMBER);
 		panel.add(depthField, c);
 
@@ -236,10 +236,10 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.MEDIUM_INSET_GAP);
 		c.weightx = 0;
 		c.gridwidth = 1;
 		c.gridx = 0;
@@ -248,24 +248,24 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 		panel.add(minDepthLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, 0);
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, 0);
 		minDepthField = new JFormattedTextField(minDepthNumber);
 		minDepthField.setColumns(MAX_COLUMN_NUMBER);
-		minDepthField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		minDepthField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		minDepthField.setEnabled(isRecusrive && hasMinMax);
 		panel.add(minDepthField, c);
 
-		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, ConstantManager.MEDIUM_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.MEDIUM_INSET_GAP, Consts.MEDIUM_INSET_GAP);
 		c.gridx = 0;
 		c.gridy = 1;
 		JLabel maxDepthLabel = new JLabel(MAX_DEPTH_LABEL_TEXT);
 		panel.add(maxDepthLabel, c);
 
 		c.gridx = 1;
-		c.insets = new Insets(0, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
+		c.insets = new Insets(0, 0, Consts.MEDIUM_INSET_GAP, 0);
 		maxDepthField = new JFormattedTextField(maxDepthNumber);
 		maxDepthField.setColumns(MAX_COLUMN_NUMBER);
-		maxDepthField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		maxDepthField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		maxDepthField.setEnabled(isRecusrive && hasMinMax);
 		panel.add(maxDepthField, c);
 
@@ -291,11 +291,11 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 	}
 
 	private void updateMinInstanceNumber() {
-		type.editMinInstance(minInstanceNumber);
+		type.editMinInstanceNumber(minInstanceNumber);
 	}
 
 	private void updateMaxInstanceNumber() {
-		type.editMaxInstance(maxInstanceNumber);
+		type.editMaxInstanceNumber(maxInstanceNumber);
 	}
 
 	private void updateDepthNumber() {

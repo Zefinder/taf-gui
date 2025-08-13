@@ -35,9 +35,9 @@ import com.taf.event.ProjectRunAbortedEvent;
 import com.taf.event.ProjectRunStartedEvent;
 import com.taf.event.ProjectRunStoppedEvent;
 import com.taf.event.RunLocationChangedEvent;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
+import com.taf.util.Consts;
 
 public class SettingsPanel extends JPanel implements EventListener {
 
@@ -70,63 +70,63 @@ public class SettingsPanel extends JPanel implements EventListener {
 		this.setLayout(new GridBagLayout());
 		RunManager runManager = RunManager.getInstance();
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.gridy = 0;
-		templatePathField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		templatePathField = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEMPLATE_PATH_STRING, templatePathField, c);
 
-		templateFileNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		templateFileNameField = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEMPLATE_FILE_NAME_STRING, templateFileNameField, c);
 
-		experimentPathField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		experimentPathField = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(EXPERIMENT_PATH_STRING, experimentPathField, c);
 
-		experimentFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		experimentFolderNameField = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(EXPERIMENT_FOLDER_NAME_STRING, experimentFolderNameField, c);
 
 		nbTestCasesField = new JFormattedTextField(runManager.getNbTestCases());
-		nbTestCasesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		nbTestCasesField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(NB_TEST_CASES_STRING, nbTestCasesField, c);
 
-		testCaseFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		testCaseFolderNameField = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEST_CASE_FOLDER_NAME_STRING, testCaseFolderNameField, c);
 
 		nbTestArtifactsField = new JFormattedTextField(runManager.getNbTestArtifacts());
-		nbTestArtifactsField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		nbTestArtifactsField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(NB_TEST_ARTIFACTS_STRING, nbTestArtifactsField, c);
 
-		testArtifactFolderNameField = new JTextField(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		testArtifactFolderNameField = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(TEST_ARTIFACT_FOLDER_NAME_STRING, testArtifactFolderNameField, c);
 
 		parameterMaxNbInstancesField = new JFormattedTextField(runManager.getParameterMaxNbInstances());
-		parameterMaxNbInstancesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		parameterMaxNbInstancesField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(PARAMETER_MAX_NB_INSTANCES_STRING, parameterMaxNbInstancesField, c);
 
 		stringParameterMaxSizeField = new JFormattedTextField(runManager.getStringParameterMaxSize());
-		stringParameterMaxSizeField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		stringParameterMaxSizeField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(STRING_PARAMETER_MAX_SIZE_STRING, stringParameterMaxSizeField, c);
 
 		nodeMaxNbInstancesField = new JFormattedTextField(runManager.getNodeMaxNbInstances());
-		nodeMaxNbInstancesField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		nodeMaxNbInstancesField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(NODE_MAX_NB_INSTANCES_STRING, nodeMaxNbInstancesField, c);
 
 		maxBacktrackingField = new JFormattedTextField(runManager.getMaxBacktracking());
-		maxBacktrackingField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		maxBacktrackingField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(MAX_BACKTRACKING_STRING, maxBacktrackingField, c);
 
 		maxDiversityField = new JFormattedTextField(runManager.getMaxDiversity());
-		maxDiversityField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		maxDiversityField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(MAX_DIVERSITY_STRING, maxDiversityField, c);
 
 		z3TimeoutField = new JFormattedTextField(runManager.getZ3Timeout());
-		z3TimeoutField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
+		z3TimeoutField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(Z3_TIMEOUT_STRING, z3TimeoutField, c);
 		
 		updateFields();
 
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, 0);
 		c.gridheight = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 0;
@@ -134,7 +134,7 @@ public class SettingsPanel extends JPanel implements EventListener {
 		deleteExperimentBox.setSelected(false);
 		this.add(deleteExperimentBox, c);
 
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, ConstantManager.MEDIUM_INSET_GAP, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, Consts.MEDIUM_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridy++;
 		JPanel buttonPanel = new JPanel();
@@ -160,7 +160,7 @@ public class SettingsPanel extends JPanel implements EventListener {
 			try {
 				runManager.run();
 			} catch (IOException e1) {
-				ConstantManager.showError("Something wrong happened when running TAF: " + e1.getMessage());
+				Consts.showError("Something wrong happened when running TAF: " + e1.getMessage());
 				e1.printStackTrace();
 			}
 		});
@@ -199,7 +199,7 @@ public class SettingsPanel extends JPanel implements EventListener {
 		// Add label
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.gridheight = 1;
 		c.gridwidth = 1;
 		c.gridx = 0;

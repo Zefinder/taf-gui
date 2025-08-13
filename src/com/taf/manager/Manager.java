@@ -6,8 +6,7 @@ import com.taf.util.HashSetBuilder;
 
 public abstract class Manager {
 
-	private static final Set<Manager> MANAGERS = new HashSetBuilder<Manager>()
-			.add(ConstantManager.getInstance())
+	static final Set<Manager> MANAGERS = new HashSetBuilder<Manager>()
 			.add(TypeManager.getInstance())
 			.add(EventManager.getInstance())
 			.add(SaveManager.getInstance())
@@ -15,14 +14,30 @@ public abstract class Manager {
 			.add(SettingsManager.getInstance())
 			.build();
 	
+	private static boolean initDone = false;
+	
 	public Manager() {
 	}
 	
 	public abstract void initManager();
 	
+	public abstract void clearManager();
+	
 	public static final void initAllManagers() {
-		for (Manager manager : MANAGERS) {
-			manager.initManager();
+		if (!initDone) {			
+			for (Manager manager : MANAGERS) {
+				manager.initManager();
+			}
+			initDone = true;
+		}
+	}
+	
+	public static final void clearAllManagers() {
+		if (initDone) {
+			for (Manager manager : MANAGERS) {
+				manager.clearManager();
+			}
+			initDone = false;
 		}
 	}
 }

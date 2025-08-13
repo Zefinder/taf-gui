@@ -8,7 +8,7 @@ import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
 import com.taf.logic.type.parameter.WeightsParameter;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 
 public class StringType extends FieldType {
@@ -80,7 +80,7 @@ public class StringType extends FieldType {
 
 	@Override
 	public String typeToString() {
-		final String separator = ConstantManager.PARAMETER_SEPARATOR;
+		final String separator = Consts.PARAMETER_SEPARATOR;
 		String typeStr = typeName.toString();
 		typeStr += separator + values.toString();
 		typeStr += separator + values.createWeightParameter().toString();

@@ -17,7 +17,7 @@ import javax.swing.table.TableColumn;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 import com.taf.util.EnumEditor;
 
 public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPanel {
@@ -60,7 +60,7 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 	private JButton removeQuantifierButton;
 
 	public ConstraintSecondaryPropertyPanel(Constraint constraint) {
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
@@ -68,7 +68,7 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(createExpressionTablePanel(constraint), c);
 
-		c.insets = new Insets(ConstantManager.LARGE_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(Consts.LARGE_INSET_GAP, 0, 0, 0);
 		c.gridy = 1;
 		this.add(createQuantifiersTablePanel(constraint), c);
 	}
@@ -77,7 +77,7 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
@@ -111,8 +111,8 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 		buttonPanel.setLayout(new GridBagLayout());
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0,
-				ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, Consts.SMALL_INSET_GAP, 0,
+				Consts.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -143,7 +143,7 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
@@ -203,8 +203,8 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 		buttonPanel.setLayout(new GridBagLayout());
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0,
-				ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, Consts.SMALL_INSET_GAP, 0,
+				Consts.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;

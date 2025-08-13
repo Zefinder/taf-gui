@@ -12,7 +12,7 @@ import com.taf.logic.type.parameter.RangesParameter.Range;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.VarianceParameter;
 import com.taf.logic.type.parameter.WeightsParameter;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 
 public class RealType extends NumericalType {
@@ -27,12 +27,12 @@ public class RealType extends NumericalType {
 			.add(WeightsParameter.PARAMETER_NAME).build();
 
 	public RealType() {
-		super(TYPE_NAME, new MinRealParameter(ConstantManager.DEFAULT_MIN_VALUE),
-				new MaxRealParameter(ConstantManager.DEFAULT_MAX_VALUE));
+		super(TYPE_NAME, new MinRealParameter(Consts.DEFAULT_MIN_VALUE),
+				new MaxRealParameter(Consts.DEFAULT_MAX_VALUE));
 	}
 
 	public void editMin(long minValue) {
-		super.editMin(minValue);
+		super.editMinNumber(minValue);
 	}
 
 	public double getMin() {
@@ -40,7 +40,7 @@ public class RealType extends NumericalType {
 	}
 
 	public void editMax(long maxValue) {
-		super.editMax(maxValue);
+		super.editMaxNumber(maxValue);
 	}
 
 	public double getMax() {
@@ -62,9 +62,9 @@ public class RealType extends NumericalType {
 	@Override
 	public void addTypeParameter(TypeParameter typeParameter) {
 		if (typeParameter instanceof MinRealParameter) {
-			editMin(((MinRealParameter) typeParameter).getValue().doubleValue());
+			editMinNumber(((MinRealParameter) typeParameter).getValue().doubleValue());
 		} else if (typeParameter instanceof MaxRealParameter) {
-			editMax(((MaxRealParameter) typeParameter).getValue().doubleValue());
+			editMaxNumber(((MaxRealParameter) typeParameter).getValue().doubleValue());
 		} else if (typeParameter instanceof DistributionParameter) {
 			setDistribution(((DistributionParameter) typeParameter).getDistributionType());
 		} else if (typeParameter instanceof MeanParameter) {
@@ -73,7 +73,7 @@ public class RealType extends NumericalType {
 			editVariance(((VarianceParameter) typeParameter).getVariance());
 		} else if (typeParameter instanceof RangesParameter) {
 			for (Range range : ((RangesParameter) typeParameter).getRanges()) {
-				addInterval(range.getLowerBound(), range.getUpperBound(), ConstantManager.DEFAULT_WEIGHT_VALUE);
+				addInterval(range.getLowerBound(), range.getUpperBound(), Consts.DEFAULT_WEIGHT_VALUE);
 			}
 		} else if (typeParameter instanceof WeightsParameter) {
 			int[] weights = ((WeightsParameter) typeParameter).getWeights();

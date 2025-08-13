@@ -23,7 +23,7 @@ import javax.swing.table.TableColumn;
 import com.taf.logic.type.NumericalType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.parameter.RangesParameter.Range;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 import com.taf.util.DoubleEditor;
 import com.taf.util.IntegerEditor;
 
@@ -49,9 +49,9 @@ public class DistributionPanel extends JPanel {
 	private static final int WEIGHT_COLUMN_INDEX = 2;
 	private static final String[] QUANTIFIERS_COLUMN_IDENTIFIERS = new String[] { LOWER_BOUND_COLUMN_NAME,
 			UPPER_BOUND_COLUMN_NAME, WEIGHT_COLUMN_NAME };
-	private static final int DEFAULT_LOWER_BOUND = ConstantManager.DEFAULT_MIN_VALUE;
-	private static final int DEFAULT_UPPER_BOUND = ConstantManager.DEFAULT_MAX_VALUE;
-	private static final int DEFAULT_WEIGHT = ConstantManager.DEFAULT_WEIGHT_VALUE;
+	private static final int DEFAULT_LOWER_BOUND = Consts.DEFAULT_MIN_VALUE;
+	private static final int DEFAULT_UPPER_BOUND = Consts.DEFAULT_MAX_VALUE;
+	private static final int DEFAULT_WEIGHT = Consts.DEFAULT_WEIGHT_VALUE;
 
 	private static final String ADD_INTERVAL_BUTTON_TEXT = "+ Add Interval";
 	private static final String REMOVE_INTERVAL_BUTTON_TEXT = "- Remove Interval";
@@ -78,29 +78,29 @@ public class DistributionPanel extends JPanel {
 
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
 		c.weightx = 0;
 		c.weighty = 0;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		JLabel meanLabel = new JLabel(MEAN_LABEL_TEXT);
 		panel.add(meanLabel, c);
 
 		c.anchor = GridBagConstraints.LINE_START;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		JFormattedTextField meanField = new JFormattedTextField(DecimalFormat.getInstance(Locale.US));
 		meanField.setValue(mean);
-		meanField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		meanField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
+		meanField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
+		meanField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
 				evt -> type.editMean(((Number) meanField.getValue()).doubleValue()));
 		panel.add(meanField, c);
 
 		c.anchor = GridBagConstraints.LINE_END;
 		c.weighty = 0;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
@@ -108,20 +108,20 @@ public class DistributionPanel extends JPanel {
 		panel.add(varianceLabel, c);
 
 		c.anchor = GridBagConstraints.LINE_START;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		JFormattedTextField varianceField = new JFormattedTextField(DecimalFormat.getInstance(Locale.US));
 		varianceField.setValue(variance);
-		varianceField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		varianceField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
+		varianceField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
+		varianceField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY,
 				evt -> type.editVariance(((Number) varianceField.getValue()).doubleValue()));
 		panel.add(varianceField, c);
 		
 		c.anchor = GridBagConstraints.NORTH;
 		c.weightx = 0;
 		c.weighty = 1;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 0;
@@ -144,7 +144,7 @@ public class DistributionPanel extends JPanel {
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
@@ -216,8 +216,8 @@ public class DistributionPanel extends JPanel {
 		buttonPanel.setLayout(new GridBagLayout());
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0,
-				ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, Consts.SMALL_INSET_GAP, 0,
+				Consts.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;

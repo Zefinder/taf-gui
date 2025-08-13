@@ -33,9 +33,9 @@ import com.taf.frame.dialog.ProjectCreationDialog;
 import com.taf.frame.popup.ProjectImportPopupMenu;
 import com.taf.frame.popup.ProjectPopupMenu;
 import com.taf.logic.field.Root;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.SaveManager;
+import com.taf.util.Consts;
 
 public class ProjectChooserPanel extends JPanel implements EventListener {
 
@@ -55,10 +55,10 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 	public ProjectChooserPanel() {
 		this.setLayout(new GridBagLayout());
-		this.setBorder(BorderFactory.createEmptyBorder(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.XXL_INSET_GAP,
-				ConstantManager.MEDIUM_INSET_GAP, ConstantManager.XXL_INSET_GAP));
+		this.setBorder(BorderFactory.createEmptyBorder(Consts.MEDIUM_INSET_GAP, Consts.XXL_INSET_GAP,
+				Consts.MEDIUM_INSET_GAP, Consts.XXL_INSET_GAP));
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = 2;
 		tableModel = new DefaultTableModel() {
@@ -131,7 +131,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		this.add(scrollPane, c);
 
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -155,7 +155,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		});
 		this.add(createButton, c);
 
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, Consts.SMALL_INSET_GAP, 0, 0);
 		c.gridx = 1;
 		// TODO Disable button when nothing is selected
 		JButton openButton = new JButton(OPEN_PROJECT_BUTTON_TEXT);
@@ -186,10 +186,10 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 			frame.initFrame();
 			EventManager.getInstance().fireEvent(new ProjectOpenedEvent());
 		} catch (IOException e1) {
-			ConstantManager.showError(OPEN_PROJECT_ERROR_MESSAGE + e1.getMessage());
+			Consts.showError(OPEN_PROJECT_ERROR_MESSAGE + e1.getMessage());
 			e1.printStackTrace();
 		} catch (ParseException e1) {
-			ConstantManager.showError(OPEN_PROJECT_ERROR_MESSAGE + e1.getShortMessage());
+			Consts.showError(OPEN_PROJECT_ERROR_MESSAGE + e1.getShortMessage());
 			e1.printStackTrace();
 		}
 	}
@@ -226,12 +226,12 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 			@Override
 			public String getDescription() {
-				return ConstantManager.XML_FILE_EXTENSION;
+				return Consts.XML_FILE_EXTENSION;
 			}
 
 			@Override
 			public boolean accept(File f) {
-				return f.isDirectory() || f.getName().endsWith(ConstantManager.XML_FILE_EXTENSION);
+				return f.isDirectory() || f.getName().endsWith(Consts.XML_FILE_EXTENSION);
 			}
 		});
 		int answer = chooser.showDialog(null, IMPORT_FILE_CHOOSER_BUTTON);
@@ -241,7 +241,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 				String fileName = SaveManager.getInstance().importProject(chooser.getSelectedFile());
 				tableModel.addRow(new String[] { fileName });
 			} catch (ImportException e) {
-				ConstantManager.showError(e.getShortMessage());
+				Consts.showError(e.getShortMessage());
 				e.printStackTrace();
 			}
 		}

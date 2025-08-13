@@ -11,9 +11,9 @@ import com.taf.event.entity.FieldTypeChangedEvent;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.type.FieldType;
-import com.taf.manager.ConstantManager;
 import com.taf.manager.EventManager;
 import com.taf.manager.TypeManager;
+import com.taf.util.Consts;
 
 public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 
@@ -26,29 +26,29 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 	public ParameterPropertyPanel(Parameter parameter) {
 		super(parameter);
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
 		c.weightx = 0;
 		c.weighty = 0;
-		JLabel parameterLabel = new JLabel(ConstantManager.PARAMETER_NAME_LABEL_TEXT);
+		JLabel parameterLabel = new JLabel(Consts.PARAMETER_NAME_LABEL_TEXT);
 		this.add(parameterLabel, c);
 
-		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
+		c.insets = new Insets(0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		this.add(entityName, c);
 
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.weighty = 1;
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
-		JLabel typeNameLabel = new JLabel(ConstantManager.PARAMETER_TYPE_LABEL_TEXT);
+		JLabel typeNameLabel = new JLabel(Consts.PARAMETER_TYPE_LABEL_TEXT);
 		this.add(typeNameLabel, c);
 
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 1;

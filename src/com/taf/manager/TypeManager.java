@@ -206,6 +206,11 @@ public class TypeManager extends Manager implements EventListener {
 	public void initManager() {
 		EventManager.getInstance().registerEventListener(instance);
 	}
+	
+	@Override
+	public void clearManager() {
+		// Nothing to do here
+	}
 
 	public static TypeManager getInstance() {
 		return instance;

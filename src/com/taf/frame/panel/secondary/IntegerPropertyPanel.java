@@ -11,7 +11,7 @@ import javax.swing.JLabel;
 
 import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.parameter.DistributionType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
@@ -40,48 +40,48 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		minValue = type.getMin();
 		maxValue = type.getMax();
 
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(0, 0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
 		c.weightx = 0;
 		c.weighty = 0;
-		minLabel = new JLabel(ConstantManager.MIN_TEXT);
+		minLabel = new JLabel(Consts.MIN_TEXT);
 		addComponent(minLabel, c);
 
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0);
+		c.insets = new Insets(0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		minField = new JFormattedTextField(minValue);
-		minField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		minField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		minField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
+		minField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(minField, c);
 
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.gridwidth = 1;
 		c.gridx = 0;
 		c.gridy = 1;
-		maxLabel = new JLabel(ConstantManager.MAX_TEXT);
+		maxLabel = new JLabel(Consts.MAX_TEXT);
 		addComponent(maxLabel, c);
 
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(ConstantManager.SMALL_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
+		c.insets = new Insets(Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = 1;
 		c.gridx = 1;
 		maxField = new JFormattedTextField(maxValue);
-		maxField.setColumns(ConstantManager.JTEXT_FIELD_DEFAULT_COLUMN);
-		maxField.addPropertyChangeListener(ConstantManager.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
+		maxField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
+		maxField.addPropertyChangeListener(Consts.JFORMATTED_TEXT_FIELD_VALUE_PROPERTY, this);
 		addComponent(maxField, c);
 
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.gridwidth = 1;
 		c.gridheight = 1;
 		c.gridx = 0;
@@ -91,7 +91,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 
 		c.anchor = GridBagConstraints.LINE_START;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, Consts.SMALL_INSET_GAP, 0, 0);
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
 		distributionBox = new JComboBox<DistributionType>(DistributionType.values());
@@ -116,7 +116,7 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.BOTH;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, 0, ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 1;
 		c.gridwidth = GridBagConstraints.REMAINDER;

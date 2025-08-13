@@ -12,7 +12,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public abstract class InputInformationDialog extends JDialog implements KeyListener, ActionListener {
 
@@ -55,7 +55,7 @@ public abstract class InputInformationDialog extends JDialog implements KeyListe
 
 	public void initDialog() {
 		GridBagConstraints c = new GridBagConstraints();
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, 0, ConstantManager.HUGE_INSET_GAP, 0);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, 0, Consts.HUGE_INSET_GAP, 0);
 		c.fill = GridBagConstraints.NONE;
 		c.gridheight = 1;
 		c.gridwidth = lastColumn;

@@ -14,8 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.taf.exception.ImportException;
-import com.taf.exception.RangeIntersectionException;
-import com.taf.manager.ConstantManager;
+import com.taf.exception.RangeException;
 
 public class XMLTafReader {
 
@@ -71,7 +70,7 @@ public class XMLTafReader {
 
 		String rootName = m.group(1);
 		String rootContent = m.group(2);
-		convertedLines += SAVE_LINE_FORMAT.formatted(ConstantManager.NODE_ENTITY_NAME, -1, rootName.strip());
+		convertedLines += SAVE_LINE_FORMAT.formatted(Consts.NODE_ENTITY_NAME, -1, rootName.strip());
 
 		RangeTree tree = registerTypesAndNodes(rootContent);
 		// Register types and nodes (position, [parameters, isNode])
@@ -86,21 +85,17 @@ public class XMLTafReader {
 		m = NODE_ENTER_PATTERN.matcher(rootContent);
 		while (m.find()) {
 			int position = m.start();
-			System.out.println(position);
 			String parameters = m.group(1).replaceAll(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
 			typeNodesPositionMap.put(position, new Pair<String, Boolean>(parameters, true));
 		}
-System.out.println();
 		for (Map.Entry<Integer, Pair<String, Boolean>> entry : typeNodesPositionMap.entrySet()) {
 			Integer position = entry.getKey();
 			Pair<String, Boolean> info = entry.getValue();
 			String parameters = info.getKey();
 			boolean isNode = info.getValue();
 			
-			System.out.println(position);
-
-			int nodeId = tree.getNodeId(position);
-			String entityName = isNode ? ConstantManager.NODE_ENTITY_NAME : ConstantManager.TYPE_ENTITY_NAME;
+			int nodeId = tree.getRangeId(position);
+			String entityName = isNode ? Consts.NODE_ENTITY_NAME : Consts.TYPE_ENTITY_NAME;
 			convertedLines += SAVE_LINE_FORMAT.formatted(entityName, tree.getParentId(nodeId), parameters.strip());
 		}
 
@@ -114,7 +109,7 @@ System.out.println();
 				parameters = m.group(2);
 				parameters = parameters.replaceAll(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
 			}
-			convertedLines += SAVE_LINE_FORMAT.formatted(entity, tree.getNodeId(position), parameters.strip());
+			convertedLines += SAVE_LINE_FORMAT.formatted(entity, tree.getRangeId(position), parameters.strip());
 		}
 
 		return convertedLines;
@@ -147,7 +142,7 @@ System.out.println();
 			enterPosition.remove(index);
 			try {
 				tree.addRange(start, end);
-			} catch (RangeIntersectionException e) {
+			} catch (RangeException e) {
 				throw new ImportException(XMLTafReader.class, RANGE_ERROR_MESSAGE + e.getMessage());
 			}
 		}
@@ -175,11 +170,6 @@ System.out.println();
 		m = NODE_EXIT_PATTERN.matcher(rootContent);
 		m.results().forEach(t -> nodeExitPosition.add(t.start()));
 
-		System.out.println(typeEnterPosition.toString());
-		System.out.println(typeExitPosition.toString());
-		System.out.println(nodeEnterPosition.toString());
-		System.out.println(nodeExitPosition.toString());
-
 		// Create range tree
 		RangeTree tree = new RangeTree();
 
@@ -190,7 +180,6 @@ System.out.println();
 		registerElements(tree, nodeEnterPosition, nodeExitPosition);
 
 		tree.numberTree();
-		System.out.println(tree.toString());
 		return tree;
 	}
 }

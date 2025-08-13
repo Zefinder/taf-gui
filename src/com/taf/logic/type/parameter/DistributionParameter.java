@@ -1,6 +1,7 @@
 package com.taf.logic.type.parameter;
 
 import com.taf.exception.ParseException;
+import com.taf.util.Consts;
 
 public class DistributionParameter extends TypeParameter {
 
@@ -16,8 +17,8 @@ public class DistributionParameter extends TypeParameter {
 
 	public DistributionParameter() {
 		super(PARAMETER_NAME);
-		meanParameter = new MeanParameter(0);
-		varianceParameter = new VarianceParameter(0);
+		meanParameter = new MeanParameter(Consts.DEFAULT_MEAN_VALUE);
+		varianceParameter = new VarianceParameter(Consts.DEFAULT_VARIANCE_VALUE);
 		rangesParameter = new RangesParameter();
 		weightsParameter = new WeightsParameter();
 	}
@@ -95,8 +96,8 @@ public class DistributionParameter extends TypeParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
-		distributionType = DistributionType.fromDistributionString(stringValue);
+	public void stringToValue(String stringValue) throws ParseException {
+		setDistributionType(DistributionType.fromDistributionString(stringValue));
 	}
 
 }

@@ -4,11 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 
-import com.taf.manager.ConstantManager;
+import com.taf.exception.ParseException;
+import com.taf.util.Consts;
 
 public class RangesConstraintParameter extends ConstraintParameter {
 
 	static final String CONSTRAINT_PARAMETER_NAME = "ranges";
+	
+	private static final String NULL_ERROR_MESSAGE = "Ranges must not be null!";
+	private static final String ERROR_MESSAGE = "A range must have a valid representation: [a,b]";
 
 	private List<Range> ranges;
 
@@ -32,7 +36,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 	public void editRightRange(int index, String right) {
 		ranges.get(index).setRight(right.strip());
 	}
-	
+
 	public List<Range> getRanges() {
 		return ranges;
 	}
@@ -43,7 +47,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 			return "";
 		}
 
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String res = ranges.get(0).toString();
 		for (int i = 1; i < ranges.size(); i++) {
 			res += separator + ranges.get(i).toString();
@@ -53,22 +57,31 @@ public class RangesConstraintParameter extends ConstraintParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+	public void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			return;
+		}
+		
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
+		ranges.clear();
 
 		for (String value : values) {
 			if (!value.isBlank()) {
-				Matcher m = ConstantManager.RANGE_PATTERN.matcher(value);
+				Matcher m = Consts.RANGE_PATTERN.matcher(value);
 				if (m.find()) {
 					String left = m.group(1).stripLeading();
 					String right = m.group(2).stripLeading();
 					addRange(left, right);
+				} else {
+					throw new ParseException(this.getClass(), ERROR_MESSAGE);
 				}
 			}
 		}
 	}
-	
+
 	public static class Range {
 
 		private static final String RANGE_STRING_FORMAT = "[%s, %s]";
@@ -84,7 +97,7 @@ public class RangesConstraintParameter extends ConstraintParameter {
 		public String getLeft() {
 			return left;
 		}
-		
+
 		public void setLeft(String left) {
 			this.left = left;
 		}
@@ -92,9 +105,19 @@ public class RangesConstraintParameter extends ConstraintParameter {
 		public String getRight() {
 			return right;
 		}
-		
+
 		public void setRight(String right) {
 			this.right = right;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (!(obj instanceof Range)) {
+				return false;
+			}
+
+			Range other = (Range) obj;
+			return other.left.equals(left) && other.right.equals(right);
 		}
 
 		@Override

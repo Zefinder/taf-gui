@@ -16,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
 import com.taf.logic.type.StringType;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 import com.taf.util.IntegerEditor;
 
 public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
@@ -41,7 +41,7 @@ public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
 	private JButton removeElementButton;
 
 	public StringPropertyPanel(StringType type) {
-		GridBagConstraints c = ConstantManager.getDefaultConstraint();
+		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = 1;
@@ -92,8 +92,8 @@ public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
 		buttonPanel.setLayout(new GridBagLayout());
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.NONE;
-		c.insets = new Insets(ConstantManager.MEDIUM_INSET_GAP, ConstantManager.SMALL_INSET_GAP, 0,
-				ConstantManager.SMALL_INSET_GAP);
+		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, Consts.SMALL_INSET_GAP, 0,
+				Consts.SMALL_INSET_GAP);
 		c.weightx = 1;
 		c.weighty = 0;
 		c.gridwidth = 1;
@@ -107,9 +107,9 @@ public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
 
 			// Add row to type, check if could be added (not same name)
 			if (type.addValue(elementName)) {
-				tableModel.addRow(new Object[] { elementName, ConstantManager.DEFAULT_WEIGHT_VALUE });
+				tableModel.addRow(new Object[] { elementName, Consts.DEFAULT_WEIGHT_VALUE });
 			} else {
-				ConstantManager.showError(ERROR_MESSAGE);
+				Consts.showError(ERROR_MESSAGE);
 			}
 
 		});

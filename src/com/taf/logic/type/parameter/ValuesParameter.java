@@ -6,17 +6,26 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.taf.exception.ParseException;
-import com.taf.manager.ConstantManager;
+import com.taf.util.Consts;
 
 public class ValuesParameter extends TypeParameter {
 
 	public static final String PARAMETER_NAME = "values";
-
+	
+	private static final String NULL_ERROR_MESSAGE = "Values must not be null!";
+	
 	private final HashMap<String, Integer> valueMap;
 
 	public ValuesParameter() {
 		super(PARAMETER_NAME);
 		valueMap = new LinkedHashMap<String, Integer>();
+	}
+	
+	public ValuesParameter(String... values) {
+		this();
+		for (String value : values) {
+			addValue(value);
+		}
 	}
 
 	/**
@@ -46,7 +55,7 @@ public class ValuesParameter extends TypeParameter {
 	 * @return true if the value was added (if value was not already present)
 	 */
 	public boolean addValue(String value) {
-		return addValue(value, ConstantManager.DEFAULT_WEIGHT_VALUE);
+		return addValue(value, Consts.DEFAULT_WEIGHT_VALUE);
 	}
 
 	/**
@@ -133,9 +142,16 @@ public class ValuesParameter extends TypeParameter {
 	}
 
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+	public void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			return;
+		}
+		
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
+		valueMap.clear();
 
 		for (String value : values) {
 			if (!value.isBlank()) {
@@ -146,7 +162,7 @@ public class ValuesParameter extends TypeParameter {
 
 	@Override
 	public String valueToString() {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String valueStr = "";
 
 		for (String value : valueMap.keySet()) {

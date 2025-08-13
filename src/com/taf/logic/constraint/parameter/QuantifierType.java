@@ -27,5 +27,10 @@ public enum QuantifierType {
 		
 		return FORALL;
 	}
+	
+	@Override
+	public String toString() {
+		return super.toString().toLowerCase();
+	}
 
 }

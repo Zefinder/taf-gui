@@ -3,13 +3,16 @@ package com.taf.logic.constraint.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.taf.manager.ConstantManager;
+import com.taf.exception.ParseException;
+import com.taf.util.Consts;
 
 public class QuantifiersConstraintParameter extends ConstraintParameter {
 
 	// We assume that there can only be one quantifier...
 
 	static final String CONSTRAINT_PARAMETER_NAME = "quantifiers";
+	
+	private static final String NULL_ERROR_MESSAGE = "Quantifiers must not be null!";
 
 	private List<String> quantifiers;
 
@@ -40,7 +43,7 @@ public class QuantifiersConstraintParameter extends ConstraintParameter {
 			return "";
 		}
 
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String res = quantifiers.get(0);
 		for (int i = 1; i < quantifiers.size(); i++) {
 			res += separator + quantifiers.get(i);
@@ -50,10 +53,17 @@ public class QuantifiersConstraintParameter extends ConstraintParameter {
 	}
 	
 	@Override
-	void stringToValue(String stringValue) {
-		final String separator = ConstantManager.ELEMENT_SEPARATOR;
+	public void stringToValue(String stringValue) throws ParseException {
+		if (stringValue == null) {
+			throw new ParseException(this.getClass(), NULL_ERROR_MESSAGE);
+		} if (stringValue.isBlank()) {
+			return;
+		}
+		
+		final String separator = Consts.ELEMENT_SEPARATOR;
 		String[] values = stringValue.split(separator);
-
+		quantifiers.clear();
+		
 		for (String value : values) {
 			if (!value.isBlank()) {
 				addQuantifier(value);

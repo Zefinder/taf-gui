@@ -12,8 +12,8 @@ public class MinInstanceParameter extends MinParameter {
 		super(PARAMETER_NAME);
 	}
 
-	public MinInstanceParameter(Integer value) {
-		super(PARAMETER_NAME, value, false);
+	public MinInstanceParameter(int value) {
+		super(PARAMETER_NAME, value < 0 ? 0 : value, false);
 	}
 	
 	@Override
@@ -22,9 +22,9 @@ public class MinInstanceParameter extends MinParameter {
 	}
 	
 	@Override
-	void stringToValue(String stringValue) throws ParseException {
+	public void stringToValue(String stringValue) throws ParseException {
 		try {
-			this.value = Integer.valueOf(stringValue);
+			setValue(Integer.valueOf(stringValue));
 		} catch (NumberFormatException e) {
 			throw new ParseException(this.getClass(), ERROR_MESSAGE);
 		}
