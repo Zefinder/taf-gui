@@ -27,6 +27,7 @@ public class TypeManager extends Manager implements EventListener {
 
 	private static final TypeManager instance = new TypeManager();
 
+	// TODO Change to String to simplify everything and use a factory to create a new FieldType
 	private final HashSet<Class<? extends FieldType>> parameterTypeSet = new HashSetBuilder<Class<? extends FieldType>>()
 			.add(BooleanType.class).add(IntegerType.class).add(RealType.class).add(StringType.class).build();
 
@@ -103,8 +104,6 @@ public class TypeManager extends Manager implements EventListener {
 		return customNodeRefSet;
 	}
 
-	// TODO Create a type annotation to check at compile time if first constructor
-	// has no args.
 	public FieldType instanciateTypeFromClassName(String typeClassName) {
 		for (Class<? extends FieldType> basicType : parameterTypeSet) {
 			if (basicType.getSimpleName().equals(typeClassName)) {

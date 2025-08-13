@@ -15,6 +15,10 @@ abstract class FieldTest {
 	public FieldTest(Field field) {
 		this.field = field;
 	}
+	
+	// TODO Add test with empty name as constructor
+	// TODO Add test with double quotes as constructor
+	// TODO Add test hashcode
 
 	@Test
 	void testFieldSetParent() {

@@ -28,56 +28,33 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf.logic;
+package com.taf.annotation;
 
-import com.taf.annotation.NotEmpty;
-import com.taf.annotation.Nullable;
-import com.taf.logic.field.Type;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.RetentionPolicy.SOURCE;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * Interface Entity is the basic block of TAF. All elements that represent an
- * "item" in the TAF representation must implement this interface.
+ * <p>
+ * The Nullable annotation provides information on whether an attribute,
+ * parameter, variable or method return value can have a <code>null</code>
+ * value.
+ * </p>
+ * 
+ * <p>
+ * This annotation is NOT available during runtime and is only useful for
+ * documentation purposes.
+ * </p>
  * 
  * @author Adrien Jakubiak
  */
-public interface Entity {
-
-	/**
-	 * Returns the entity type name. For non recursive nodes, the type will be
-	 * empty.
-	 *
-	 * @return the entity type name
-	 */
-	String getEntityTypeName();
-
-	/**
-	 * Returns the entity name. The name cannot be blank!
-	 *
-	 * @return the entity name
-	 */
-	@NotEmpty
-	String getName();
-
-	/**
-	 * Returns the entity parent. The root node has no parent.
-	 *
-	 * @return the entity parent
-	 */
-	@Nullable
-	Type getParent();
-
-	/**
-	 * Sets the entity name.
-	 *
-	 * @param name the new entity name
-	 */
-	void setName(@NotEmpty String name);
-
-	/**
-	 * Sets the entity parent.
-	 *
-	 * @param parent the new entity parent
-	 */
-	void setParent(Type parent);
+@Retention(SOURCE)
+@Target({ FIELD, PARAMETER, LOCAL_VARIABLE, METHOD })
+public @interface Nullable {
 
 }
