@@ -31,7 +31,7 @@ class RangesConstraintParameterTest extends ConstraintParameterTest<Range> {
 	@Override
 	public Consumer<List<Range>> listProviderConsumer() {
 		return values -> {
-			values.forEach(value -> rangesConstraintParameter.addRange(value.getLeft(), value.getRight()));
+			values.forEach(value -> rangesConstraintParameter.addRange(value.getLowerBound(), value.getUpperBound()));
 		};
 	}
 	

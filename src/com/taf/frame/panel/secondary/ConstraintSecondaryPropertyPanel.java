@@ -186,7 +186,7 @@ public class ConstraintSecondaryPropertyPanel extends EntitySecondaryPropertyPan
 			String quantifier = quantifiers.get(i);
 			Range range = ranges.get(i);
 			QuantifierType type = types.get(i);
-			quantifiersTableModel.addRow(new Object[] { quantifier, range.getLeft(), range.getRight(), type });
+			quantifiersTableModel.addRow(new Object[] { quantifier, range.getLowerBound(), range.getUpperBound(), type });
 		}
 
 		// Create table

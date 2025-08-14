@@ -50,7 +50,7 @@ public class TypeParameterFactory {
 	private static final String UNEXPECTED_VALUE_ERROR_MESSAGE = "Unexpected type name: ";
 
 	/**
-	 * Creates a new TypeParameter object with {@link MinMaxTypeParameterType#NONE}.
+	 * Creates a new {@link TypeParameter} object with {@link MinMaxTypeParameterType#NONE}.
 	 *
 	 * @param typeName    the type name
 	 * @param stringValue the string value
@@ -62,7 +62,7 @@ public class TypeParameterFactory {
 	}
 
 	/**
-	 * Creates a new TypeParameter object.
+	 * Creates a new {@link TypeParameter} object.
 	 *
 	 * @param typeName            the type name
 	 * @param stringValue         the string value
@@ -165,9 +165,6 @@ public class TypeParameterFactory {
 		return type;
 	}
 
-	/**
-	 * Instantiates a new type parameter factory.
-	 */
 	private TypeParameterFactory() {
 	}
 
