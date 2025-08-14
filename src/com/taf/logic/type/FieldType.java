@@ -32,6 +32,7 @@ package com.taf.logic.type;
 
 import java.util.Set;
 
+import com.taf.logic.field.Field;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Type;
