@@ -58,6 +58,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		addComponent(typeNames, c);
 	}
 
+	@Override
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {

@@ -34,6 +34,7 @@ import com.taf.annotation.NotEmpty;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.FieldType;
 import com.taf.logic.type.NodeType;
+import com.taf.manager.TypeManager;
 import com.taf.util.Consts;
 
 /**
@@ -46,6 +47,12 @@ import com.taf.util.Consts;
  * <p>
  * A Node can be recursive, either by having a type, or by making a reference to
  * another Node. For more information, see {@link NodeType}.
+ * </p>
+ * 
+ * <p>
+ * Note that any Node can serve as a reference, which are stored inside the
+ * {@link TypeManager}. If you want to remove a Node, do not forget to remove it
+ * also from the {@link TypeManager}.
  * </p>
  * 
  * @see Type
