@@ -1,3 +1,33 @@
+/*
+ * Copyright or © or Copr.
+ * 
+ * This software is a computer program whose purpose is to generate random test
+ * case from a template file describing the data model.
+ * 
+ * This software is governed by the CeCILL-B license under French law and
+ * abiding by the rules of distribution of free software. You can use, modify
+ * and/or redistribute the software under the terms of the CeCILL-B license as
+ * circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * 
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ * 
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ * 
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL-B license and that you accept its terms.
+ */
 package com.taf.manager;
 
 import java.lang.reflect.InvocationTargetException;
@@ -11,18 +41,128 @@ import com.taf.event.Event;
 import com.taf.event.EventListener;
 import com.taf.event.EventMethod;
 
+/**
+ * <p>
+ * The EventManager manager focuses on firing event and registering
+ * {@link EventListener}s. It uses the {@link EventMethod} annotation to search
+ * for event listening methods. See {@link EventMethod} to understand how to
+ * create an event method.
+ * </p>
+ * 
+ * <p>
+ * To register an event listener, use
+ * {@link #registerEventListener(EventListener)} and to fire an event use
+ * {@link #fireEvent(Event)}. For example:
+ * 
+ * <pre>
+ * public class ListenerTest implements EventListener {
+ * 	public ListenerTest() {
+ * 		EventListener.getInstance().registerEventListener(this);
+ * 	}
+ * 
+ * 	&#64;EventMethod
+ * 	public void onDummyEvent(DummyEvent event) {
+ * 		System.out.println("Hello World!");
+ * 	}
+ * 
+ * 	public void unregisterComponents() {
+ * 	}
+ * 
+ * 	public void sayHi() {
+ * 		EventManager.getInstance().fireEvent(new DummyEvent());
+ * 	}
+ * 
+ * }
+ * </pre>
+ * </p>
+ * 
+ * @see Manager
+ * @see EventListener
+ * @see Event
+ * @see EventMethod
+ * 
+ * @author Adrien Jakubiak
+ */
 public class EventManager extends Manager {
 
+	/** The manager instance. */
 	private static final EventManager instance = new EventManager();
 
+	/**
+	 * Gets the single instance of EventManager.
+	 *
+	 * @return single instance of EventManager
+	 */
+	public static EventManager getInstance() {
+		return instance;
+	}
+
+	/** The event to listener map. */
 	private final Map<Class<? extends Event>, Set<ListenerObject>> eventListenerMap;
+
+	/** The listener to object map. */
 	private final Map<EventListener, Set<ListenerObject>> listenerToObjectMap;
-	
+
+	/**
+	 * Instantiates a new event manager.
+	 */
 	private EventManager() {
 		eventListenerMap = new HashMap<Class<? extends Event>, Set<ListenerObject>>();
 		listenerToObjectMap = new HashMap<EventListener, Set<ListenerObject>>();
 	}
 
+	@Override
+	public void clearManager() {
+		// Clear all lists and listeners
+		eventListenerMap.clear();
+		listenerToObjectMap.clear();
+	}
+
+	/**
+	 * Fire the event. It will call all the listeners that registered for this
+	 * event.
+	 *
+	 * @param event the event to fire
+	 */
+	public void fireEvent(Event event) {
+		Set<ListenerObject> listenerSet = eventListenerMap.get(event.getClass());
+		if (listenerSet != null) {
+			for (ListenerObject object : listenerSet) {
+				EventListener listener = object.getListener();
+				Method method = object.getMethod();
+
+				try {
+					method.invoke(listener, event);
+				} catch (IllegalAccessException | InvocationTargetException e) {
+					// It should never go here
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Checks if there exist event listeners that listen for this event class.
+	 *
+	 * @param eventClazz the event class
+	 * @return true if there are listening event listeners
+	 */
+	public boolean hasEventListeners(Class<? extends Event> eventClazz) {
+		return eventListenerMap.containsKey(eventClazz) && !eventListenerMap.get(eventClazz).isEmpty();
+	}
+
+	@Override
+	public void initManager() {
+		// Nothing to do here
+	}
+
+	/**
+	 * Register a new event listener. The registered methods of the
+	 * {@link EventListener} must have the {@link EventMethod} annotation and must
+	 * have one argument extending {@link Event}.
+	 *
+	 * @param listener the listener to register
+	 */
 	public void registerEventListener(EventListener listener) {
 		// Loop over methods, register when annotation found
 		Method[] listenerMethods = listener.getClass().getDeclaredMethods();
@@ -47,23 +187,11 @@ public class EventManager extends Manager {
 		}
 	}
 
-	public void fireEvent(Event event) {
-		Set<ListenerObject> listenerSet = eventListenerMap.get(event.getClass());
-		if (listenerSet != null) {
-			for (ListenerObject object : listenerSet) {
-				EventListener listener = object.getListener();
-				Method method = object.getMethod();
-
-				try {
-					method.invoke(listener, event);
-				} catch (IllegalAccessException | InvocationTargetException e) {
-					// It should never go here
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
+	/**
+	 * Unregister the event listener and its internal components.
+	 *
+	 * @param listener the listener
+	 */
 	public void unregisterEventListener(EventListener listener) {
 		// Verify if EventListener has events. A listener can have no event if it is
 		// just an intermediate
@@ -81,49 +209,34 @@ public class EventManager extends Manager {
 		// Remove also components
 		listener.unregisterComponents();
 	}
-	
-	public boolean hasEventListeners(Class<? extends Event> eventClazz) {
-		return eventListenerMap.containsKey(eventClazz) && !eventListenerMap.get(eventClazz).isEmpty();
-	}
-	
-	public static EventManager getInstance() {
-		return instance;
-	}
 
-	@Override
-	public void initManager() {
-		// Nothing to do here
-	}
-	
-	@Override
-	public void clearManager() {
-		// Clear all lists and listeners
-		eventListenerMap.clear();
-		listenerToObjectMap.clear();
-	}
-
+	/**
+	 * Defines a couple of event listener and its listening method for an event.
+	 *
+	 * @author Adrien Jakubiak
+	 */
 	private static class ListenerObject {
 
+		/** The event listener. */
 		private EventListener listener;
+
+		/** The event class. */
 		private Class<? extends Event> event;
+
+		/** The handling method. */
 		private Method method;
 
+		/**
+		 * Instantiates a new listener object.
+		 *
+		 * @param listener the listener
+		 * @param event    the event
+		 * @param method   the method
+		 */
 		public ListenerObject(EventListener listener, Class<? extends Event> event, Method method) {
 			this.listener = listener;
 			this.event = event;
 			this.method = method;
-		}
-
-		public EventListener getListener() {
-			return listener;
-		}
-
-		public Class<? extends Event> getEvent() {
-			return event;
-		}
-
-		public Method getMethod() {
-			return method;
 		}
 
 		@Override
@@ -134,6 +247,33 @@ public class EventManager extends Manager {
 
 			ListenerObject other = (ListenerObject) obj;
 			return listener.equals(other.listener) && event.equals(other.event) && method.equals(other.method);
+		}
+
+		/**
+		 * Returns the event.
+		 *
+		 * @return the event
+		 */
+		public Class<? extends Event> getEvent() {
+			return event;
+		}
+
+		/**
+		 * Returns the event listener.
+		 *
+		 * @return the listener
+		 */
+		public EventListener getListener() {
+			return listener;
+		}
+
+		/**
+		 * Returns the handling method.
+		 *
+		 * @return the method
+		 */
+		public Method getMethod() {
+			return method;
 		}
 
 		@Override
