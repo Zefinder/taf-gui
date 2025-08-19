@@ -89,6 +89,7 @@ public class TypeManager extends Manager implements EventListener {
 			.add(BooleanType.class).add(IntegerType.class).add(RealType.class).add(StringType.class).build();
 
 	/** The parameter type name set. */
+	@Deprecated(forRemoval = true)
 	private final Set<String> parameterTypeNameSet;
 
 	/** The custom node type set. */
@@ -142,6 +143,7 @@ public class TypeManager extends Manager implements EventListener {
 	 *
 	 * @return the parameter type names
 	 */
+	@Deprecated(forRemoval = true)
 	public Set<String> getParameterTypeNames() {
 		return parameterTypeNameSet;
 	}
