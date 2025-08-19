@@ -310,7 +310,8 @@ public class ProcessStreamReader {
 			StyleConstants.setForeground(style, Consts.CONSOLE_FOREGROUND_COLOR);
 			StyleConstants.setBackground(style, Consts.CONSOLE_BACKGROUND_COLOR);
 			StyleConstants.setUnderline(style, false);
-
+			break;
+			
 		default:
 			// Do nothing
 			break;

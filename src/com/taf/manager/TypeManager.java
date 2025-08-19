@@ -1,3 +1,33 @@
+/*
+ * Copyright or © or Copr.
+ * 
+ * This software is a computer program whose purpose is to generate random test
+ * case from a template file describing the data model.
+ * 
+ * This software is governed by the CeCILL-B license under French law and
+ * abiding by the rules of distribution of free software. You can use, modify
+ * and/or redistribute the software under the terms of the CeCILL-B license as
+ * circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * 
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ * 
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ * 
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL-B license and that you accept its terms.
+ */
 package com.taf.manager;
 
 import java.lang.reflect.InvocationTargetException;
@@ -23,18 +53,54 @@ import com.taf.logic.type.RealType;
 import com.taf.logic.type.StringType;
 import com.taf.util.HashSetBuilder;
 
+/**
+ * <p>
+ * The TypeManager manager focuses on registering parameter types and custom
+ * types for nodes (including node references).
+ * </p>
+ *
+ * <p>
+ * When a type or a node is added, it will be automatically added to this
+ * manager. When a type or node is removed, it will be automatically removed
+ * from this manager and from all the nodes that were using it.
+ * </p>
+ *
+ * @author Adrien Jakubiak
+ */
 public class TypeManager extends Manager implements EventListener {
 
+	/** The manager instance. */
 	private static final TypeManager instance = new TypeManager();
 
-	// TODO Change to String to simplify everything and use a factory to create a new FieldType
+	/**
+	 * Gets the single instance of TypeManager.
+	 *
+	 * @return single instance of TypeManager
+	 */
+	public static TypeManager getInstance() {
+		return instance;
+	}
+
+	/** The parameter type set. */
+	// TODO Change to String to simplify everything and use a factory to create a
+	// new FieldType
+	@Deprecated(forRemoval = true)
 	private final HashSet<Class<? extends FieldType>> parameterTypeSet = new HashSetBuilder<Class<? extends FieldType>>()
 			.add(BooleanType.class).add(IntegerType.class).add(RealType.class).add(StringType.class).build();
 
+	/** The parameter type name set. */
 	private final Set<String> parameterTypeNameSet;
+
+	/** The custom node type set. */
 	private final Set<String> customNodeTypeSet;
+
+	/** The custom node reference set. */
 	private final Set<String> customNodeRefSet;
+
+	/** The type to node map. */
 	private final Map<String, Set<Node>> typeToNodeMap;
+
+	/** The reference to node map. */
 	private final Map<String, Set<Node>> refToNodeMap;
 
 	private TypeManager() {
@@ -48,63 +114,51 @@ public class TypeManager extends Manager implements EventListener {
 		refToNodeMap = new HashMap<String, Set<Node>>();
 	}
 
-	void addCustomNodeType(Type type) {
-		customNodeTypeSet.add(type.getName());
-		typeToNodeMap.put(type.getName(), new HashSet<Node>());
+	@Override
+	public void clearManager() {
+		// Nothing to do here
 	}
 
-	private void removeCustomNodeType(String typeName) {
-		// Remove types of associated nodes
-		typeToNodeMap.get(typeName).forEach(node -> {
-			node.removeType();
-			EventManager.getInstance().fireEvent(new NodeTypeChangedEvent(node));
-		});
-		typeToNodeMap.remove(typeName);
-
-		// Remove from type set
-		customNodeTypeSet.remove(typeName);
-	}
-
-	void addCustomReference(Node node) {
-		customNodeRefSet.add(node.getName());
-		refToNodeMap.put(node.getName(), new HashSet<Node>());
-	}
-
-	private void removeCustomReference(String refName) {
-		// Remove ref of associated nodes
-		refToNodeMap.get(refName).forEach(node -> {
-			node.removeType();
-			EventManager.getInstance().fireEvent(new NodeTypeChangedEvent(node));
-		});
-		refToNodeMap.remove(refName);
-
-		// Remove from ref set
-		customNodeRefSet.remove(refName);
-	}
-
-	public void resetCustomNodeTypes() {
-		// Remove types
-		typeToNodeMap.clear();
-		customNodeTypeSet.clear();
-
-		// Remove refs
-		refToNodeMap.clear();
-		customNodeRefSet.clear();
-	}
-
-	public Set<String> getParameterTypeNames() {
-		return parameterTypeNameSet;
-	}
-
-	public Set<String> getCustomNodeTypeSet() {
-		return customNodeTypeSet;
-	}
-
+	/**
+	 * Returns the custom node reference set.
+	 *
+	 * @return the custom node reference set
+	 */
 	public Set<String> getCustomNodeRefSet() {
 		return customNodeRefSet;
 	}
 
-	public FieldType instanciateTypeFromClassName(String typeClassName) {
+	/**
+	 * Returns the custom node type set.
+	 *
+	 * @return the custom node type set
+	 */
+	public Set<String> getCustomNodeTypeSet() {
+		return customNodeTypeSet;
+	}
+
+	/**
+	 * Returns the parameter type names.
+	 *
+	 * @return the parameter type names
+	 */
+	public Set<String> getParameterTypeNames() {
+		return parameterTypeNameSet;
+	}
+
+	@Override
+	public void initManager() {
+		EventManager.getInstance().registerEventListener(instance);
+	}
+
+	/**
+	 * Instantiates a parameter type from its class name.
+	 *
+	 * @param typeClassName the type class name
+	 * @return the field type
+	 */
+	@Deprecated(forRemoval = true)
+	public FieldType instantiateTypeFromClassName(String typeClassName) {
 		for (Class<? extends FieldType> basicType : parameterTypeSet) {
 			if (basicType.getSimpleName().equals(typeClassName)) {
 				try {
@@ -121,33 +175,23 @@ public class TypeManager extends Manager implements EventListener {
 		return null;
 	}
 
-	public FieldType instanciateTypeFromTypeName(String typeName) {
+	/**
+	 * Instantiates a parameter type from its name.
+	 *
+	 * @param typeName the type name
+	 * @return the field type
+	 */
+	@Deprecated(forRemoval = true)
+	public FieldType instantiateTypeFromTypeName(String typeName) {
 		String typeClassName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1) + "Type";
-		return instanciateTypeFromClassName(typeClassName);
+		return instantiateTypeFromClassName(typeClassName);
 	}
 
-	void setNodeType(String typeName, Node node) {
-		// Must appear after type creation!
-		if (customNodeTypeSet.contains(typeName)) {
-			typeToNodeMap.get(typeName).add(node);
-		}
-	}
-
-	void setNodeRef(String nodeName, Node node) {
-		// Can appear BEFORE the ref node exist...
-		refToNodeMap.computeIfAbsent(nodeName, t -> new HashSet<Node>()).add(node);
-	}
-
-	@EventMethod
-	public void onTypeCreated(TypeCreatedEvent event) {
-		addCustomNodeType(event.getType());
-	}
-
-	@EventMethod
-	public void onNodeCreated(NodeCreatedEvent event) {
-		addCustomReference(event.getNode());
-	}
-
+	/**
+	 * Handler for {@link EntityDeletedEvent}.
+	 *
+	 * @param event the event
+	 */
 	@EventMethod
 	public void onEntityDeleted(EntityDeletedEvent event) {
 		Entity entity = event.getEntity();
@@ -171,6 +215,21 @@ public class TypeManager extends Manager implements EventListener {
 		}
 	}
 
+	/**
+	 * Handler for {@link NodeCreatedEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onNodeCreated(NodeCreatedEvent event) {
+		addCustomReference(event.getNode());
+	}
+
+	/**
+	 * Handler for {@link NodeTypeChangedEvent}.
+	 *
+	 * @param event the event
+	 */
 	@EventMethod
 	public void onNodeTypeChanged(NodeTypeChangedEvent event) {
 		Node node = event.getNode();
@@ -196,23 +255,113 @@ public class TypeManager extends Manager implements EventListener {
 		}
 	}
 
+	/**
+	 * Handler for {@link TypeCreatedEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onTypeCreated(TypeCreatedEvent event) {
+		addCustomNodeType(event.getType());
+	}
+
+	/**
+	 * Reset all types and references.
+	 */
+	public void resetCustomNodeTypes() {
+		// Remove types
+		typeToNodeMap.clear();
+		customNodeTypeSet.clear();
+
+		// Remove refs
+		refToNodeMap.clear();
+		customNodeRefSet.clear();
+	}
+
 	@Override
 	public void unregisterComponents() {
 		// Nothing to unregister
 	}
 
-	@Override
-	public void initManager() {
-		EventManager.getInstance().registerEventListener(instance);
-	}
-	
-	@Override
-	public void clearManager() {
-		// Nothing to do here
+	/**
+	 * Adds a custom node type to the manager.
+	 *
+	 * @param type the type to add
+	 */
+	void addCustomNodeType(Type type) {
+		customNodeTypeSet.add(type.getName());
+		typeToNodeMap.put(type.getName(), new HashSet<Node>());
 	}
 
-	public static TypeManager getInstance() {
-		return instance;
+	/**
+	 * Adds the custom reference to the manager .
+	 *
+	 * @param node the reference node to add
+	 */
+	void addCustomReference(Node node) {
+		customNodeRefSet.add(node.getName());
+		refToNodeMap.put(node.getName(), new HashSet<Node>());
+	}
+
+	/**
+	 * Sets the node reference. Because the node order is not guaranteed, the
+	 * referenced node can be not yet initialized when setting the node reference.
+	 *
+	 * @param nodeName the node name
+	 * @param node     the node
+	 */
+	void setNodeRef(String nodeName, Node node) {
+		// Can appear BEFORE the ref node exist...
+		refToNodeMap.computeIfAbsent(nodeName, t -> new HashSet<Node>()).add(node);
+	}
+
+	/**
+	 * Sets the node type to a node. Because types are initialized before nodes, the
+	 * type must exist when trying to reference it.
+	 *
+	 * @param typeName the type name
+	 * @param node     the node
+	 */
+	void setNodeType(String typeName, Node node) {
+		// Must appear after type creation!
+		if (customNodeTypeSet.contains(typeName)) {
+			typeToNodeMap.get(typeName).add(node);
+		}
+	}
+
+	/**
+	 * Removes the custom node type from the manager and resets all types from the
+	 * nodes having it.
+	 *
+	 * @param typeName the type name
+	 */
+	private void removeCustomNodeType(String typeName) {
+		// Remove types of associated nodes
+		typeToNodeMap.get(typeName).forEach(node -> {
+			node.removeType();
+			EventManager.getInstance().fireEvent(new NodeTypeChangedEvent(node));
+		});
+		typeToNodeMap.remove(typeName);
+
+		// Remove from type set
+		customNodeTypeSet.remove(typeName);
+	}
+
+	/**
+	 * Removes the custom reference from the manager and all nodes referencing it.
+	 *
+	 * @param refName the reference name
+	 */
+	private void removeCustomReference(String refName) {
+		// Remove ref of associated nodes
+		refToNodeMap.get(refName).forEach(node -> {
+			node.removeType();
+			EventManager.getInstance().fireEvent(new NodeTypeChangedEvent(node));
+		});
+		refToNodeMap.remove(refName);
+
+		// Remove from ref set
+		customNodeRefSet.remove(refName);
 	}
 
 }

@@ -63,7 +63,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
 			String typeName = (String) typeNames.getSelectedItem();
-			com.taf.logic.type.FieldType type = TypeManager.getInstance().instanciateTypeFromClassName(typeName);
+			com.taf.logic.type.FieldType type = TypeManager.getInstance().instantiateTypeFromClassName(typeName);
 			createdParameter = new Parameter(name, type);
 			dispose();
 		}
