@@ -30,69 +30,31 @@
  */
 package com.taf.frame;
 
-import java.awt.BorderLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import javax.swing.JFrame;
 
-import com.taf.event.Event;
-import com.taf.event.ProjectRunAbortedEvent;
-import com.taf.event.ProjectRunClosedEvent;
-import com.taf.frame.menubar.RunMenuBar;
-import com.taf.frame.panel.RunPanel;
-import com.taf.manager.EventManager;
-
 /**
- * The RunFrame is the frame shown when a project is run. It allows TAF
- * generation.
- * 
- * @see TafFrame
- * @see RunPanel
- * @see RunMenuBar
+ * The TafFrame is a base class for TAF's {@link JFrame}s.
  *
  * @author Adrien Jakubiak
  */
-public class RunFrame extends TafFrame {
+public abstract class TafFrame extends JFrame {
 
-	private static final long serialVersionUID = -2445180809943024092L;
-
-	/** The frame name. */
-	private static final String FRAME_NAME = "Run TAF";
-
-	/** The run panel. */
-	private RunPanel runPanel;
+	private static final long serialVersionUID = 5518078335667528474L;
 
 	/**
-	 * Instantiates a new run frame.
+	 * Instantiates a new TAF frame.
+	 *
+	 * @param title the title
 	 */
-	public RunFrame() {
-		super(FRAME_NAME);
-		this.setSize(1000, 600);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		this.setLocationRelativeTo(null);
-		this.setResizable(true);
-		this.setJMenuBar(new RunMenuBar());
+	public TafFrame(String title) {
+		super(title);
+	}
 
-		this.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				// Send the event to abort the process if it exists
-				Event event = new ProjectRunAbortedEvent();
-				EventManager.getInstance().fireEvent(event);
-
-				// Send the event to notify that the frame is closed
-				event = new ProjectRunClosedEvent();
-				EventManager.getInstance().fireEvent(event);
-				runPanel.unregisterConsolePanel();
-			}
-		});
-
-		this.setLayout(new BorderLayout());
-		runPanel = new RunPanel();
-		this.add(runPanel);
-
-		this.setVisible(false);
+	/**
+	 * Initializes the frame.
+	 */
+	public void initFrame() {
+		this.setVisible(true);
 	}
 
 }
