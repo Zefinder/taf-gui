@@ -1,3 +1,33 @@
+/*
+ * Copyright or © or Copr.
+ * 
+ * This software is a computer program whose purpose is to generate random test
+ * case from a template file describing the data model.
+ * 
+ * This software is governed by the CeCILL-B license under French law and
+ * abiding by the rules of distribution of free software. You can use, modify
+ * and/or redistribute the software under the terms of the CeCILL-B license as
+ * circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * 
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ * 
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ * 
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL-B license and that you accept its terms.
+ */
 package com.taf.frame.panel.run;
 
 import static com.taf.manager.RunManager.EXPERIMENT_FOLDER_NAME_STRING;
@@ -39,33 +69,79 @@ import com.taf.manager.EventManager;
 import com.taf.manager.RunManager;
 import com.taf.util.Consts;
 
+/**
+ * The SettingsPanel is used in the {@link TafRunComponentPanel} and manages all
+ * the settings used for the TAF generation.
+ * 
+ * @see JPanel
+ * @see TafRunComponentPanel
+ *
+ * @author Adrien Jakubiak
+ */
 public class SettingsPanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = 2148563875281479934L;
 
+	/** The delete experiment folder checkbox text. */
 	private static final String DELETE_EXPERIMENT_FOLDER_CHECKBOX_TEXT = "Delete experiment folder name before running TAF";
 
+	/** The run button text. */
 	private static final String RUN_BUTTON_TEXT = "Run";
+
+	/** The stop button text. */
 	private static final String STOP_BUTTON_TEXT = "Stop";
 
+	/** The template path field. */
 	private JTextField templatePathField;
+
+	/** The template file name field. */
 	private JTextField templateFileNameField;
+
+	/** The experiment path field. */
 	private JTextField experimentPathField;
+
+	/** The experiment folder name field. */
 	private JTextField experimentFolderNameField;
+
+	/** The number of test cases field. */
 	private JFormattedTextField nbTestCasesField;
+
+	/** The test case folder name field. */
 	private JTextField testCaseFolderNameField;
+
+	/** The number of test artifacts field. */
 	private JFormattedTextField nbTestArtifactsField;
+
+	/** The test artifact folder name field. */
 	private JTextField testArtifactFolderNameField;
+
+	/** The parameter maximum number of instances field. */
 	private JFormattedTextField parameterMaxNbInstancesField;
+
+	/** The string parameter maximum size field. */
 	private JFormattedTextField stringParameterMaxSizeField;
+
+	/** The node maximum number of instances field. */
 	private JFormattedTextField nodeMaxNbInstancesField;
+
+	/** The maximum backtracking field. */
 	private JFormattedTextField maxBacktrackingField;
+
+	/** The maximum diversity field. */
 	private JFormattedTextField maxDiversityField;
+
+	/** The z3 timeout field. */
 	private JFormattedTextField z3TimeoutField;
 
+	/** The run button. */
 	private JButton runButton;
+
+	/** The stop button. */
 	private JButton stopButton;
 
+	/**
+	 * Instantiates a new settings panel.
+	 */
 	public SettingsPanel() {
 		this.setLayout(new GridBagLayout());
 		RunManager runManager = RunManager.getInstance();
@@ -121,7 +197,7 @@ public class SettingsPanel extends JPanel implements EventListener {
 		z3TimeoutField = new JFormattedTextField(runManager.getZ3Timeout());
 		z3TimeoutField.setColumns(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		addLabeledField(Z3_TIMEOUT_STRING, z3TimeoutField, c);
-		
+
 		updateFields();
 
 		c.anchor = GridBagConstraints.CENTER;
@@ -176,24 +252,50 @@ public class SettingsPanel extends JPanel implements EventListener {
 		EventManager.getInstance().registerEventListener(this);
 	}
 
-	private void updateFields() {
-		RunManager runManager = RunManager.getInstance();
-		templatePathField.setText(runManager.getTemplatePath());
-		templateFileNameField.setText(runManager.getTemplateFileName());
-		experimentPathField.setText(runManager.getExperimentPath());
-		experimentFolderNameField.setText(runManager.getExperimentFolderName());
-		nbTestCasesField.setValue(runManager.getNbTestCases());
-		testCaseFolderNameField.setText(runManager.getTestCaseFolderName());
-		nbTestArtifactsField.setValue(runManager.getNbTestArtifacts());
-		testArtifactFolderNameField.setText(runManager.getTestArtifactFolderName());
-		parameterMaxNbInstancesField.setValue(runManager.getParameterMaxNbInstances());
-		stringParameterMaxSizeField.setValue(runManager.getStringParameterMaxSize());
-		nodeMaxNbInstancesField.setValue(runManager.getNodeMaxNbInstances());
-		maxBacktrackingField.setValue(runManager.getMaxBacktracking());
-		maxDiversityField.setValue(runManager.getMaxDiversity());
-		z3TimeoutField.setValue(runManager.getZ3Timeout());
+	/**
+	 * Handler for {@link RunLocationChangedEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onLocationChanged(RunLocationChangedEvent event) {
+		updateFields();
 	}
 
+	/**
+	 * Handler for {@link ProjectRunStartedEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onRunStartedEvent(ProjectRunStartedEvent event) {
+		runButton.setEnabled(false);
+		stopButton.setEnabled(true);
+	}
+
+	/**
+	 * Handler for {@link ProjectRunStoppedEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onRunStoppedEvent(ProjectRunStoppedEvent event) {
+		runButton.setEnabled(true);
+		stopButton.setEnabled(false);
+	}
+
+	@Override
+	public void unregisterComponents() {
+		// Nothing here
+	}
+
+	/**
+	 * Adds the labeled field to the panel.
+	 *
+	 * @param text  the text
+	 * @param field the field
+	 * @param c     the c
+	 */
 	// TODO Add to constant manager and use on a lot of panels
 	private void addLabeledField(String text, JTextField field, GridBagConstraints c) {
 		// Add label
@@ -216,26 +318,25 @@ public class SettingsPanel extends JPanel implements EventListener {
 		c.gridy++;
 	}
 
-	@EventMethod
-	public void onRunStartedEvent(ProjectRunStartedEvent event) {
-		runButton.setEnabled(false);
-		stopButton.setEnabled(true);
-	}
-
-	@EventMethod
-	public void onRunStoppedEvent(ProjectRunStoppedEvent event) {
-		runButton.setEnabled(true);
-		stopButton.setEnabled(false);
-	}
-
-	@EventMethod
-	public void onLocationChanged(RunLocationChangedEvent event) {
-		updateFields();
-	}
-	
-	@Override
-	public void unregisterComponents() {
-		// Nothing here
+	/**
+	 * Update fields.
+	 */
+	private void updateFields() {
+		RunManager runManager = RunManager.getInstance();
+		templatePathField.setText(runManager.getTemplatePath());
+		templateFileNameField.setText(runManager.getTemplateFileName());
+		experimentPathField.setText(runManager.getExperimentPath());
+		experimentFolderNameField.setText(runManager.getExperimentFolderName());
+		nbTestCasesField.setValue(runManager.getNbTestCases());
+		testCaseFolderNameField.setText(runManager.getTestCaseFolderName());
+		nbTestArtifactsField.setValue(runManager.getNbTestArtifacts());
+		testArtifactFolderNameField.setText(runManager.getTestArtifactFolderName());
+		parameterMaxNbInstancesField.setValue(runManager.getParameterMaxNbInstances());
+		stringParameterMaxSizeField.setValue(runManager.getStringParameterMaxSize());
+		nodeMaxNbInstancesField.setValue(runManager.getNodeMaxNbInstances());
+		maxBacktrackingField.setValue(runManager.getMaxBacktracking());
+		maxDiversityField.setValue(runManager.getMaxDiversity());
+		z3TimeoutField.setValue(runManager.getZ3Timeout());
 	}
 
 }
