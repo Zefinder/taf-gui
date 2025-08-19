@@ -34,6 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.taf.annotation.NotEmpty;
+import com.taf.annotation.Nullable;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
@@ -107,7 +108,7 @@ public class Type extends Field {
 	}
 
 	@Override
-	public void setType(FieldType type) {
+	public void setType(@Nullable FieldType type) {
 		// Cannot change the type of a type!
 	}
 

@@ -31,23 +31,46 @@
 package com.taf.exception;
 
 /**
- * The ImportException exception represents an error when importing a file.
+ * The TafException class defines a base class for custom exceptions in TAF.
+ * 
+ * @see Exception
  *
  * @author Adrien Jakubiak
  */
-public class ImportException extends TafException {
+public abstract class TafException extends Exception {
 
-	/** The serial version UID. */
-	private static final long serialVersionUID = 6190920797625046289L;
+	private static final long serialVersionUID = 5047540787569083549L;
+
+	private static final String ARROW = "->";
+
+	/** The error format. */
+	private static final String ERROR_FORMAT = "[%s] %s %s";
+
+	/** The short message. */
+	private String shortMessage;
 
 	/**
-	 * Instantiates a new import exception.
+	 * Instantiates a new taf exception.
 	 *
 	 * @param initiator the initiator
 	 * @param message   the message
 	 */
-	public ImportException(Class<?> initiator, String message) {
-		super(initiator, message);
+	public TafException(Class<?> initiator, String message) {
+		super(ERROR_FORMAT.formatted(initiator.getName(), ARROW, message));
+
+		this.shortMessage = message;
+		while (shortMessage.contains(ARROW)) {
+			shortMessage = shortMessage.split(ARROW)[1].strip();
+		}
+	}
+
+	/**
+	 * Returns the exception short message.
+	 *
+	 * @return the exception short message
+	 */
+	public String getShortMessage() {
+		return shortMessage;
 	}
 
 }
