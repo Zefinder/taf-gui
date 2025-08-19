@@ -40,6 +40,9 @@ import com.taf.manager.EventManager;
 /**
  * The ProjectImportPopupMenu is displayed when right-clicking on the
  * {@link ProjectChooserPanel} but not on a project line.
+ * 
+ * @see JPopupMenu
+ * @see ProjectChooserPanel
  *
  * @author Adrien Jakubiak
  */

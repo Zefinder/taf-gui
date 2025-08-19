@@ -43,6 +43,9 @@ import com.taf.manager.EventManager;
 /**
  * The TreeEntityPopupMenu is displayed when right-clicking on an entity in the
  * {@link FieldTreePanel}.
+ * 
+ * @see JPopupMenu
+ * @see FieldTreePanel
  *
  * @author Adrien Jakubiak
  */

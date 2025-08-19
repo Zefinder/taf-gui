@@ -42,6 +42,9 @@ import com.taf.manager.EventManager;
 /**
  * The ProjectPopupMenu is displayed when right-clicking on a project name in
  * the {@link ProjectChooserPanel}.
+ * 
+ * @see JPopupMenu
+ * @see ProjectChooserPanel
  *
  * @author Adrien Jakubiak
  */
@@ -76,6 +79,13 @@ public class ProjectPopupMenu extends JPopupMenu {
 	}
 
 	/**
+	 * Fires an event to notify that the user wants to delete a project.
+	 */
+	private void delete() {
+		EventManager.getInstance().fireEvent(new ProjectToDeleteEvent());
+	}
+
+	/**
 	 * Fires an event to notify that the user wants to import a project.
 	 */
 	private void importProject() {
@@ -87,13 +97,6 @@ public class ProjectPopupMenu extends JPopupMenu {
 	 */
 	private void open() {
 		EventManager.getInstance().fireEvent(new ProjectToOpenEvent());
-	}
-
-	/**
-	 * Fires an event to notify that the user wants to delete a project.
-	 */
-	private void delete() {
-		EventManager.getInstance().fireEvent(new ProjectToDeleteEvent());
 	}
 
 }
