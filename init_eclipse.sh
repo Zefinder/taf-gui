@@ -5,7 +5,7 @@ CLASSPATH_FILE='.classpath'
 SETTINGS_DIR='.settings'
 
 CUSTOM_ERRORS_WARNINGS='errors_warnings'
-ECLIPSE_ERRORS_WARNINGS='.settings/org.eclipse.jdt.code.prefs'
+ECLIPSE_ERRORS_WARNINGS='.settings/org.eclipse.jdt.core.prefs'
 
 CUSTOM_JAUTODOC='jautodoc'
 ECLIPSE_JAUTODOC='.settings/net.sf.jautodoc.prefs'
