@@ -1,20 +1,3 @@
-package com.taf.util;
-
-import java.awt.Component;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.text.NumberFormat;
-import java.text.ParseException;
-
-import javax.swing.AbstractAction;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JFormattedTextField;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.text.DefaultFormatterFactory;
-import javax.swing.text.NumberFormatter;
-
 /*
  * Copyright (c) 1995, 2008, Oracle and/or its affiliates. All rights reserved.
  *
@@ -45,21 +28,52 @@ import javax.swing.text.NumberFormatter;
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package com.taf.util;
 
-/*
- * This is a modified version of the IntegerEditor of the Java tutorial of JTables
+import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.text.NumberFormat;
+import java.text.ParseException;
+
+import javax.swing.AbstractAction;
+import javax.swing.DefaultCellEditor;
+import javax.swing.JFormattedTextField;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.KeyStroke;
+import javax.swing.text.DefaultFormatterFactory;
+import javax.swing.text.NumberFormatter;
+
+/**
+ * <p>
+ * The IntegerEditor is a {@link JTable} cell editor that is used to verify,
+ * format and store integers.
+ * </p>
+ *
+ * <p>
+ * This is a modified version of the IntegerEditor of the Java tutorial of
+ * JTables
+ * </p>
+ * 
+ * @author Adrien Jakubiak
  */
-
 public class IntegerEditor extends DefaultCellEditor {
 
 	private static final long serialVersionUID = -6290272775924941609L;
-	
 	private static final String CHECK_ACTION = "check";
+
 	private static final String UNKNWON_VALUE_ERROR_MESSAGE = "getCellEditorValue: can't parse o: ";
 
+	/** The integer field. */
 	private JFormattedTextField integerField;
+
+	/** The integer format. */
 	private NumberFormat integerFormat;
 
+	/**
+	 * Instantiates a new integer editor.
+	 */
 	public IntegerEditor() {
 		super(new JFormattedTextField());
 		integerField = (JFormattedTextField) getComponent();
@@ -79,25 +93,16 @@ public class IntegerEditor extends DefaultCellEditor {
 		integerField.getActionMap().put(CHECK_ACTION, new AbstractAction() {
 			private static final long serialVersionUID = -7031956174719188660L;
 
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				checkFormatedField();
 			}
 		});
 	}
 
-	// Override to invoke setValue on the formatted text field.
-	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-//		JFormattedTextField ftf = (JFormattedTextField) super.getTableCellEditorComponent(table, value, isSelected, row,
-//				column);
-		integerField.setValue(value);
-		return integerField;
-	}
-
 	@Override
 	public Object getCellEditorValue() {
-//		JFormattedTextField ftf = (JFormattedTextField) getComponent();
 		Object o = integerField.getValue();
-//		System.out.println(o);
 		if (o instanceof Integer) {
 			return o;
 		} else if (o instanceof Number) {
@@ -113,6 +118,23 @@ public class IntegerEditor extends DefaultCellEditor {
 		}
 	}
 
+	// Override to invoke setValue on the formatted text field.
+	@Override
+	public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+		integerField.setValue(value);
+		return integerField;
+	}
+
+	@Override
+	public boolean stopCellEditing() {
+		return checkFormatedField();
+	}
+
+	/**
+	 * Check if the formatted field contains a valid value.
+	 *
+	 * @return true if the field contains a valid value
+	 */
 	private boolean checkFormatedField() {
 		if (!integerField.isEditValid()) {
 			// TODO JOptionPane message to say invalid input
@@ -127,10 +149,5 @@ public class IntegerEditor extends DefaultCellEditor {
 		}
 
 		return super.stopCellEditing();
-	}
-
-	@Override
-	public boolean stopCellEditing() {
-		return checkFormatedField();
 	}
 }

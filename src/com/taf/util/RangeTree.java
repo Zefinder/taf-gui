@@ -1,3 +1,33 @@
+/*
+ * Copyright or © or Copr.
+ * 
+ * This software is a computer program whose purpose is to generate random test
+ * case from a template file describing the data model.
+ * 
+ * This software is governed by the CeCILL-B license under French law and
+ * abiding by the rules of distribution of free software. You can use, modify
+ * and/or redistribute the software under the terms of the CeCILL-B license as
+ * circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * 
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ * 
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ * 
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL-B license and that you accept its terms.
+ */
 package com.taf.util;
 
 import java.util.ArrayList;
@@ -6,22 +36,50 @@ import java.util.List;
 import com.taf.exception.RangeException;
 import com.taf.exception.RangeIntersectionException;
 
+/**
+ * A RangeTree represents a tree of non overlapping integer ranges. It allows
+ * fast integer research and can be used to build a RangeMap if needed. It is
+ * possible to renumber the ranges, but in the depth-first format.
+ *
+ * @author Adrien Jakubiak
+ */
 public class RangeTree {
 
 	private static final String RANGE_INTERSECTION_ERROR_MESSAGE = "Ranges intersect, abort...";
 
+	/** The root node. */
 	private Node rootNode;
+
+	/** The tree max node id. */
 	private int maxNodeId;
 
+	/**
+	 * Instantiates a new range tree.
+	 */
 	public RangeTree() {
 		rootNode = new Node(0);
 	}
 
+	/**
+	 * Adds a range to the tree. If the range intersects with an already existing
+	 * range, a {@link RangeException} is thrown.
+	 *
+	 * @param start the range start
+	 * @param end   the range end
+	 * @throws RangeException if the new range intersects with a range present in
+	 *                        the range tree
+	 */
 	public void addRange(int start, int end) throws RangeException {
 		Range range = new Range(start, end);
 		rootNode.addRange(range, maxNodeId++);
 	}
 
+	/**
+	 * Returns the parent id of the range at the specified id.
+	 *
+	 * @param rangeId the range id
+	 * @return the parent id
+	 */
 	public int getParentId(int rangeId) {
 		return rootNode.getParentId(rangeId);
 	}
@@ -29,7 +87,8 @@ public class RangeTree {
 	/**
 	 * Returns the id of the range containing the input number n, or -1 if no range
 	 * contains it.
-	 * 
+	 *
+	 * @param n the number to check
 	 * @return the id of the range containing the input number n, or -1.
 	 */
 	public int getRangeId(int n) {
@@ -37,7 +96,8 @@ public class RangeTree {
 	}
 
 	/**
-	 * Numbers the tree in a DFS style (starting with 1). Id 0 is reserved for the root
+	 * Numbers the tree in a depth-first style (starting with 1). Id 0 is reserved
+	 * for the root.
 	 */
 	public void numberTree() {
 		rootNode.numberNode(0);
@@ -48,21 +108,54 @@ public class RangeTree {
 		return rootNode.toString();
 	}
 
+	/**
+	 * The class that represents a node in the range tree.
+	 * 
+	 * @see RangeTree
+	 *
+	 * @author Adrien Jakubiak
+	 */
 	private static class Node {
+
+		/** The node range. */
 		private Range range;
+
+		/** The node id. */
 		private int nodeId;
+
+		/** The node children. */
 		private List<RangeTree.Node> children;
 
+		/**
+		 * Instantiates a new node with a specified id.
+		 *
+		 * @param nodeId the node id
+		 */
+		public Node(int nodeId) {
+			this(null, nodeId);
+		}
+
+		/**
+		 * Instantiates a new node with a specified range and id.
+		 *
+		 * @param range  the node range
+		 * @param nodeId the node id
+		 */
 		public Node(Range range, int nodeId) {
 			this.range = range;
 			this.nodeId = nodeId;
 			children = new ArrayList<RangeTree.Node>();
 		}
 
-		public Node(int nodeId) {
-			this(null, nodeId);
-		}
-
+		/**
+		 * Adds a range to the node. It throws a {@link RangeIntersectionException} if
+		 * it intersects with one of the node children.
+		 *
+		 * @param range     the range to add
+		 * @param maxNodeId the max node id
+		 * @throws RangeIntersectionException if the new range intersects with one of
+		 *                                    the children
+		 */
 		public void addRange(Range range, int maxNodeId) throws RangeIntersectionException {
 			List<Node> enclosedNodeIndexes = new ArrayList<Node>();
 
@@ -95,6 +188,12 @@ public class RangeTree {
 			children.add(newChild);
 		}
 
+		/**
+		 * Returns the node id at the specified position.
+		 *
+		 * @param position the position
+		 * @return the node id
+		 */
 		public int getNodeId(int position) {
 			// If this node is in range (or range null because root), check for children
 			if (range == null || range.isInRange(position)) {
@@ -159,6 +258,12 @@ public class RangeTree {
 			return -1;
 		}
 
+		/**
+		 * Number the node and its children in a depth-first style.
+		 *
+		 * @param nodeNumber the current node number
+		 * @return the new node number after numbering all children
+		 */
 		public int numberNode(int nodeNumber) {
 			nodeId = nodeNumber;
 			for (Node child : children) {
@@ -180,17 +285,28 @@ public class RangeTree {
 		}
 	}
 
+	/**
+	 * Represents a integer range that is used in the range tree.
+	 * 
+	 * @see RangeTree
+	 *
+	 * @author Adrien Jakubiak
+	 */
 	private static class Range {
+
 		private static final String RANGE_BOUNDS_ERROR_MESSAGE = "Error in range creation: start > end!";
 
+		/** The range start. */
 		private int start;
+
+		/** The range end. */
 		private int end;
 
 		/**
-		 * Represents the range [start; end]. Start must be lower or equal to end
-		 * 
-		 * @param start
-		 * @param end
+		 * Represents the range [start; end]. Start must be lower or equal to end.
+		 *
+		 * @param start the start
+		 * @param end   the end
 		 * @throws RangeException if start > end
 		 */
 		public Range(int start, int end) throws RangeException {
@@ -199,10 +315,6 @@ public class RangeTree {
 			}
 			this.start = start;
 			this.end = end;
-		}
-
-		public boolean isInRange(int value) {
-			return value >= start && value <= end;
 		}
 
 		/**
@@ -224,6 +336,16 @@ public class RangeTree {
 		 */
 		public boolean intersects(Range other) {
 			return (other.start >= start && other.start <= end) || (other.end >= start && other.end <= end);
+		}
+
+		/**
+		 * Checks if the value is in this range.
+		 *
+		 * @param value the value
+		 * @return true if is in range
+		 */
+		public boolean isInRange(int value) {
+			return value >= start && value <= end;
 		}
 	}
 

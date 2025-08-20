@@ -16,6 +16,8 @@ import com.taf.logic.type.DefaultFieldType;
 import com.taf.util.Consts;
 
 class TypeTest extends FieldTest {
+	
+	// TODO Add test add two times the same field name (should return an exception)
 
 	protected Type type;
 
