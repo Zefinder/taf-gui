@@ -3,3 +3,5 @@
 .project
 /.settings/
 /testbin/
+errors_warnings
+jautodoc
