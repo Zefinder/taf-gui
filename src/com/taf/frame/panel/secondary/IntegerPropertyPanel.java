@@ -1,3 +1,33 @@
+/*
+ * Copyright or © or Copr.
+ * 
+ * This software is a computer program whose purpose is to generate random test
+ * case from a template file describing the data model.
+ * 
+ * This software is governed by the CeCILL-B license under French law and
+ * abiding by the rules of distribution of free software. You can use, modify
+ * and/or redistribute the software under the terms of the CeCILL-B license as
+ * circulated by CEA, CNRS and INRIA at the following URL
+ * "http://www.cecill.info".
+ * 
+ * As a counterpart to the access to the source code and rights to copy, modify
+ * and redistribute granted by the license, users are provided only with a
+ * limited warranty and the software's author, the holder of the economic
+ * rights, and the successive licensors have only limited liability.
+ * 
+ * In this respect, the user's attention is drawn to the risks associated with
+ * loading, using, modifying and/or developing or reproducing the software by
+ * the user in light of its specific status of free software, that may mean that
+ * it is complicated to manipulate, and that also therefore means that it is
+ * reserved for developers and experienced professionals having in-depth
+ * computer knowledge. Users are therefore encouraged to load and test the
+ * software's suitability as regards their requirements in conditions enabling
+ * the security of their systems and/or data to be ensured and, more generally,
+ * to use and operate it in the same conditions as regards security.
+ * 
+ * The fact that you are presently reading this means that you have had
+ * knowledge of the CeCILL-B license and that you accept its terms.
+ */
 package com.taf.frame.panel.secondary;
 
 import java.awt.GridBagConstraints;
@@ -13,28 +43,58 @@ import com.taf.logic.type.IntegerType;
 import com.taf.logic.type.parameter.DistributionType;
 import com.taf.util.Consts;
 
+/**
+ * The IntegerPropertyPanel is a secondary property panel used for
+ * {@link IntegerType}. It allows the user to set the minimum and maximum value
+ * of the parameter, and the distribution.
+ * 
+ * @see EntitySecondaryPropertyPanel
+ * @see DistributionPanel
+ *
+ * @author Adrien Jakubiak
+ */
 public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -9035183700723112945L;
 
+	/** The distribution label text. */
 	private static final String DISTRIBUTION_LABEL_TEXT = "Distribution";
 
+	/** The entity type. */
 	private IntegerType type;
 
+	/** The minimum value. */
 	private long minValue;
+
+	/** The maximum value. */
 	private long maxValue;
 
+	/** The minimum label. */
 	private JLabel minLabel;
+
+	/** The minimum field. */
 	private JFormattedTextField minField;
 
+	/** The maximum label. */
 	private JLabel maxLabel;
+
+	/** The maximum field. */
 	private JFormattedTextField maxField;
 
+	/** The distribution label. */
 	private JLabel distributionLabel;
+
+	/** The distribution box. */
 	private JComboBox<DistributionType> distributionBox;
 
+	/** The distribution panel. */
 	private DistributionPanel distributionPanel;
 
+	/**
+	 * Instantiates a new integer property panel.
+	 *
+	 * @param type the type
+	 */
 	public IntegerPropertyPanel(IntegerType type) {
 		this.type = type;
 		minValue = type.getMin();
@@ -128,14 +188,6 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 		addComponent(distributionPanel, c);
 	}
 
-	private void updateMin() {
-		type.editMin(minValue);
-	}
-
-	private void updateMax() {
-		type.editMax(maxValue);
-	}
-
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		Object source = evt.getSource();
@@ -146,6 +198,20 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 			maxValue = ((Number) maxField.getValue()).longValue();
 			updateMax();
 		}
+	}
+
+	/**
+	 * Update the maximum value.
+	 */
+	private void updateMax() {
+		type.editMax(maxValue);
+	}
+
+	/**
+	 * Update the minimum value.
+	 */
+	private void updateMin() {
+		type.editMin(minValue);
 	}
 
 }
