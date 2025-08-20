@@ -57,6 +57,8 @@ Set the encoding set to UTF-8 (in the `Problems` tab, right click on the problem
 
 For the custom annotations (WIP)
 
+After everything done, restart Eclipse.
+
 ### JAutoDoc
 
 If you want to use the JAutoDoc plugin, install it and create (or replace the content of) `.settings/net.sf.jautodoc.prefs` by the content of `jautodoc`. Once you did this, you can delete the `jautodoc` file.
