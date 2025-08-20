@@ -9,11 +9,12 @@ Welcome to the official graphical interface repository of the TAF software. Beca
 This repository is made in **Java 21** and tries to respect all TAF specifications. It is better to use Eclipse to run this project since the installation is made for Eclipse (but if you want to use another IDE, feel free to do so)
 
 ## How to configure the workspace? 
-I made the choice to not use Maven to limit the needs of external libraries. There are two source folders: `src` containing the source code of the GUI, and `tests` containing all unit tests. The unit tests use JUnit Jupiter (JUnit 5). 
+I made the choice to not use Maven to limit the needs of external libraries. There are two source folders: `src` containing the source code of the GUI, and `tests` containing all unit tests. The unit tests use **JUnit Jupiter** (JUnit 5). 
 
 Custom annotations are used for **null static analysis**:
-- **Nullable** to specify that a value can be null
-- **NotNull** to specify that a value cannot be null
+- **Nullable** to specify that a value can be **null**
+- **NotNull** to specify that a value **cannot be null**
+
 The annotation **NotEmpty** is here for documentation purpose and specifies that an array, list or String value is not empty.
 
 Custom annotations, coupled with java annotation processors, are used to verify the code structure (and sometimes generate code) (WIP):
@@ -24,12 +25,12 @@ Custom annotations, coupled with java annotation processors, are used to verify 
 
 ### How to configure with Eclipse?
 If you are on Linux, you can run the script `init_eclipse.sh` **after adding the project into Eclipse** and it will install everything for you. If you don't know how to import a project into Eclipse, here are the steps (after cloning the repo):
-- File -> New -> Java Project
+- `File -> New -> Java Project`
 - Enter a project name (`tafgui` is a good name)
 - In the project location, put the location of the clone (`/home/myuser/work/taf-gui` for example)
 
 You can also clone the git repository in Eclipse:
-- Open the Git perspective (Window -> Perspective -> Open Perspective -> Other... -> Git
+- Open the Git perspective (`Window -> Perspective -> Open Perspective -> Other... -> Git`)
 - Clone a Git repository and choose `GitHub`
 - In the search bar, type `Zefinder/taf-gui` and `Next`, `Next`
 - Choose where to clone the repository (you can leave the default location, it is as you like) and `Finish`
