@@ -69,6 +69,9 @@ import com.taf.util.HashSetBuilder;
  */
 public class TypeManager extends Manager implements EventListener {
 
+	/** The next type id. */
+	private static int nextTypeId;
+	
 	/** The manager instance. */
 	private static final TypeManager instance = new TypeManager();
 
@@ -119,6 +122,15 @@ public class TypeManager extends Manager implements EventListener {
 	public void clearManager() {
 		// Nothing to do here
 	}
+	
+	/**
+	 * Provide a type id
+	 *
+	 * @return a type id
+	 */
+	public static int provideTypeId() {
+		return nextTypeId++;
+	}
 
 	/**
 	 * Returns the custom node reference set.
@@ -150,6 +162,7 @@ public class TypeManager extends Manager implements EventListener {
 
 	@Override
 	public void initManager() {
+		nextTypeId = 0;
 		EventManager.getInstance().registerEventListener(instance);
 	}
 

@@ -145,4 +145,12 @@ class TypeTest extends FieldTest {
 		assertIterableEquals(new LinkedHashSet<Constraint>(), type.getConstraintSet());
 	}
 	
+	@Test
+	void testTypeAddTwiceSameName() {
+		Field parameter1 = new Parameter("param", new DefaultFieldType());
+		Field parameter2 = new Parameter("param", new DefaultFieldType());
+		type.addEntity(parameter1);
+		type.addEntity(parameter2);
+	}
+	
 }

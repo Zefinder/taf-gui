@@ -273,7 +273,7 @@ public class Constraint implements Entity {
 
 	@Override
 	public int hashCode() {
-		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parent.getName()).hashCode();
+		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parent.getId()).hashCode();
 	}
 
 	/**

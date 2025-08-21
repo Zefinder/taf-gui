@@ -119,8 +119,8 @@ public abstract class Field implements Entity {
 
 	@Override
 	public int hashCode() {
-		String parentName = parent == null ? "" : parent.getName();
-		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parentName).hashCode();
+		int parentId = parent == null ? -1 : parent.getId();
+		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parentId).hashCode();
 	}
 
 	@Override
@@ -132,9 +132,9 @@ public abstract class Field implements Entity {
 			if (parent != null) {
 				parent.removeEntity(this);
 			}
-			
+
 			this.name = name;
-			
+
 			if (parent != null) {
 				parent.addEntity(this);
 			}
@@ -176,7 +176,12 @@ public abstract class Field implements Entity {
 
 		return indent;
 	}
-	
+
+	/**
+	 * Format the field to show its name and type.
+	 *
+	 * @return the formatted field
+	 */
 	protected String formatField() {
 		return Consts.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
 	}

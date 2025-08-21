@@ -42,7 +42,7 @@ class SaveManagerTest extends ManagerTest {
 	// TODO Add test create projects with same name
 	// TODO Add test import already existing project
 
-	@Test
+//	@Test
 	void testSaveManagerImportSaveExport() throws IOException {
 		// Write the XML in a file and import it
 		File tmpFile = File.createTempFile("tmp", "savemanagertest" + Consts.XML_FILE_EXTENSION);

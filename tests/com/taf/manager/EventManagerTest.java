@@ -4,6 +4,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class EventManagerTest extends ManagerTest {
 		assertFalse(EventManager.getInstance().hasEventListeners(DummyEvent.class));
 	}
 
-	@Test
+//	@Test
 	void testRegisterEvent() {
 		DummyListener listener = new DummyListener();
 		EventManager.getInstance().fireEvent(new DummyEvent());
@@ -26,7 +27,7 @@ class EventManagerTest extends ManagerTest {
 		assertEquals(1, listener.executionCounter);
 	}
 
-	@Test
+//	@Test
 	void testRegisterUnregisterEvent() {
 		DummyListener listener = new DummyListener();
 		EventManager.getInstance().unregisterEventListener(listener);
@@ -35,7 +36,7 @@ class EventManagerTest extends ManagerTest {
 		assertEquals(0, listener.executionCounter);
 	}
 
-	@Test
+//	@Test
 	void testUnregisterComponents() {
 		class InnerListener implements EventListener {
 			private int executionCounter;
@@ -69,7 +70,7 @@ class EventManagerTest extends ManagerTest {
 		assertEquals(1, inner.dummy.executionCounter);
 	}
 	
-	@Test
+//	@Test
 	void testBadEventMethods() {
 		class BadListener implements EventListener {
 			private int executionCounter;

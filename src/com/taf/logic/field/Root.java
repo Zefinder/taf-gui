@@ -79,12 +79,12 @@ public class Root extends Node {
 	}
 
 	@Override
-	public void addEntity(Entity entity) {
+	public boolean addEntity(Entity entity) {
 		// Root can add all types of fields
 		if (entity instanceof Type && !(entity instanceof Node)) {
-			addType((Type) entity);
+			return addType((Type) entity);
 		} else {
-			super.addEntity(entity);
+			return super.addEntity(entity);
 		}
 	}
 
@@ -150,11 +150,12 @@ public class Root extends Node {
 	 * Adds the type to the root.
 	 *
 	 * @param type the type to add to the root
+	 * @return true if the type was added to the type
 	 */
-	private void addType(Type type) {
+	private boolean addType(Type type) {
 		type.setIndentationLevel(indentationLevel + 1);
 		type.setParent(this);
-		typeSet.add(type);
+		return typeSet.add(type);
 	}
 
 	/**
