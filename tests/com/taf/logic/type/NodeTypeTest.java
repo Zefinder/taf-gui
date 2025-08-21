@@ -20,7 +20,7 @@ import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 
-class NodeTypeTest extends TypeTest {
+class NodeTypeTest extends FieldTypeTest {
 
 	private NodeType nodeType;
 
@@ -30,7 +30,7 @@ class NodeTypeTest extends TypeTest {
 	}
 
 	@Override
-	void testTypeDefaultValuesImpl() {
+	void testFieldTypeDefaultValuesImpl() {
 		assertEquals(Consts.DEFAULT_INSTANCE_NUMBER, nodeType.getInstanceNumber());
 		assertEquals(Consts.DEFAULT_MAX_INSTANCE_NUMBER, nodeType.getMaxInstanceNumber());
 		assertEquals(Consts.DEFAULT_MIN_INSTANCE_NUMBER, nodeType.getMinInstanceNumber());
@@ -43,12 +43,12 @@ class NodeTypeTest extends TypeTest {
 	}
 	
 	@Override
-	void testTypeMandatoryParametersImpl() {
+	void testFieldTypeMandatoryParametersImpl() {
 		assertIterableEquals(new HashSet<String>(), nodeType.getMandatoryParametersName());
 	}
 
 	@Override
-	void testTypeOptionalParametersImpl() {
+	void testFieldTypeOptionalParametersImpl() {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>()
 				.add(InstanceNumberParameter.PARAMETER_NAME).add(MinInstanceParameter.PARAMETER_NAME)
 				.add(MaxInstanceParameter.PARAMETER_NAME).add(TypeNameParameter.PARAMETER_NAME)

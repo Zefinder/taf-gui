@@ -11,7 +11,7 @@ import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 
-class BooleanTypeTest extends TypeTest {
+class BooleanTypeTest extends FieldTypeTest {
 
 	private BooleanType booleanType;
 
@@ -21,18 +21,18 @@ class BooleanTypeTest extends TypeTest {
 	}
 
 	@Override
-	void testTypeDefaultValuesImpl() {
+	void testFieldTypeDefaultValuesImpl() {
 		assertEquals(Consts.DEFAULT_WEIGHT_VALUE, booleanType.getFalseWeight());
 		assertEquals(Consts.DEFAULT_WEIGHT_VALUE, booleanType.getTrueWeight());
 	}
 
 	@Override
-	void testTypeMandatoryParametersImpl() {
+	void testFieldTypeMandatoryParametersImpl() {
 		assertIterableEquals(new HashSet<String>(), booleanType.getMandatoryParametersName());
 	}
 
 	@Override
-	void testTypeOptionalParametersImpl() {
+	void testFieldTypeOptionalParametersImpl() {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>().add(WeightsParameter.PARAMETER_NAME)
 				.build();
 		assertIterableEquals(optionalTypeParameters, booleanType.getOptionalParametersName());

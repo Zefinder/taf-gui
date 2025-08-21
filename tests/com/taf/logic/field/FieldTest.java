@@ -4,7 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.IntegerType;
+import com.taf.util.Consts;
 
 abstract class FieldTest {
 
@@ -15,9 +17,7 @@ abstract class FieldTest {
 	public FieldTest(Field field) {
 		this.field = field;
 	}
-	
-	// TODO Add test with empty name as constructor
-	// TODO Add test with double quotes as constructor
+
 	// TODO Add test hashcode
 
 	@Test
@@ -50,6 +50,32 @@ abstract class FieldTest {
 	@Test
 	void testFieldDefaultValues() {
 		testFieldDefaultValuesImpl();
+	}
+
+	@Test
+	void testNullName() {
+		field.setName(null);
+		assertEquals(name, field.getName());
+	}
+
+	@Test
+	void testEmptyNameConstructor() {
+		// Any field will work since it requires a name
+		Field field = new Parameter("", new DefaultFieldType());
+		assertEquals(name, field.getName());
+	}
+
+	@Test
+	void testNullNameConstructor() {
+		// Any field will work since it requires a name
+		Field field = new Parameter(null, new DefaultFieldType());
+		assertEquals(name, field.getName());
+	}
+
+	@Test
+	void testFieldHashCode() {
+		assertEquals((this.getClass().toString() + Consts.HASH_SEPARATOR + field.getName() + -1).hashCode(),
+				field.hashCode());
 	}
 
 	abstract void testFieldDefaultValuesImpl();

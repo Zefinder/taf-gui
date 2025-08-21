@@ -4,24 +4,24 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import java.util.HashSet;
 
-class DefaultFieldTypeTest extends TypeTest {
+class DefaultFieldTypeTest extends FieldTypeTest {
 
 	public DefaultFieldTypeTest() {
 		super(new DefaultFieldType(), "");
 	}
 
 	@Override
-	void testTypeDefaultValuesImpl() {
+	void testFieldTypeDefaultValuesImpl() {
 		// Nothing here
 	}
 
 	@Override
-	void testTypeMandatoryParametersImpl() {
+	void testFieldTypeMandatoryParametersImpl() {
 		assertIterableEquals(new HashSet<String>(), fieldType.getMandatoryParametersName());
 	}
 
 	@Override
-	void testTypeOptionalParametersImpl() {
+	void testFieldTypeOptionalParametersImpl() {
 		assertIterableEquals(new HashSet<String>(), fieldType.getOptionalParametersName());
 	}
 

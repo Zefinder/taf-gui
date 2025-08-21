@@ -15,7 +15,7 @@ import com.taf.logic.type.parameter.WeightsParameter;
 import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 
-class StringTypeTest extends TypeTest {
+class StringTypeTest extends FieldTypeTest {
 
 	private StringType stringType;
 
@@ -25,17 +25,17 @@ class StringTypeTest extends TypeTest {
 	}
 
 	@Override
-	void testTypeDefaultValuesImpl() {
+	void testFieldTypeDefaultValuesImpl() {
 		assertIterableEquals(new LinkedHashSet<Entry<String, Integer>>(), stringType.getValues());
 	}
 	
 	@Override
-	void testTypeMandatoryParametersImpl() {
+	void testFieldTypeMandatoryParametersImpl() {
 		assertIterableEquals(new HashSet<String>(), stringType.getMandatoryParametersName());
 	}
 
 	@Override
-	void testTypeOptionalParametersImpl() {
+	void testFieldTypeOptionalParametersImpl() {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>()
 				.add(ValuesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();
 		assertIterableEquals(optionalTypeParameters, stringType.getOptionalParametersName());

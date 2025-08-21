@@ -17,8 +17,6 @@ import com.taf.util.Consts;
 
 class TypeTest extends FieldTest {
 	
-	// TODO Add test add two times the same field name (should return an exception or nothing happens)
-
 	protected Type type;
 
 	public TypeTest() {
