@@ -165,7 +165,7 @@ public class Node extends Type {
 			nodeStr += constraintsToString();
 		}
 
-		return NODE_STRING_FORMAT.formatted(super.toString(), nodeStr, getIndentation());
+		return NODE_STRING_FORMAT.formatted(formatField(), nodeStr, getIndentation());
 	}
 
 }

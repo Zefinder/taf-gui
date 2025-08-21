@@ -121,9 +121,20 @@ public class RootTest extends TypeTest {
 	
 	@Test
 	void testRootRemoveType() {
+		System.out.println();
 		Type type = new Type("type");
 		root.addEntity(type);
 		root.removeEntity(type);
+		
+		assertIterableEquals(new LinkedHashSet<Type>(), root.getTypeSet());
+	}
+	
+	@Test
+	void testTypeAddModifyRemoveType() {
+		Type type = new Type("type");
+		type.addEntity(type);
+		type.setName("aaaa");
+		type.removeEntity(type);
 		
 		assertIterableEquals(new LinkedHashSet<Type>(), root.getTypeSet());
 	}

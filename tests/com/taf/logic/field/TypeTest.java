@@ -17,7 +17,7 @@ import com.taf.util.Consts;
 
 class TypeTest extends FieldTest {
 	
-	// TODO Add test add two times the same field name (should return an exception)
+	// TODO Add test add two times the same field name (should return an exception or nothing happens)
 
 	protected Type type;
 
@@ -98,7 +98,7 @@ class TypeTest extends FieldTest {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
 		type.removeEntity(parameter);
-
+		
 		assertIterableEquals(new LinkedHashSet<Field>(), type.getFieldSet());
 	}
 	
@@ -125,4 +125,24 @@ class TypeTest extends FieldTest {
 		assertIterableEquals(new LinkedHashSet<Constraint>(), type.getConstraintSet());
 	}
 
+	@Test
+	void testTypeAddModifyRemoveField() {
+		Field parameter = new Parameter("param", new DefaultFieldType());
+		type.addEntity(parameter);
+		parameter.setName("aaaa");
+		type.removeEntity(parameter);
+		
+		assertIterableEquals(new LinkedHashSet<Field>(), type.getFieldSet());
+	}
+	
+	@Test
+	void testTypeAddModifyRemoveConstraint() {
+		Constraint constraint = new Constraint("constr");
+		type.addEntity(constraint);
+		constraint.setName("aaaa");
+		type.removeEntity(constraint);
+
+		assertIterableEquals(new LinkedHashSet<Constraint>(), type.getConstraintSet());
+	}
+	
 }

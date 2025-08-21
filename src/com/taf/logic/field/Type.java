@@ -133,8 +133,8 @@ public class Type extends Field {
 	 */
 	private void addField(Field field) {
 		field.setIndentationLevel(indentationLevel + 1);
-		fieldSet.add(field);
 		field.setParent(this);
+		fieldSet.add(field);
 	}
 
 	/**
@@ -152,8 +152,8 @@ public class Type extends Field {
 	 * @param constraint the constraint to add
 	 */
 	private void addConstraint(Constraint constraint) {
-		constraintSet.add(constraint);
 		constraint.setParent(this);
+		constraintSet.add(constraint);
 	}
 
 	/**
@@ -244,7 +244,7 @@ public class Type extends Field {
 			typeStr += constraintsToString();
 		}
 
-		return TYPE_STRING_FORMAT.formatted(super.toString(), typeStr);
+		return TYPE_STRING_FORMAT.formatted(formatField(), typeStr);
 	}
 
 }

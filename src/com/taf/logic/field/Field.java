@@ -43,6 +43,12 @@ import com.taf.util.Consts;
  * has a name and a {@link FieldType}.
  * </p>
  * 
+ * <p>
+ * Field uniqueness is determined by its class, parent and name. If two fields
+ * are two {@link Parameter}s sharing the same name and parent, they are the
+ * same whether they have the same field type or not.
+ * </p>
+ * 
  * @see Entity
  * @see Type
  * @see Parameter
@@ -78,27 +84,15 @@ public abstract class Field implements Entity {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Field)) {
+		if (!obj.getClass().equals(this.getClass())) {
 			return false;
 		}
 
 		Field other = (Field) obj;
-		boolean parentsEquals = false;
-		
-		final Type parent = this.parent;
-		if (parent == null) {
-			parentsEquals = other.parent == null;
-		} else {
-			parentsEquals = parent.equals(other.parent);
-		}
-		
-		return this.name.equals(other.name) && this.type.equals(other.type) && parentsEquals;
-	}
+		boolean parentsEquals = parent == null ? other.parent == null : parent.equals(other.parent);
 
-	@Override
-	public int hashCode() {
-		String parentName = parent == null ? "" : parent.getName();
-		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parentName + toString()).hashCode();
+		// Class checked at first line
+		return this.name.equals(other.name) && parentsEquals;
 	}
 
 	@Override
@@ -124,9 +118,26 @@ public abstract class Field implements Entity {
 	}
 
 	@Override
+	public int hashCode() {
+		String parentName = parent == null ? "" : parent.getName();
+		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parentName).hashCode();
+	}
+
+	@Override
 	public void setName(@NotEmpty String name) {
 		if (!name.isBlank()) {
+			// Because hashcode is not updated in a set, you need to remove and add again to
+			// the parent.
+			Type parent = this.parent;
+			if (parent != null) {
+				parent.removeEntity(this);
+			}
+			
 			this.name = name;
+			
+			if (parent != null) {
+				parent.addEntity(this);
+			}
 		}
 	}
 
@@ -141,14 +152,14 @@ public abstract class Field implements Entity {
 	 * @param type the new type
 	 */
 	public void setType(@NotNull FieldType type) {
-		if (type != null) {			
+		if (type != null) {
 			this.type = type;
 		}
 	}
 
 	@Override
 	public String toString() {
-		return Consts.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
+		return formatField();
 	}
 
 	/**
@@ -164,6 +175,10 @@ public abstract class Field implements Entity {
 		}
 
 		return indent;
+	}
+	
+	protected String formatField() {
+		return Consts.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
 	}
 
 	/**

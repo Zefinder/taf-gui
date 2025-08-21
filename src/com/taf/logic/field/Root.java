@@ -153,8 +153,8 @@ public class Root extends Node {
 	 */
 	private void addType(Type type) {
 		type.setIndentationLevel(indentationLevel + 1);
-		typeSet.add(type);
 		type.setParent(this);
+		typeSet.add(type);
 	}
 
 	/**

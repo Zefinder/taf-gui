@@ -210,6 +210,16 @@ public class Constraint implements Entity {
 	}
 
 	@Override
+	public boolean equals(Object obj) {
+		if (!(obj instanceof Constraint)) {
+			return false;
+		}
+
+		Constraint other = (Constraint) obj;
+		return other.parent.equals(parent) && other.name.equals(name);
+	}
+
+	@Override
 	public String getEntityTypeName() {
 		return Consts.CONSTRAINT_ENTITY_NAME;
 	}
@@ -261,6 +271,11 @@ public class Constraint implements Entity {
 		return typesConstraintParameter.getTypes();
 	}
 
+	@Override
+	public int hashCode() {
+		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parent.getName()).hashCode();
+	}
+
 	/**
 	 * Returns a nice string representation of the parameters inside the constraint.
 	 *
@@ -310,7 +325,11 @@ public class Constraint implements Entity {
 
 	@Override
 	public void setName(@NotEmpty String name) {
+		// Because hashcode is not updated in a set, you need to remove and add again to
+		// the parent.
+		parent.removeEntity(this);
 		this.name = name;
+		parent.addEntity(this);
 	}
 
 	@Override
