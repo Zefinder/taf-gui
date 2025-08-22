@@ -29,21 +29,21 @@ class IntegerTypeTest extends NumericalTypeTest {
 	}
 
 	@Override
-	void testTypeDefaultValuesImpl() {
-		super.testTypeDefaultValuesImpl();
+	void testFieldTypeDefaultValuesImpl() {
+		super.testFieldTypeDefaultValuesImpl();
 		assertEquals(Consts.DEFAULT_MIN_VALUE, numericalType.getMinNumber());
 		assertEquals(Consts.DEFAULT_MAX_VALUE, numericalType.getMaxNumber());
 	}
 	
 	@Override
-	void testTypeMandatoryParametersImpl() {
+	void testFieldTypeMandatoryParametersImpl() {
 		HashSet<String> mandatoryTypeParameters = new HashSetBuilder<String>().add(MaxIntegerParameter.PARAMETER_NAME)
 				.add(MinIntegerParameter.PARAMETER_NAME).build();
 		assertIterableEquals(mandatoryTypeParameters, numericalType.getMandatoryParametersName());
 	}
 
 	@Override
-	void testTypeOptionalParametersImpl() {
+	void testFieldTypeOptionalParametersImpl() {
 		HashSet<String> optionalTypeParameters = new HashSetBuilder<String>().add(DistributionParameter.PARAMETER_NAME)
 				.add(MeanParameter.PARAMETER_NAME).add(VarianceParameter.PARAMETER_NAME)
 				.add(RangesParameter.PARAMETER_NAME).add(WeightsParameter.PARAMETER_NAME).build();

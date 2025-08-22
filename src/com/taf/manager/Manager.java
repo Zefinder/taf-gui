@@ -50,7 +50,7 @@ import com.taf.util.HashSetBuilder;
 public abstract class Manager {
 
 	/** The set of managers. */
-	static final Set<Manager> MANAGERS = new HashSetBuilder<Manager>()
+	protected static final Set<Manager> MANAGERS = new HashSetBuilder<Manager>()
 			.add(TypeManager.getInstance())
 			.add(EventManager.getInstance())
 			.add(SaveManager.getInstance())

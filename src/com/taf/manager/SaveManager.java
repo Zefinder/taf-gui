@@ -53,6 +53,7 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 
 import com.taf.event.ProjectClosedEvent;
+import com.taf.exception.EntityCreationException;
 import com.taf.exception.ImportException;
 import com.taf.exception.ParseException;
 import com.taf.logic.constraint.Constraint;
@@ -646,8 +647,10 @@ public class SaveManager extends Manager {
 			}
 		} catch (NumberFormatException e) {
 			throwParseException(NUMBER_FORMAT_EXCEPTION_ERROR_MESSAGE, lineNumber);
-		} catch (ParseException e1) {
-			throwParseException(e1.getMessage(), lineNumber);
+		} catch (ParseException e) {
+			throwParseException(e.getMessage(), lineNumber);
+		} catch (EntityCreationException e) {
+			throwParseException(e.getMessage(), lineNumber);
 		}
 
 		this.projectRoot = root;

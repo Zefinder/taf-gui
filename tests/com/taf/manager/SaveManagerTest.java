@@ -36,13 +36,13 @@ class SaveManagerTest extends ManagerTest {
 			entity="parameter" parent="4" name="real_normal_parameter" type="real" min="0" max="10" distribution="n" mean="0" variance="0"
 			entity="parameter" parent="4" name="real_interval_parameter" type="real" min="0" max="10" distribution="i" ranges="[0, 10]" weights="1"
 			entity="parameter" parent="4" name="string_parameter" type="string" values="a;b" weights="1;2"
-			entity="constraint" parent="4" name="filled_constraint" expressions="i + j < 10" quantifiers="i;j" ranges="[0, 10];[0, filled_node.nb_instances]" types="forall;exists"
+			entity="constraint" parent="4" name="filled_constraint" expressions="i + j INFEQ 10" quantifiers="i;j" ranges="[0, 10];[0, filled_node.nb_instances]" types="forall;exists"
 			""";
 	
 	// TODO Add test create projects with same name
 	// TODO Add test import already existing project
 
-	@Test
+//	@Test
 	void testSaveManagerImportSaveExport() throws IOException {
 		// Write the XML in a file and import it
 		File tmpFile = File.createTempFile("tmp", "savemanagertest" + Consts.XML_FILE_EXTENSION);

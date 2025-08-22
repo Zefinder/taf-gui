@@ -32,6 +32,7 @@ abstract class ConstraintParameterTest<K> extends FactoryTest implements ListTes
 				values -> new Pair<String, String>(valuesToStringList(values), valuesToStringList(values)));
 	}
 
+	@Override
 	@Test
 	public void testFactoryCreation() throws ParseException {
 		ConstraintParameter created = ConstraintParameterFactory.createConstraintParameter(name, DEFAULT_VALUE);

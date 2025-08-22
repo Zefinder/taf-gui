@@ -10,36 +10,41 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
+import com.taf.logic.field.Type;
 import com.taf.util.Consts;
 
 class ConstraintTest {
 
 	private static final String name = "test";
 
+	private Type parent;
 	private Constraint constraint;
 
-	public ConstraintTest() {
+	public ConstraintTest() throws EntityCreationException {
+		parent = new Type("a");
 		constraint = new Constraint(name);
+		parent.addEntity(constraint);
 	}
 
 	@Test
 	void testEmptyConstraint() {
 		assertEquals(name, constraint.getName());
 		assertEquals(Consts.CONSTRAINT_ENTITY_NAME, constraint.getEntityTypeName());
-		assertEquals(null, constraint.getParent());
+		assertEquals(parent, constraint.getParent());
 		assertIterableEquals(new ArrayList<String>(), constraint.getExpressions());
 		assertIterableEquals(new ArrayList<String>(), constraint.getQuantifiers());
 		assertIterableEquals(new ArrayList<Range>(), constraint.getRanges());
 		assertIterableEquals(new ArrayList<QuantifierType>(), constraint.getTypes());
 	}
-	
+
 	@Test
 	void testFieldEditName() {
 		String newName = name + "a";
 		constraint.setName(newName);
-		
+
 		assertEquals(newName, constraint.getName());
 	}
 
@@ -85,7 +90,7 @@ class ConstraintTest {
 		expectedList.add(newExpression);
 		assertIterableEquals(expectedList, constraint.getExpressions());
 	}
-	
+
 	@ParameterizedTest
 	@EnumSource(value = QuantifierType.class)
 	void testEditQuantifierName(QuantifierType quantifierType) {
@@ -95,7 +100,7 @@ class ConstraintTest {
 		String rightRange = "AAAAAAA";
 		constraint.addQuantifier(oldQuantifierName, leftRange, rightRange, quantifierType);
 		constraint.editQuantifier(0, newQuantifierName);
-		
+
 		List<String> expectedQuantifierList = new ArrayList<String>();
 		List<Range> expectedRangeList = new ArrayList<Range>();
 		List<QuantifierType> expectedQuantifierTypeList = new ArrayList<QuantifierType>();
@@ -108,7 +113,7 @@ class ConstraintTest {
 		assertIterableEquals(expectedRangeList, constraint.getRanges());
 		assertIterableEquals(expectedQuantifierTypeList, constraint.getTypes());
 	}
-	
+
 	@ParameterizedTest
 	@EnumSource(value = QuantifierType.class)
 	void testEditRange(QuantifierType quantifierType) {
@@ -120,7 +125,7 @@ class ConstraintTest {
 		constraint.addQuantifier(quantifierName, oldLeftRange, oldRightRange, quantifierType);
 		constraint.editLeftRange(0, newLeftRange);
 		constraint.editRightRange(0, newRightRange);
-		
+
 		List<String> expectedQuantifierList = new ArrayList<String>();
 		List<Range> expectedRangeList = new ArrayList<Range>();
 		List<QuantifierType> expectedQuantifierTypeList = new ArrayList<QuantifierType>();
@@ -133,7 +138,7 @@ class ConstraintTest {
 		assertIterableEquals(expectedRangeList, constraint.getRanges());
 		assertIterableEquals(expectedQuantifierTypeList, constraint.getTypes());
 	}
-	
+
 	@Test
 	void testEditQuantifier() {
 		String quantifierName = "i";
@@ -162,10 +167,10 @@ class ConstraintTest {
 		String expression = "AAAAAAA";
 		constraint.addExpression(expression);
 		constraint.removeExpression(0);
-		
+
 		assertIterableEquals(new ArrayList<String>(), constraint.getExpressions());
 	}
-	
+
 	@ParameterizedTest
 	@EnumSource(value = QuantifierType.class)
 	void testRemoveQuantifier(QuantifierType quantifierType) {
@@ -174,7 +179,7 @@ class ConstraintTest {
 		String rightRange = "AAAAAAA";
 		constraint.addQuantifier(quantifierName, leftRange, rightRange, quantifierType);
 		constraint.removeQuantifier(0);
-		
+
 		assertIterableEquals(new ArrayList<String>(), constraint.getQuantifiers());
 		assertIterableEquals(new ArrayList<Range>(), constraint.getRanges());
 		assertIterableEquals(new ArrayList<QuantifierType>(), constraint.getTypes());

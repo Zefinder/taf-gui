@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 import com.taf.logic.type.parameter.DistributionType;
 import com.taf.util.Consts;
 
-abstract class NumericalTypeTest extends TypeTest {
+abstract class NumericalTypeTest extends FieldTypeTest {
 
 	protected NumericalType numericalType;
 
@@ -19,7 +19,7 @@ abstract class NumericalTypeTest extends TypeTest {
 	}
 
 	@Override
-	void testTypeDefaultValuesImpl() {
+	void testFieldTypeDefaultValuesImpl() {
 		assertEquals(Consts.DEFAULT_DISTRIBUTION, numericalType.getDistribution());
 		assertEquals(Consts.DEFAULT_MEAN_VALUE, numericalType.getMean());
 		assertEquals(Consts.DEFAULT_VARIANCE_VALUE, numericalType.getVariance());

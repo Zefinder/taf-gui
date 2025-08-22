@@ -35,10 +35,12 @@ import java.util.Set;
 
 import com.taf.annotation.NotEmpty;
 import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.FieldType;
+import com.taf.manager.TypeManager;
 import com.taf.util.Consts;
 
 /**
@@ -60,6 +62,9 @@ public class Type extends Field {
 			<type %s>
 			%s
 			\t</type>""";
+	
+	/** The type id. */
+	private final int id;
 
 	/** The set of contained fields. */
 	private Set<Field> fieldSet;
@@ -68,48 +73,81 @@ public class Type extends Field {
 	private Set<Constraint> constraintSet;
 
 	/**
+	 * Instantiates a new type with a name and a default field type.
+	 *
+	 * @param name the type name
+	 * @throws EntityCreationException if the name is null or empty
+	 */
+	public Type(@NotEmpty String name) throws EntityCreationException {
+		this(name, new DefaultFieldType());
+	}
+
+	/**
 	 * Instantiates a new type with a name and a field type. Used to instantiate a
 	 * {@link Node} since it has its own type.
 	 *
 	 * @param name the type name
 	 * @param type the type's field type
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	protected Type(@NotEmpty String name, FieldType type) {
+	protected Type(@NotEmpty String name, FieldType type) throws EntityCreationException {
 		super(name, type);
+		id = TypeManager.provideTypeId();
 		fieldSet = new LinkedHashSet<Field>();
 		constraintSet = new LinkedHashSet<Constraint>();
-	}
-
-	/**
-	 * Instantiates a new type with a name and a default field type.
-	 *
-	 * @param name the type name
-	 */
-	public Type(@NotEmpty String name) {
-		this(name, new DefaultFieldType());
 	}
 
 	/**
 	 * Adds an entity to the type.
 	 *
 	 * @param entity the entity to add
+	 * @return true if the entity was added to the type
 	 */
-	public void addEntity(Entity entity) {
+	public boolean addEntity(Entity entity) {
 		if (entity instanceof Field) {
 			// Add field if not a pure type
 			if (entity instanceof Node || entity instanceof Parameter) {
 				if (!(entity instanceof Root)) {
-					addField((Field) entity);
+					return addField((Field) entity);
 				}
 			}
 		} else if (entity instanceof Constraint) {
-			addConstraint((Constraint) entity);
+			return addConstraint((Constraint) entity);
 		}
+		
+		return false;
+	}
+
+	/**
+	 * Returns the constraint set.
+	 *
+	 * @return the constraint set
+	 */
+	public Set<Constraint> getConstraintSet() {
+		return constraintSet;
 	}
 
 	@Override
-	public void setType(@Nullable FieldType type) {
-		// Cannot change the type of a type!
+	public String getEntityTypeName() {
+		return Consts.TYPE_ENTITY_NAME;
+	}
+
+	/**
+	 * Returns the field set.
+	 *
+	 * @return the field set
+	 */
+	public Set<Field> getFieldSet() {
+		return fieldSet;
+	}
+	
+	/**
+	 * Returns the type id.
+	 *
+	 * @return the type id
+	 */
+	public int getId() {
+		return id;
 	}
 
 	/**
@@ -125,44 +163,45 @@ public class Type extends Field {
 		}
 	}
 
-	/**
-	 * Adds a field to the type. Increases its indentation level for display
-	 * purpose.
-	 *
-	 * @param field the field to add
-	 */
-	private void addField(Field field) {
-		field.setIndentationLevel(indentationLevel + 1);
-		fieldSet.add(field);
-		field.setParent(this);
+	@Override
+	public void setType(@Nullable FieldType type) {
+		// Cannot change the type of a type!
+	}
+
+	@Override
+	public String toString() {
+		String typeStr = "";
+		if (!fieldSet.isEmpty()) {
+			typeStr += insideFieldsToString() + Consts.LINE_JUMP;
+		}
+
+		if (!constraintSet.isEmpty()) {
+			typeStr += constraintsToString();
+		}
+
+		return TYPE_STRING_FORMAT.formatted(formatField(), typeStr);
 	}
 
 	/**
-	 * Removes the field from the type.
+	 * Returns a nice string representation of the constraints inside the type with the
+	 * correct indentation.
 	 *
-	 * @param field the field to remove
+	 * @return the constraints string representation
 	 */
-	private void removeField(Field field) {
-		fieldSet.remove(field);
-	}
+	protected final String constraintsToString() {
+		final String lineJump = Consts.LINE_JUMP;
+		final String indent = getIndentation() + Consts.TAB;
 
-	/**
-	 * Adds the constraint to the type.
-	 *
-	 * @param constraint the constraint to add
-	 */
-	private void addConstraint(Constraint constraint) {
-		constraintSet.add(constraint);
-		constraint.setParent(this);
-	}
+		String strConstraints = "";
+		int i = 0;
+		for (Constraint constraint : constraintSet) {
+			strConstraints += indent + constraint.toString();
 
-	/**
-	 * Removes the constraint from the type.
-	 *
-	 * @param constraint the constraint to remove
-	 */
-	private void removeConstraint(Constraint constraint) {
-		constraintSet.remove(constraint);
+			if (i++ != constraintSet.size() - 1) {
+				strConstraints += lineJump;
+			}
+		}
+		return strConstraints;
 	}
 
 	/**
@@ -189,62 +228,45 @@ public class Type extends Field {
 	}
 
 	/**
-	 * Returns a nice string representation of the constraints inside the type with the
-	 * correct indentation.
+	 * Adds the constraint to the type.
 	 *
-	 * @return the constraints string representation
+	 * @param constraint the constraint to add
+	 * @return true if the constraint was added to the type
 	 */
-	protected final String constraintsToString() {
-		final String lineJump = Consts.LINE_JUMP;
-		final String indent = getIndentation() + Consts.TAB;
-
-		String strConstraints = "";
-		int i = 0;
-		for (Constraint constraint : constraintSet) {
-			strConstraints += indent + constraint.toString();
-
-			if (i++ != constraintSet.size() - 1) {
-				strConstraints += lineJump;
-			}
-		}
-		return strConstraints;
+	private boolean addConstraint(Constraint constraint) {
+		constraint.setParent(this);
+		return constraintSet.add(constraint);
 	}
 
 	/**
-	 * Returns the field set.
+	 * Adds a field to the type. Increases its indentation level for display
+	 * purpose.
 	 *
-	 * @return the field set
+	 * @param field the field to add
+	 * @return true if the field was added to the type
 	 */
-	public Set<Field> getFieldSet() {
-		return fieldSet;
+	private boolean addField(Field field) {
+		field.setIndentationLevel(indentationLevel + 1);
+		field.setParent(this);
+		return fieldSet.add(field);
 	}
 
 	/**
-	 * Returns the constraint set.
+	 * Removes the constraint from the type.
 	 *
-	 * @return the constraint set
+	 * @param constraint the constraint to remove
 	 */
-	public Set<Constraint> getConstraintSet() {
-		return constraintSet;
+	private void removeConstraint(Constraint constraint) {
+		constraintSet.remove(constraint);
 	}
 
-	@Override
-	public String getEntityTypeName() {
-		return Consts.TYPE_ENTITY_NAME;
-	}
-
-	@Override
-	public String toString() {
-		String typeStr = "";
-		if (!fieldSet.isEmpty()) {
-			typeStr += insideFieldsToString() + Consts.LINE_JUMP;
-		}
-
-		if (!constraintSet.isEmpty()) {
-			typeStr += constraintsToString();
-		}
-
-		return TYPE_STRING_FORMAT.formatted(super.toString(), typeStr);
+	/**
+	 * Removes the field from the type.
+	 *
+	 * @param field the field to remove
+	 */
+	private void removeField(Field field) {
+		fieldSet.remove(field);
 	}
 
 }

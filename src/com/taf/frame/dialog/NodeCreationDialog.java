@@ -36,6 +36,8 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.field.Node;
 import com.taf.util.Consts;
 
@@ -92,7 +94,7 @@ public class NodeCreationDialog extends InputInformationDialog {
 	 *
 	 * @return the created node
 	 */
-	// TODO Replace by optional
+	@Nullable
 	public Node getField() {
 		return createdNode;
 	}
@@ -107,7 +109,11 @@ public class NodeCreationDialog extends InputInformationDialog {
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
-			createdNode = new Node(name);
+			try {
+				createdNode = new Node(name);
+			} catch (EntityCreationException e) {
+				// This cannot happen, ignore
+			}
 			dispose();
 		}
 	}

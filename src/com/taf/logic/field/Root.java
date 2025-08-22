@@ -34,6 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.taf.annotation.NotEmpty;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.util.Consts;
@@ -72,19 +73,20 @@ public class Root extends Node {
 	 * Instantiates a new root.
 	 *
 	 * @param name the name
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Root(@NotEmpty String name) {
+	public Root(@NotEmpty String name) throws EntityCreationException {
 		super(name);
 		typeSet = new LinkedHashSet<Type>();
 	}
 
 	@Override
-	public void addEntity(Entity entity) {
+	public boolean addEntity(Entity entity) {
 		// Root can add all types of fields
 		if (entity instanceof Type && !(entity instanceof Node)) {
-			addType((Type) entity);
+			return addType((Type) entity);
 		} else {
-			super.addEntity(entity);
+			return super.addEntity(entity);
 		}
 	}
 
@@ -150,11 +152,12 @@ public class Root extends Node {
 	 * Adds the type to the root.
 	 *
 	 * @param type the type to add to the root
+	 * @return true if the type was added to the type
 	 */
-	private void addType(Type type) {
+	private boolean addType(Type type) {
 		type.setIndentationLevel(indentationLevel + 1);
-		typeSet.add(type);
 		type.setParent(this);
+		return typeSet.add(type);
 	}
 
 	/**

@@ -37,6 +37,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.type.FieldType;
 import com.taf.manager.TypeManager;
@@ -111,7 +113,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 	 *
 	 * @return the created parameter
 	 */
-	// TODO Replace by optional
+	@Nullable
 	public Parameter getField() {
 		return createdParameter;
 	}
@@ -128,7 +130,11 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		if (!name.isBlank()) {
 			String typeName = (String) typeNames.getSelectedItem();
 			com.taf.logic.type.FieldType type = TypeManager.getInstance().instantiateTypeFromClassName(typeName);
-			createdParameter = new Parameter(name, type);
+			try {
+				createdParameter = new Parameter(name, type);
+			} catch (EntityCreationException e) {
+				// This cannot happen, ignore
+			}
 			dispose();
 		}
 	}

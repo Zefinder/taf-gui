@@ -33,6 +33,7 @@ package com.taf.logic.field;
 import com.taf.annotation.NotEmpty;
 import com.taf.annotation.NotNull;
 import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.type.FieldType;
 import com.taf.util.Consts;
@@ -43,14 +44,25 @@ import com.taf.util.Consts;
  * has a name and a {@link FieldType}.
  * </p>
  * 
+ * <p>
+ * Field uniqueness is determined by its class, parent and name. If two fields
+ * are two {@link Parameter}s sharing the same name and parent, they are the
+ * same whether they have the same field type or not.
+ * </p>
+ * 
  * @see Entity
  * @see Type
  * @see Parameter
  * @author Adrien Jakubiak
  */
 public abstract class Field implements Entity {
+	
+	private static final String NULL_NAME_ERROR_MESSAGE = "The field name cannot be null";
+	private static final String EMPTY_NAME_ERROR_MESSAGE = "The field name cannot be empty";
 
 	/** The field name. */
+	@NotNull
+	@NotEmpty
 	private String name;
 
 	/** The field type (which is not {@link Type}!) */
@@ -69,8 +81,15 @@ public abstract class Field implements Entity {
 	 *
 	 * @param name the field name
 	 * @param type the field type
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Field(@NotEmpty String name, FieldType type) {
+	public Field(@Nullable String name, FieldType type) throws EntityCreationException {
+		if (name == null) {
+			throw new EntityCreationException(getClass(), NULL_NAME_ERROR_MESSAGE);
+		}
+		if (name.isBlank()) {
+			throw new EntityCreationException(getClass(), EMPTY_NAME_ERROR_MESSAGE);
+		}
 		this.name = name;
 		this.type = type;
 		this.indentationLevel = 0;
@@ -78,33 +97,21 @@ public abstract class Field implements Entity {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Field)) {
+		if (!obj.getClass().equals(this.getClass())) {
 			return false;
 		}
 
 		Field other = (Field) obj;
-		boolean parentsEquals = false;
-		
-		final Type parent = this.parent;
-		if (parent == null) {
-			parentsEquals = other.parent == null;
-		} else {
-			parentsEquals = parent.equals(other.parent);
-		}
-		
-		return this.name.equals(other.name) && this.type.equals(other.type) && parentsEquals;
-	}
+		boolean parentsEquals = parent == null ? other.parent == null : parent.equals(other.parent);
 
-	@Override
-	public int hashCode() {
-		String parentName = parent == null ? "" : parent.getName();
-		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parentName + toString()).hashCode();
+		// Class checked at first line
+		return this.name.equals(other.name) && parentsEquals;
 	}
 
 	@Override
 	@NotEmpty
 	public String getName() {
-		return name;
+		return Consts.sanitizeName(name);
 	}
 
 	@Override
@@ -124,9 +131,26 @@ public abstract class Field implements Entity {
 	}
 
 	@Override
-	public void setName(@NotEmpty String name) {
-		if (!name.isBlank()) {
+	public int hashCode() {
+		int parentId = parent == null ? -1 : parent.getId();
+		return (this.getClass().toString() + Consts.HASH_SEPARATOR + getName() + parentId).hashCode();
+	}
+
+	@Override
+	public void setName(@Nullable String name) {
+		if (name != null && !name.isBlank()) {
+			// Because hashcode is not updated in a set, you need to remove and add again to
+			// the parent.
+			Type parent = this.parent;
+			if (parent != null) {
+				parent.removeEntity(this);
+			}
+
 			this.name = name;
+
+			if (parent != null) {
+				parent.addEntity(this);
+			}
 		}
 	}
 
@@ -141,14 +165,14 @@ public abstract class Field implements Entity {
 	 * @param type the new type
 	 */
 	public void setType(@NotNull FieldType type) {
-		if (type != null) {			
+		if (type != null) {
 			this.type = type;
 		}
 	}
 
 	@Override
 	public String toString() {
-		return Consts.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
+		return formatField();
 	}
 
 	/**
@@ -167,6 +191,15 @@ public abstract class Field implements Entity {
 	}
 
 	/**
+	 * Format the field to show its name and type.
+	 *
+	 * @return the formatted field
+	 */
+	protected String formatField() {
+		return Consts.FIELD_STRING_FORMAT.formatted(getName(), type.toString()).strip();
+	}
+
+	/**
 	 * <p>
 	 * Sets the indentation level of the field.
 	 * </p>
@@ -181,5 +214,7 @@ public abstract class Field implements Entity {
 	void setIndentationLevel(int indentationLevel) {
 		this.indentationLevel = indentationLevel;
 	}
+	
+
 
 }
