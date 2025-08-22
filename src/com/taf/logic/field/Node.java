@@ -31,6 +31,7 @@
 package com.taf.logic.field;
 
 import com.taf.annotation.NotEmpty;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.FieldType;
 import com.taf.logic.type.NodeType;
@@ -76,8 +77,9 @@ public class Node extends Type {
 	 * New node with node type with default values.
 	 * 
 	 * @param name the node name
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Node(@NotEmpty String name) {
+	public Node(@NotEmpty String name) throws EntityCreationException {
 		this(name, new NodeType());
 	}
 
@@ -86,8 +88,9 @@ public class Node extends Type {
 	 *
 	 * @param name the node name
 	 * @param type the node type
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Node(@NotEmpty String name, NodeType type) {
+	public Node(@NotEmpty String name, NodeType type) throws EntityCreationException {
 		super(name, type);
 		this.type = type;
 	}

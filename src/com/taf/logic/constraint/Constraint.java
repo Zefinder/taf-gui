@@ -34,6 +34,7 @@ import java.util.List;
 
 import com.taf.annotation.NotEmpty;
 import com.taf.annotation.NotNull;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.parameter.ConstraintParameter;
 import com.taf.logic.constraint.parameter.ExpressionsConstraintParameter;
@@ -64,6 +65,9 @@ import com.taf.util.Consts;
  */
 public class Constraint implements Entity {
 
+	private static final String NULL_NAME_ERROR_MESSAGE = "The constraint name cannot be null";
+	private static final String EMPTY_NAME_ERROR_MESSAGE = "The constraint name cannot be empty";
+	
 	/** Used to format a constraint to a XML string representation. */
 	private static final String CONSTRAINT_STRING_FORMAT = """
 			<constraint %s/>""";
@@ -90,8 +94,15 @@ public class Constraint implements Entity {
 	 * Instantiates a new constraint.
 	 *
 	 * @param name the name
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Constraint(String name) {
+	public Constraint(String name) throws EntityCreationException {
+		if (name == null) {
+			throw new EntityCreationException(getClass(), NULL_NAME_ERROR_MESSAGE);
+		}
+		if (name.isBlank()) {
+			throw new EntityCreationException(getClass(), EMPTY_NAME_ERROR_MESSAGE);
+		}
 		this.name = name;
 		expressionsConstraintParameter = new ExpressionsConstraintParameter();
 		quantifiersConstraintParameter = new QuantifiersConstraintParameter();

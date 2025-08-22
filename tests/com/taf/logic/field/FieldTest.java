@@ -1,9 +1,11 @@
 package com.taf.logic.field;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.logic.type.IntegerType;
 import com.taf.util.Consts;
@@ -18,10 +20,8 @@ abstract class FieldTest {
 		this.field = field;
 	}
 
-	// TODO Add test hashcode
-
 	@Test
-	void testFieldSetParent() {
+	void testFieldSetParent() throws EntityCreationException {
 		Root root = new Root("a");
 
 		root.addEntity(field);
@@ -53,28 +53,26 @@ abstract class FieldTest {
 	}
 
 	@Test
-	void testNullName() {
+	void testFieldNullName() {
 		field.setName(null);
 		assertEquals(name, field.getName());
 	}
 
 	@Test
-	void testEmptyNameConstructor() {
+	void testFieldEmptyNameConstructor() {
 		// Any field will work since it requires a name
-		Field field = new Parameter("", new DefaultFieldType());
-		assertEquals(name, field.getName());
+		assertThrows(EntityCreationException.class, () -> new Parameter("", new DefaultFieldType()));
 	}
 
 	@Test
-	void testNullNameConstructor() {
+	void testFieldNullNameConstructor() {
 		// Any field will work since it requires a name
-		Field field = new Parameter(null, new DefaultFieldType());
-		assertEquals(name, field.getName());
+		assertThrows(EntityCreationException.class, () -> new Parameter(null, new DefaultFieldType()));
 	}
 
 	@Test
 	void testFieldHashCode() {
-		assertEquals((this.getClass().toString() + Consts.HASH_SEPARATOR + field.getName() + -1).hashCode(),
+		assertEquals((field.getClass().toString() + Consts.HASH_SEPARATOR + field.getName() + -1).hashCode(),
 				field.hashCode());
 	}
 

@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.type.NodeType;
 import com.taf.util.Consts;
 
@@ -15,7 +16,7 @@ class NodeTest extends TypeTest {
 
 	private Node node;
 	
-	public NodeTest() {
+	public NodeTest() throws EntityCreationException {
 		node = new Node(name);
 		
 		// Update hierarchy

@@ -36,6 +36,8 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.constraint.Constraint;
 import com.taf.util.Consts;
 
@@ -91,7 +93,7 @@ public class ConstraintCreationDialog extends InputInformationDialog {
 	 *
 	 * @return the constraint
 	 */
-	// TODO Replace by optional
+	@Nullable
 	public Constraint getConstraint() {
 		return createdConstraint;
 	}
@@ -105,8 +107,12 @@ public class ConstraintCreationDialog extends InputInformationDialog {
 	@Override
 	protected void performAction() {
 		String name = constraintName.getText();
-		if (!name.isBlank()) {
-			createdConstraint = new Constraint(name.strip());
+		if (name != null && !name.isBlank()) {
+			try {
+				createdConstraint = new Constraint(name.strip());
+			} catch (EntityCreationException e) {
+				// This cannot happen, ignore
+			}
 			dispose();
 		}
 	}

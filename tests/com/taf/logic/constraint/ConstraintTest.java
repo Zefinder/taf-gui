@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
 import com.taf.logic.field.Type;
@@ -22,7 +23,7 @@ class ConstraintTest {
 	private Type parent;
 	private Constraint constraint;
 
-	public ConstraintTest() {
+	public ConstraintTest() throws EntityCreationException {
 		parent = new Type("a");
 		constraint = new Constraint(name);
 		parent.addEntity(constraint);

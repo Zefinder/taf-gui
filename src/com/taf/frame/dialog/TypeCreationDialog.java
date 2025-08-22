@@ -36,6 +36,8 @@ import java.awt.Insets;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.util.Consts;
 
 /**
@@ -91,7 +93,7 @@ public class TypeCreationDialog extends InputInformationDialog {
 	 *
 	 * @return the created type
 	 */
-	// TODO Replace by optional
+	@Nullable
 	public com.taf.logic.field.Type getField() {
 		return createdType;
 	}
@@ -106,7 +108,11 @@ public class TypeCreationDialog extends InputInformationDialog {
 	protected void performAction() {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
-			createdType = new com.taf.logic.field.Type(name);
+			try {
+				createdType = new com.taf.logic.field.Type(name);
+			} catch (EntityCreationException e) {
+				// This cannot happen, ignore
+			}
 			dispose();
 		}
 	}

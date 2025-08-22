@@ -87,9 +87,6 @@ public class XMLTafReader {
 	 */
 	private static final String PARAMETER_CONSTRAINT_PATTERN_STRING = "<(parameter|constraint)((?s).+?)/>";
 
-	/** String pattern to retrieve all whitespace characters. */
-	private static final String MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING = "((?s)[\\s]+)";
-
 	/** Entity representation in the save file. */
 	// TODO Add to Save manager?
 	private static final String SAVE_LINE_FORMAT = "entity=\"%s\" parent=\"%d\" %s\n";
@@ -160,14 +157,14 @@ public class XMLTafReader {
 		m = TYPE_ENTER_PATTERN.matcher(rootContent);
 		while (m.find()) {
 			int position = m.start();
-			String parameters = m.group(1).replaceAll(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
+			String parameters = m.group(1).replaceAll(Consts.MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
 			typeNodesPositionMap.put(position, new Pair<String, Boolean>(parameters, false));
 		}
 
 		m = NODE_ENTER_PATTERN.matcher(rootContent);
 		while (m.find()) {
 			int position = m.start();
-			String parameters = m.group(1).replaceAll(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
+			String parameters = m.group(1).replaceAll(Consts.MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
 			typeNodesPositionMap.put(position, new Pair<String, Boolean>(parameters, true));
 		}
 		for (Map.Entry<Integer, Pair<String, Boolean>> entry : typeNodesPositionMap.entrySet()) {
@@ -189,7 +186,7 @@ public class XMLTafReader {
 			String parameters = "";
 			if (groupCount > 1) {
 				parameters = m.group(2);
-				parameters = parameters.replaceAll(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
+				parameters = parameters.replaceAll(Consts.MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING, " ");
 			}
 			convertedLines += SAVE_LINE_FORMAT.formatted(entity, tree.getRangeId(position), parameters.strip());
 		}

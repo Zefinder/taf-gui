@@ -28,61 +28,26 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf.logic.field;
-
-import com.taf.exception.EntityCreationException;
-import com.taf.logic.type.BooleanType;
-import com.taf.logic.type.FieldType;
-import com.taf.logic.type.IntegerType;
-import com.taf.logic.type.RealType;
-import com.taf.logic.type.StringType;
-import com.taf.logic.type.parameter.TypeParameter;
+package com.taf.exception;
 
 /**
- * <p>
- * A Parameter is a TAF entity which represents a value. A value has a type, and
- * different parameters depending on its type (see {@link TypeParameter}).
- * </p>
- * 
- * <p>
- * The different types a parameter can take are the following:
- * <ul>
- * <li>{@link IntegerType} to represent an integer parameter
- * <li>{@link RealType} to represent a float parameter
- * <li>{@link StringType} to represent a string parameter
- * <li>{@link BooleanType} to represent a boolean parameter
- * </ul>
- * </p>
- * 
- * @see Field
- * @see TypeParameter
- * 
+ * The EntityCreationException exception represents an error when creating an
+ * entity. Most of the time it is because the name is empty or null.
+ *
  * @author Adrien Jakubiak
  */
-public class Parameter extends Field {
+public class EntityCreationException extends TafException {
 
-	/** Used to format a parameter to a XML string representation. */
-	private static final String PARAMETER_STRING_FORMAT = "<parameter %s/>";
+	private static final long serialVersionUID = -4999943800076196722L;
 
 	/**
-	 * Instantiates a new parameter with a specified field type.
+	 * Instantiates a new entity creation exception.
 	 *
-	 * @param name the parameter name
-	 * @param type the parameter type
-	 * @throws EntityCreationException if the name is null or empty
+	 * @param initiator the initiator
+	 * @param message   the message
 	 */
-	public Parameter(String name, FieldType type) throws EntityCreationException {
-		super(name, type);
-	}
-
-	@Override
-	public String getEntityTypeName() {
-		return getType().getName();
-	}
-
-	@Override
-	public String toString() {
-		return PARAMETER_STRING_FORMAT.formatted(super.toString());
+	public EntityCreationException(Class<?> initiator, String message) {
+		super(initiator, message);
 	}
 
 }

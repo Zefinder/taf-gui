@@ -104,7 +104,7 @@ public abstract class ConstraintParameter implements Parsable {
 
 	@Override
 	public String toString() {
-		return Consts.formatParameter(name, valueToString());
+		return Consts.formatParameter(name, Consts.sanitizeInput(valueToString()));
 	}
 
 }

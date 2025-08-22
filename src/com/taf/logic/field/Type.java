@@ -35,6 +35,7 @@ import java.util.Set;
 
 import com.taf.annotation.NotEmpty;
 import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
@@ -75,8 +76,9 @@ public class Type extends Field {
 	 * Instantiates a new type with a name and a default field type.
 	 *
 	 * @param name the type name
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Type(@NotEmpty String name) {
+	public Type(@NotEmpty String name) throws EntityCreationException {
 		this(name, new DefaultFieldType());
 	}
 
@@ -86,8 +88,9 @@ public class Type extends Field {
 	 *
 	 * @param name the type name
 	 * @param type the type's field type
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	protected Type(@NotEmpty String name, FieldType type) {
+	protected Type(@NotEmpty String name, FieldType type) throws EntityCreationException {
 		super(name, type);
 		id = TypeManager.provideTypeId();
 		fieldSet = new LinkedHashSet<Field>();

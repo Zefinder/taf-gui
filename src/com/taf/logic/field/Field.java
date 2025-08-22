@@ -33,6 +33,7 @@ package com.taf.logic.field;
 import com.taf.annotation.NotEmpty;
 import com.taf.annotation.NotNull;
 import com.taf.annotation.Nullable;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.type.FieldType;
 import com.taf.util.Consts;
@@ -55,8 +56,13 @@ import com.taf.util.Consts;
  * @author Adrien Jakubiak
  */
 public abstract class Field implements Entity {
+	
+	private static final String NULL_NAME_ERROR_MESSAGE = "The field name cannot be null";
+	private static final String EMPTY_NAME_ERROR_MESSAGE = "The field name cannot be empty";
 
 	/** The field name. */
+	@NotNull
+	@NotEmpty
 	private String name;
 
 	/** The field type (which is not {@link Type}!) */
@@ -75,8 +81,15 @@ public abstract class Field implements Entity {
 	 *
 	 * @param name the field name
 	 * @param type the field type
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Field(@NotEmpty String name, FieldType type) {
+	public Field(@Nullable String name, FieldType type) throws EntityCreationException {
+		if (name == null) {
+			throw new EntityCreationException(getClass(), NULL_NAME_ERROR_MESSAGE);
+		}
+		if (name.isBlank()) {
+			throw new EntityCreationException(getClass(), EMPTY_NAME_ERROR_MESSAGE);
+		}
 		this.name = name;
 		this.type = type;
 		this.indentationLevel = 0;
@@ -98,7 +111,7 @@ public abstract class Field implements Entity {
 	@Override
 	@NotEmpty
 	public String getName() {
-		return name;
+		return Consts.sanitizeName(name);
 	}
 
 	@Override
@@ -124,8 +137,8 @@ public abstract class Field implements Entity {
 	}
 
 	@Override
-	public void setName(@NotEmpty String name) {
-		if (!name.isBlank()) {
+	public void setName(@Nullable String name) {
+		if (name != null && !name.isBlank()) {
 			// Because hashcode is not updated in a set, you need to remove and add again to
 			// the parent.
 			Type parent = this.parent;
@@ -183,7 +196,7 @@ public abstract class Field implements Entity {
 	 * @return the formatted field
 	 */
 	protected String formatField() {
-		return Consts.FIELD_STRING_FORMAT.formatted(name, type.toString()).strip();
+		return Consts.FIELD_STRING_FORMAT.formatted(getName(), type.toString()).strip();
 	}
 
 	/**
@@ -201,5 +214,7 @@ public abstract class Field implements Entity {
 	void setIndentationLevel(int indentationLevel) {
 		this.indentationLevel = indentationLevel;
 	}
+	
+
 
 }

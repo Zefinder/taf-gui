@@ -11,6 +11,7 @@ import java.util.LinkedHashSet;
 
 import org.junit.jupiter.api.Test;
 
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.type.DefaultFieldType;
 import com.taf.util.Consts;
@@ -19,7 +20,7 @@ class TypeTest extends FieldTest {
 	
 	protected Type type;
 
-	public TypeTest() {
+	public TypeTest() throws EntityCreationException {
 		super(new Type(name));
 		type = (Type) field;
 	}
@@ -40,7 +41,7 @@ class TypeTest extends FieldTest {
 	}
 
 	@Test
-	void testTypeAddField() {
+	void testTypeAddField() throws EntityCreationException {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
 
@@ -52,7 +53,7 @@ class TypeTest extends FieldTest {
 	}
 
 	@Test
-	void testTypeAddFields() {
+	void testTypeAddFields() throws EntityCreationException {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
 
@@ -69,7 +70,7 @@ class TypeTest extends FieldTest {
 	}
 
 	@Test
-	void testTypeAddConstraint() {
+	void testTypeAddConstraint() throws EntityCreationException {
 		Constraint constraint = new Constraint("constr");
 		type.addEntity(constraint);
 
@@ -81,7 +82,7 @@ class TypeTest extends FieldTest {
 	}
 
 	@Test
-	void testTypeAddType() {
+	void testTypeAddType() throws EntityCreationException {
 		Type type = new Type("type");
 		this.type.addEntity(type);
 
@@ -92,7 +93,7 @@ class TypeTest extends FieldTest {
 	}
 
 	@Test
-	void testTypeRemoveField() {
+	void testTypeRemoveField() throws EntityCreationException {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
 		type.removeEntity(parameter);
@@ -101,7 +102,7 @@ class TypeTest extends FieldTest {
 	}
 	
 	@Test
-	void testTypeRemoveFields() {
+	void testTypeRemoveFields() throws EntityCreationException {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
 
@@ -115,7 +116,7 @@ class TypeTest extends FieldTest {
 	}
 
 	@Test
-	void testTypeRemoveConstraint() {
+	void testTypeRemoveConstraint() throws EntityCreationException {
 		Constraint constraint = new Constraint("constr");
 		type.addEntity(constraint);
 		type.removeEntity(constraint);
@@ -124,7 +125,7 @@ class TypeTest extends FieldTest {
 	}
 
 	@Test
-	void testTypeAddModifyRemoveField() {
+	void testTypeAddModifyRemoveField() throws EntityCreationException {
 		Field parameter = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter);
 		parameter.setName("aaaa");
@@ -134,7 +135,7 @@ class TypeTest extends FieldTest {
 	}
 	
 	@Test
-	void testTypeAddModifyRemoveConstraint() {
+	void testTypeAddModifyRemoveConstraint() throws EntityCreationException {
 		Constraint constraint = new Constraint("constr");
 		type.addEntity(constraint);
 		constraint.setName("aaaa");
@@ -144,7 +145,7 @@ class TypeTest extends FieldTest {
 	}
 	
 	@Test
-	void testTypeAddTwiceSameName() {
+	void testTypeAddTwiceSameName() throws EntityCreationException {
 		Field parameter1 = new Parameter("param", new DefaultFieldType());
 		Field parameter2 = new Parameter("param", new DefaultFieldType());
 		type.addEntity(parameter1);

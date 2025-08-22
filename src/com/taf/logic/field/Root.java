@@ -34,6 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import com.taf.annotation.NotEmpty;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.constraint.Constraint;
 import com.taf.util.Consts;
@@ -72,8 +73,9 @@ public class Root extends Node {
 	 * Instantiates a new root.
 	 *
 	 * @param name the name
+	 * @throws EntityCreationException if the name is null or empty
 	 */
-	public Root(@NotEmpty String name) {
+	public Root(@NotEmpty String name) throws EntityCreationException {
 		super(name);
 		typeSet = new LinkedHashSet<Type>();
 	}

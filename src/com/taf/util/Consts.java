@@ -35,11 +35,14 @@ import java.awt.GridBagConstraints;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
+import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import com.taf.annotation.NotEmpty;
 import com.taf.logic.type.parameter.DistributionType;
 
 /**
@@ -55,11 +58,9 @@ public class Consts {
 			DecimalFormatSymbols.getInstance(Locale.US));
 
 	/*
-	 * ------------------
-	 * --- EXTENSIONS ---
-	 * ------------------
+	 * ------------------ --- EXTENSIONS --- ------------------
 	 */
-	
+
 	/** The TAF file extension. */
 	public static final String TAF_FILE_EXTENSION = ".taf";
 
@@ -67,11 +68,9 @@ public class Consts {
 	public static final String XML_FILE_EXTENSION = ".xml";
 
 	/*
-	 * --------------------
-	 * --- ENTITY NAMES ---
-	 * --------------------
+	 * -------------------- --- ENTITY NAMES --- --------------------
 	 */
-	
+
 	/** The parameter type name displayed in the entity tree. */
 	public static final String PARAMETER_ENTITY_NAME = "parameter";
 
@@ -85,32 +84,48 @@ public class Consts {
 	public static final String CONSTRAINT_ENTITY_NAME = "constraint";
 
 	/*
-	 * --------------------
-	 * --- DISPLAY TEXT ---
-	 * --------------------
+	 * -------------------- --- DISPLAY TEXT --- --------------------
 	 */
-	
-	/** The text displayed to ask for parameter name in the parameter creation dialog, and to display the parameter name. */
+
+	/**
+	 * The text displayed to ask for parameter name in the parameter creation
+	 * dialog, and to display the parameter name.
+	 */
 	public static final String PARAMETER_NAME_LABEL_TEXT = "Parameter name";
 
-	/** The text displayed to ask for parameter type in the parameter creation dialog, and to display the parameter type. */
+	/**
+	 * The text displayed to ask for parameter type in the parameter creation
+	 * dialog, and to display the parameter type.
+	 */
 	public static final String PARAMETER_TYPE_LABEL_TEXT = "Parameter type";
 
-	/** The text displayed to ask for node name in the node creation dialog, and to display the node type. */
+	/**
+	 * The text displayed to ask for node name in the node creation dialog, and to
+	 * display the node type.
+	 */
 	public static final String NODE_NAME_LABEL_TEXT = "Node name";
-	
+
 	/** The text displayed to show the node type combo box. */
 	public static final String NODE_TYPE_LABEL_TEXT = "Node type";
 
-	/** The text displayed to ask for root name in the root creation dialog, and to display the root name. */
+	/**
+	 * The text displayed to ask for root name in the root creation dialog, and to
+	 * display the root name.
+	 */
 	public static final String ROOT_NAME_LABEL_TEXT = "Root name";
 
-	/** The text displayed to ask for type name in the type creation dialog, and to display the type name. */
+	/**
+	 * The text displayed to ask for type name in the type creation dialog, and to
+	 * display the type name.
+	 */
 	public static final String TYPE_NAME_LABEL_TEXT = "Type name";
 
-	/** The text displayed to ask for constraint name in the constraint creation dialog, and to display the constraint name. */
+	/**
+	 * The text displayed to ask for constraint name in the constraint creation
+	 * dialog, and to display the constraint name.
+	 */
 	public static final String CONSTRAINT_NAME_LABEL_TEXT = "Constraint name";
-	
+
 	/** The text displayed to show the minimum value. */
 	public static final String MIN_TEXT = "Min";
 
@@ -122,14 +137,12 @@ public class Consts {
 
 	/** The true value text. */
 	public static final String TRUE_VALUE = "True";
-	
+
 	/** The error title for a {@link JOptionPane} dialog. */
 	public static final String ERROR_DIALOG_TITLE = "Error!";
 
 	/*
-	 * ---------------------
-	 * --- ENTITY FORMAT ---
-	 * ---------------------
+	 * --------------------- --- ENTITY FORMAT --- ---------------------
 	 */
 
 	/** The parameter format to print its name and value. */
@@ -139,11 +152,9 @@ public class Consts {
 	public static final String FIELD_STRING_FORMAT = "name=\"%s\" %s";
 
 	/*
-	 * ------------------
-	 * --- CHARACTERS ---
-	 * ------------------
+	 * ------------------ --- CHARACTERS --- ------------------
 	 */
-	
+
 	/** The tabulation constant. */
 	public static final String TAB = "\t";
 
@@ -160,26 +171,24 @@ public class Consts {
 	public static final String PARAMETER_SEPARATOR = " ";
 
 	/*
-	 * ------------------
-	 * --- PROPERTIES ---
-	 * ------------------
+	 * ------------------ --- PROPERTIES --- ------------------
 	 */
 
 	/** The default number of columns in a {@link JTextField}. */
 	public static final int JTEXT_FIELD_DEFAULT_COLUMN = 20;
 
-	/** The value property name in a formatted text field to associate to a handler. */
+	/**
+	 * The value property name in a formatted text field to associate to a handler.
+	 */
 	public static final String JFORMATTED_TEXT_FIELD_VALUE_PROPERTY = "value";
-	
+
 	/*
-	 * ----------------------
-	 * --- DEFAULT VALUES ---
-	 * ----------------------
+	 * ---------------------- --- DEFAULT VALUES --- ----------------------
 	 */
 
 	/** The default name for the root node. */
 	public static final String DEFAULT_ROOT_NAME = "test_cases";
-	
+
 	/** The default weight value. */
 	public static final int DEFAULT_WEIGHT_VALUE = 1;
 
@@ -215,11 +224,9 @@ public class Consts {
 
 	/** The default maximum depth number. */
 	public static final int DEFAULT_MAX_DEPTH_NUMBER = 1;
-	
+
 	/*
-	 * --------------
-	 * --- INSETS ---
-	 * --------------
+	 * -------------- --- INSETS --- --------------
 	 */
 
 	/** A small inset gap for {@link GridBagConstraints}. */
@@ -236,11 +243,9 @@ public class Consts {
 
 	/** A huge huge inset gap for {@link GridBagConstraints}. */
 	public static final int XXL_INSET_GAP = 50;
-	
+
 	/*
-	 * ----------------------
-	 * --- STRING PATTERN ---
-	 * ----------------------
+	 * ---------------------- --- STRING PATTERN --- ----------------------
 	 */
 
 	/** The string pattern to represent a range. */
@@ -248,11 +253,12 @@ public class Consts {
 
 	/** The pattern object of a range. */
 	public static final Pattern RANGE_PATTERN = Pattern.compile(RANGE_PATTERN_STRING);
-	
+
+	/** String pattern to retrieve all whitespace characters. */
+	public static final String MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING = "((?s)[\\s]+)";
+
 	/*
-	 * ---------------------
-	 * --- CONSOLE STYLE ---
-	 * ---------------------
+	 * --------------------- --- CONSOLE STYLE --- ---------------------
 	 */
 
 	/** The console background color. */
@@ -285,6 +291,27 @@ public class Consts {
 	/** The console white color. */
 	public static final Color WHITE_COLOR = new Color(0xFFFFFF);
 
+	/** The chars to replace to sanitize an input. */
+	private static final Map<String, String> CHARS_TO_REPLACE = Map.of(
+			"\"", "&quot;", 
+			"&", "&amp;", 
+			"'", "&apos;", 
+			"<", "&lt;",
+			">", "&gt;"
+		);
+
+	private static final Pattern SANITIZE_PATTERN = getReplacePattern();
+	/**
+	 * Format a parameter using the parameter format.
+	 *
+	 * @param name  the parameter name
+	 * @param value the parameter value
+	 * @return the formatted parameter
+	 */
+	public static final String formatParameter(String name, String value) {
+		return PARAMETER_STRING_FORMAT.formatted(name, value);
+	}
+
 	/**
 	 * Defines the default {@link GridBagConstraints} used in the UI.
 	 *
@@ -305,6 +332,36 @@ public class Consts {
 	}
 
 	/**
+	 * Sanitizes the input to make it usable in the XML and ensure that the save
+	 * file won't be broken and that the output generated will be correct.
+	 *
+	 * @param input the input to sanitize
+	 * @return the sanitized input
+	 */
+	@NotEmpty
+	public static final String sanitizeInput(String input) {
+		// Replace white spaces by an underscore
+		Matcher m = SANITIZE_PATTERN.matcher(input);
+		String sanitizedInput = m.replaceAll(mr -> "_");
+		sanitizedInput = m.replaceAll(mr -> CHARS_TO_REPLACE.get(mr.group()));
+		return sanitizedInput;
+	}
+	
+	/**
+	 * Sanitizes the input name. This will call {@link #sanitizeInput(String)} and
+	 * replace all white spaces by underscores
+	 *
+	 * @param name the name to sanitize
+	 * @return the sanitized name
+	 */
+	@NotEmpty
+	public static final String sanitizeName(String name) {
+		Matcher m = Pattern.compile(MULTIPLE_WHITESPACE_CHARS_PATTERN_STRING).matcher(name);
+		String sanitizedName = m.replaceAll(mr -> "_");
+		return sanitizeInput(sanitizedName);
+	}
+
+	/**
 	 * Show an error to the user using a pop-up message by the {@link JOptionPane}
 	 * class.
 	 *
@@ -314,15 +371,15 @@ public class Consts {
 		JOptionPane.showMessageDialog(null, errorMessage, ERROR_DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
 	}
 
-	/**
-	 * Format a parameter using the parameter format.
-	 *
-	 * @param name  the parameter name
-	 * @param value the parameter value
-	 * @return the formatted parameter
-	 */
-	public static final String formatParameter(String name, String value) {
-		return PARAMETER_STRING_FORMAT.formatted(name, value);
+	private static final Pattern getReplacePattern() {
+		String patternStringFormat = "(%s)";
+		String patterns = "";
+		for (String pattern : CHARS_TO_REPLACE.keySet()) {
+			patterns += "|" + pattern;
+		}
+
+		Pattern pattern = Pattern.compile(patternStringFormat.formatted(patterns.substring(1)));
+		return pattern;
 	}
 
 	private Consts() {
