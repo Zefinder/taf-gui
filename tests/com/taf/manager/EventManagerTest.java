@@ -8,9 +8,9 @@ import org.junit.Ignore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 
 class EventManagerTest extends ManagerTest {
 

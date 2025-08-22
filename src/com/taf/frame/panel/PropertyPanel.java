@@ -39,9 +39,9 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import com.taf.annotation.EventMethod;
 import com.taf.annotation.Nullable;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.EntitySelectedEvent;
 import com.taf.event.entity.FieldTypeChangedEvent;

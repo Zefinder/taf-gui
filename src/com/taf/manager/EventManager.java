@@ -37,9 +37,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 
 /**
  * <p>

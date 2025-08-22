@@ -37,8 +37,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.NodeTypeChangedEvent;
 import com.taf.event.entity.creation.NodeCreatedEvent;

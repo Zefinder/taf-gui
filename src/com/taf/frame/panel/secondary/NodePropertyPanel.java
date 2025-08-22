@@ -44,8 +44,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import com.taf.annotation.EventMethod;
 import com.taf.annotation.FactoryObject;
-import com.taf.event.EventMethod;
 import com.taf.event.entity.NodeTypeChangedEvent;
 import com.taf.frame.panel.secondary.type.TypeAddEntityPanel;
 import com.taf.logic.field.Node;

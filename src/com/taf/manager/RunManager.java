@@ -46,9 +46,9 @@ import java.util.stream.Stream;
 
 import javax.swing.JTextPane;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.ProcessReadyEvent;
 import com.taf.event.ProjectRunAbortedEvent;
 import com.taf.event.ProjectRunClosedEvent;

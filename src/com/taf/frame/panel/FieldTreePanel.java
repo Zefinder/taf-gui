@@ -52,9 +52,9 @@ import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.EntityNameChangedEvent;
 import com.taf.event.entity.EntitySelectedEvent;

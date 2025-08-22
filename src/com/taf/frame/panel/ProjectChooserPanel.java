@@ -50,8 +50,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.ProjectOpenedEvent;
 import com.taf.event.ProjectToDeleteEvent;
 import com.taf.event.ProjectToImportEvent;
