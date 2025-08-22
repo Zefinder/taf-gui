@@ -36,8 +36,10 @@ import java.awt.Insets;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.event.Event;
 import com.taf.event.entity.FieldTypeChangedEvent;
+import com.taf.logic.Entity;
 import com.taf.logic.field.Field;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.type.FieldType;
@@ -53,6 +55,7 @@ import com.taf.util.Consts;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = Entity.class, generate = true)
 public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8925850604078710611L;

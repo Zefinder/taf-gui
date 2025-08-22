@@ -37,7 +37,9 @@ import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.logic.type.BooleanType;
+import com.taf.logic.type.FieldType;
 import com.taf.util.Consts;
 
 /**
@@ -49,6 +51,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = FieldType.class, generate = true)
 public class BooleanPropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = -9212722796480771296L;

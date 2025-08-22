@@ -35,6 +35,7 @@ import java.util.LinkedHashMap;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.exception.ParseException;
 import com.taf.logic.type.StringType;
@@ -50,6 +51,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class ValuesParameter extends TypeParameter {
 
 	/** The parameter name. */

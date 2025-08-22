@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type.parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.exception.ParseException;
 import com.taf.logic.field.Node;
 import com.taf.logic.type.NodeType;
@@ -43,6 +44,7 @@ import com.taf.logic.type.NodeType;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class MinInstanceParameter extends MinParameter {
 
 	private static final String ERROR_MESSAGE = "Min instance number must be an integer!";

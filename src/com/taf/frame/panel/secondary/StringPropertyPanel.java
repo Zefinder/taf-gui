@@ -45,6 +45,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.taf.annotation.FactoryObject;
+import com.taf.logic.type.FieldType;
 import com.taf.logic.type.StringType;
 import com.taf.util.Consts;
 import com.taf.util.IntegerEditor;
@@ -58,6 +60,7 @@ import com.taf.util.IntegerEditor;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = FieldType.class, generate = true)
 public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = -6799435160247338364L;

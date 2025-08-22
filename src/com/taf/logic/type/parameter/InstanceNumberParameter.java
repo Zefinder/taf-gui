@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type.parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.exception.ParseException;
 import com.taf.logic.field.Node;
@@ -43,6 +44,7 @@ import com.taf.logic.field.Node;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class InstanceNumberParameter extends TypeParameter {
 
 	private static final String ERROR_MESSAGE = "Instance number must be an integer!";

@@ -38,8 +38,10 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.event.Event;
 import com.taf.event.entity.NodeTypeChangedEvent;
+import com.taf.logic.Entity;
 import com.taf.logic.field.Node;
 import com.taf.manager.EventManager;
 import com.taf.manager.TypeManager;
@@ -53,6 +55,7 @@ import com.taf.util.Consts;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = Entity.class, generate = true)
 public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8423915116760040223L;

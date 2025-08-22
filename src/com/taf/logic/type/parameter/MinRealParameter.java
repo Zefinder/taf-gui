@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type.parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.exception.ParseException;
 import com.taf.logic.type.RealType;
 
@@ -41,6 +42,7 @@ import com.taf.logic.type.RealType;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class MinRealParameter extends MinParameter {
 
 	private static final String ERROR_MESSAGE = "Min real number must be an integer or a real!";

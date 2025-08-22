@@ -33,6 +33,7 @@ package com.taf.logic.constraint.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.exception.ParseException;
 import com.taf.util.Consts;
@@ -47,6 +48,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = true)
 public class QuantifiersConstraintParameter extends ConstraintParameter {
 
 	/** The parameter. */

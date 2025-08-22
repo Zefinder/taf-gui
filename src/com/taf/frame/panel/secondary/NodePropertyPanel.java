@@ -44,10 +44,12 @@ import javax.swing.JRadioButton;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.event.EventMethod;
 import com.taf.event.entity.NodeTypeChangedEvent;
 import com.taf.frame.panel.secondary.type.TypeAddEntityPanel;
 import com.taf.logic.field.Node;
+import com.taf.logic.type.FieldType;
 import com.taf.logic.type.NodeType;
 import com.taf.util.Consts;
 
@@ -61,6 +63,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = FieldType.class, generate = true)
 public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 293578359212546065L;

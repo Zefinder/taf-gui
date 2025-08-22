@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type.parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.exception.ParseException;
 import com.taf.logic.type.IntegerType;
 
@@ -42,6 +43,7 @@ import com.taf.logic.type.IntegerType;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class MaxIntegerParameter extends MaxParameter {
 
 	private static final String ERROR_MESSAGE = "Max integer number must be an integer!";

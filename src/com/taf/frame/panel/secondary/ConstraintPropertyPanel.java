@@ -44,6 +44,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.constraint.parameter.QuantifierType;
 import com.taf.logic.constraint.parameter.RangesConstraintParameter.Range;
@@ -57,6 +58,7 @@ import com.taf.util.EnumEditor;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = Constraint.class, generate = false)
 public class ConstraintPropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = 7936903848228324275L;

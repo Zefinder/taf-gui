@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type.parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.exception.ParseException;
 import com.taf.logic.field.Node;
@@ -44,6 +45,7 @@ import com.taf.logic.type.NodeType;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class ReferenceParameter extends TypeParameter {
 
 	/** The parameter name. */
