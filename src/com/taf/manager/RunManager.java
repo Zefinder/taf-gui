@@ -47,6 +47,8 @@ import java.util.stream.Stream;
 import javax.swing.JTextPane;
 
 import com.taf.annotation.EventMethod;
+import com.taf.annotation.ManagerImpl;
+import com.taf.annotation.Priority;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
 import com.taf.event.ProcessReadyEvent;
@@ -66,7 +68,8 @@ import com.taf.util.ProcessStreamReader;
  *
  * @author Adrien Jakubiak
  */
-public class RunManager extends Manager implements EventListener {
+@ManagerImpl(priority = Priority.LOW)
+public class RunManager implements Manager, EventListener {
 
 	/** The manager instance. */
 	private static final RunManager instance = new RunManager();
@@ -301,7 +304,7 @@ public class RunManager extends Manager implements EventListener {
 	}
 
 	@Override
-	public void clearManager() {
+	public void clear() {
 		// Nothing to do here
 	}
 
@@ -432,7 +435,7 @@ public class RunManager extends Manager implements EventListener {
 	}
 
 	@Override
-	public void initManager() {
+	public void init() {
 		EventManager.getInstance().registerEventListener(this);
 	}
 

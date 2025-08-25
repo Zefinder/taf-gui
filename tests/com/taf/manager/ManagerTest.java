@@ -20,7 +20,7 @@ abstract class ManagerTest {
 
 	@BeforeEach
 	void setUpManagers() {
-		Manager.initAllManagers();
+		Manager.initManagers();
 
 		OSValidator OS = OSValidator.getOS();
 		switch (OS) {
@@ -49,7 +49,7 @@ abstract class ManagerTest {
 
 	@AfterEach
 	void clearUpManagers() throws IOException {
-		Manager.clearAllManagers();
+		Manager.clearManagers();
 
 		if (initFail) {
 			return;

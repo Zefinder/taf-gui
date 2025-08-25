@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.taf.annotation.EventMethod;
+import com.taf.annotation.ManagerImpl;
+import com.taf.annotation.Priority;
 import com.taf.event.EventListener;
 import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.NodeTypeChangedEvent;
@@ -67,11 +69,12 @@ import com.taf.util.HashSetBuilder;
  *
  * @author Adrien Jakubiak
  */
-public class TypeManager extends Manager implements EventListener {
+@ManagerImpl(priority = Priority.MEDIUM)
+public class TypeManager implements Manager, EventListener {
 
 	/** The next type id. */
 	private static int nextTypeId;
-	
+
 	/** The manager instance. */
 	private static final TypeManager instance = new TypeManager();
 
@@ -119,10 +122,10 @@ public class TypeManager extends Manager implements EventListener {
 	}
 
 	@Override
-	public void clearManager() {
+	public void clear() {
 		// Nothing to do here
 	}
-	
+
 	/**
 	 * Provide a type id
 	 *
@@ -161,7 +164,7 @@ public class TypeManager extends Manager implements EventListener {
 	}
 
 	@Override
-	public void initManager() {
+	public void init() {
 		nextTypeId = 0;
 		EventManager.getInstance().registerEventListener(instance);
 	}

@@ -52,6 +52,8 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileSystemView;
 
+import com.taf.annotation.ManagerImpl;
+import com.taf.annotation.Priority;
 import com.taf.event.ProjectClosedEvent;
 import com.taf.exception.EntityCreationException;
 import com.taf.exception.ImportException;
@@ -150,7 +152,8 @@ import com.taf.util.XMLTafReader;
  *
  * @author Adrien Jakubiak
  */
-public class SaveManager extends Manager {
+@ManagerImpl(priority = Priority.MEDIUM)
+public class SaveManager implements Manager {
 
 	/** The xml header. */
 	private static final String XML_HEADER = "<?xml version=\"1.0\"?>\n\n\n";
@@ -324,7 +327,7 @@ public class SaveManager extends Manager {
 	}
 
 	@Override
-	public void clearManager() {
+	public void clear() {
 		// Nothing to do here
 	}
 
@@ -458,7 +461,7 @@ public class SaveManager extends Manager {
 	}
 
 	@Override
-	public void initManager() {
+	public void init() {
 		// For each OS, check if the main directory is present
 		switch (OS) {
 		case WINDOWS:

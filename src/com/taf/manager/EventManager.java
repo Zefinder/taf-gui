@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.Set;
 
 import com.taf.annotation.EventMethod;
+import com.taf.annotation.ManagerImpl;
+import com.taf.annotation.Priority;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
 
@@ -83,7 +85,8 @@ import com.taf.event.EventListener;
  * 
  * @author Adrien Jakubiak
  */
-public class EventManager extends Manager {
+@ManagerImpl(priority = Priority.HIGH)
+public class EventManager implements Manager {
 
 	/** The manager instance. */
 	private static final EventManager instance = new EventManager();
@@ -112,7 +115,7 @@ public class EventManager extends Manager {
 	}
 
 	@Override
-	public void clearManager() {
+	public void clear() {
 		// Clear all lists and listeners
 		eventListenerMap.clear();
 		listenerToObjectMap.clear();
@@ -152,7 +155,7 @@ public class EventManager extends Manager {
 	}
 
 	@Override
-	public void initManager() {
+	public void init() {
 		// Nothing to do here
 	}
 

@@ -28,32 +28,16 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf;
-
-import javax.swing.SwingUtilities;
-
-import com.taf.frame.MainMenuFrame;
-import com.taf.manager.Manager;
+package com.taf.annotation;
 
 /**
- * Initiator class, will make all verifications before launching the main frame.
- *
+ * This enumeration represents a priority. It is used in {@link ManagerImpl} to
+ * determine the initialization order.
+ * 
+ * @see ManagerImpl
+ * 
  * @author Adrien Jakubiak
  */
-public class Main {
-	
-	public static void main(String[] args) {
-		Manager.initManagers();
-		
-		// TODO Verify all annotations
-		
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new MainMenuFrame().initFrame();
-			}
-
-		});
-	}
+public enum Priority {
+	LOW, MEDIUM, HIGH;
 }

@@ -28,32 +28,40 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf;
+package com.taf.annotation;
 
-import javax.swing.SwingUtilities;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-import com.taf.frame.MainMenuFrame;
-import com.taf.manager.Manager;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
 /**
- * Initiator class, will make all verifications before launching the main frame.
- *
+ * <p>
+ * The ManagerImpl annotation tells the coder that the annotated type is a
+ * Manager and must be treated as is. A class implementing this annotation must
+ * have no public constructor, a static method <code>getInstance</code> that
+ * returns the singleton, and two public void methods <code>init()</code> and
+ * <code>clear()</code>. Note that a manager must be in com.taf.manager in order
+ * to be detected.
+ * </p>
+ * 
+ * <p>
+ * Managers are organized in priority: LOW, MEDIUM, HIGH. The higher the
+ * priority, the faster they need to be initialized.
+ * </p>
+ * 
+ * <p>
+ * This annotation is available during runtime. It is useful for documentation
+ * purposes and to perform a check at launch.
+ * </p>
+ * 
  * @author Adrien Jakubiak
  */
-public class Main {
-	
-	public static void main(String[] args) {
-		Manager.initManagers();
-		
-		// TODO Verify all annotations
-		
-		SwingUtilities.invokeLater(new Runnable() {
-
-			@Override
-			public void run() {
-				new MainMenuFrame().initFrame();
-			}
-
-		});
-	}
+@Retention(RUNTIME)
+@Target(TYPE)
+@Documented
+public @interface ManagerImpl {
+	public Priority priority();
 }
