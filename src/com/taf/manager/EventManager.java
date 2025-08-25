@@ -246,7 +246,7 @@ public class EventManager implements Manager {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof ListenerObject)) {
 				return false;
-			}
+			} 
 
 			ListenerObject other = (ListenerObject) obj;
 			return listener.equals(other.listener) && event.equals(other.event) && method.equals(other.method);

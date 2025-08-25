@@ -88,7 +88,7 @@ public interface Manager {
 					}
 				})
 				.filter(clazzOptional -> clazzOptional.isPresent() // Filters classes that has the annotation ManagerImpl
-						&& clazzOptional.get().isAnnotationPresent(ManagerImpl.class)) 
+						&& clazzOptional.get().isAnnotationPresent(annotationClass)) 
 				.map(Optional::get)
 				.filter(clazz -> clazz.getConstructors().length == 0 // Filters classes with no constructors
 						&& Arrays.asList(clazz.getMethods()).stream()
@@ -112,6 +112,7 @@ public interface Manager {
 					manager.init();
 					MANAGERS.add(manager);
 				});
+		System.out.println(MANAGERS);
 		try {
 			reader.close();
 		} catch (IOException e) {
@@ -123,7 +124,9 @@ public interface Manager {
 	 * Clears all managers.
 	 */
 	public static void clearManagers() {
+		System.out.println(MANAGERS);
 		for (Manager manager : MANAGERS) {
+			System.out.println(manager);
 			manager.clear();
 		}
 
