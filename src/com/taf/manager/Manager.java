@@ -112,7 +112,6 @@ public interface Manager {
 					manager.init();
 					MANAGERS.add(manager);
 				});
-		System.out.println(MANAGERS);
 		try {
 			reader.close();
 		} catch (IOException e) {
@@ -124,9 +123,7 @@ public interface Manager {
 	 * Clears all managers.
 	 */
 	public static void clearManagers() {
-		System.out.println(MANAGERS);
 		for (Manager manager : MANAGERS) {
-			System.out.println(manager);
 			manager.clear();
 		}
 
