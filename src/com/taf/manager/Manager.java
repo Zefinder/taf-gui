@@ -30,71 +30,108 @@
  */
 package com.taf.manager;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-import com.taf.util.HashSetBuilder;
+import com.taf.annotation.ManagerImpl;
 
 /**
  * <p>
- * A Manager is a class representing a singleton that manages a single aspect of
- * the code.
+ * A Manager is a class focusing on one aspect of the code. It must be annotated
+ * with {@link ManagerImpl}.
  * </p>
  * 
- * <p>
- * It must be implemented as a singleton with a private constructor and a static
- * method <code>getInstance()</code> returning itself. TODO
- * </p>
+ * @see ManagerImpl
  * 
  * @author Adrien Jakubiak
  */
-public abstract class Manager {
+public interface Manager {
 
-	/** The set of managers. */
-	protected static final Set<Manager> MANAGERS = new HashSetBuilder<Manager>()
-			.add(TypeManager.getInstance())
-			.add(EventManager.getInstance())
-			.add(SaveManager.getInstance())
-			.add(RunManager.getInstance())
-			.add(SettingsManager.getInstance())
-			.build();
-	
-	/** The init state. */
-	private static boolean initDone = false;
-	
-	protected Manager() {
-	}
-	
+	/** The set of initialized managers. */
+	public static Set<Manager> MANAGERS = new HashSet<Manager>();
+
 	/**
 	 * Initializes the manager.
 	 */
-	public abstract void initManager();
-	
+	void init();
+
 	/**
 	 * Clears the manager.
 	 */
-	public abstract void clearManager();
-	
+	void clear();
+
 	/**
-	 * Initializes all managers.
+	 * Initializes all classes with annotation ManagerImpl and having no public
+	 * constructors, a static method getInstance that returns itself with no
+	 * parameters.
 	 */
-	public static final void initAllManagers() {
-		if (!initDone) {			
-			for (Manager manager : MANAGERS) {
-				manager.initManager();
-			}
-			initDone = true;
+	public static void initManagers() {
+		var annotationClass = ManagerImpl.class;
+		String packageName = Manager.class.getPackage().getName();
+		InputStream stream = ClassLoader.getSystemResourceAsStream(packageName.replaceAll("[.]", "/"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(stream));
+		reader.lines()
+				.filter(line -> line.endsWith(".class"))
+				.<Optional<Class<?>>>map(line -> { // Gets all classes within the com.taf.manager package
+					try {
+						return Optional.of(Class.forName(packageName + "." + line.substring(0, line.lastIndexOf('.'))));
+					} catch (ClassNotFoundException e) {
+						return Optional.empty();
+					}
+				})
+				.filter(clazzOptional -> clazzOptional.isPresent() // Filters classes that has the annotation ManagerImpl
+						&& clazzOptional.get().isAnnotationPresent(annotationClass)) 
+				.map(Optional::get)
+				.filter(clazz -> clazz.getConstructors().length == 0 // Filters classes with no constructors
+						&& Arrays.asList(clazz.getMethods()).stream()
+															.anyMatch(method -> method.getName().equals("getInstance") // Method must be named getInstance
+																	&& method.getParameterCount() == 0 // with no parameters
+																	&& clazz.isAssignableFrom(method.getReturnType()) // that returns itself
+																	&& Modifier.isStatic(method.getModifiers()))) // and is static
+				.sorted((managerClass1, managerClass2) -> -managerClass1.getAnnotation(annotationClass).priority() // Sort by priority
+						.compareTo(managerClass2.getAnnotation(annotationClass).priority()))
+				.<Optional<? extends Manager>>map(managerClass -> { // Invoke getInstance
+					try {
+						return Optional.of((Manager) managerClass.getMethod("getInstance").invoke(null));
+					} catch (NoSuchMethodException | SecurityException | IllegalAccessException
+							| InvocationTargetException e) {
+						// Should never happen
+						return Optional.empty();
+					}
+				})
+				.filter(Optional::isPresent).map(Optional::get)
+				.forEach(manager -> { // Init manager and add to the manager set
+					manager.init();
+					MANAGERS.add(manager);
+				});
+		try {
+			reader.close();
+		} catch (IOException e) {
+			// Ignored
 		}
 	}
-	
+
 	/**
 	 * Clears all managers.
 	 */
-	public static final void clearAllManagers() {
-		if (initDone) {
-			for (Manager manager : MANAGERS) {
-				manager.clearManager();
-			}
-			initDone = false;
+	public static void clearManagers() {
+		for (Manager manager : MANAGERS) {
+			manager.clear();
 		}
+
+		// Reset the manager set
+		MANAGERS.clear();
+	}
+
+	public static void main(String[] args) {
+		Manager.initManagers();
 	}
 }

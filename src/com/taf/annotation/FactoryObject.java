@@ -30,10 +30,7 @@
  */
 package com.taf.annotation;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.SOURCE;
 
 import java.lang.annotation.Documented;
@@ -42,12 +39,20 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * The NotEmpty annotation tells the coder that the attribute, parameter,
- * variable or method return value cannot have an empty value. This implies that
- * the value cannot be null either. This has a meaning for strings, lists,
- * arrays, ...
+ * The FactoryObject annotation provides information on a type, telling the user
+ * and the compiler (TODO) that this object is used in a factory.
  * </p>
- *
+ * 
+ * <p>
+ * This annotation takes two arguments:
+ * <ul>
+ * <li>An array of classes representing the types that at least one constructor
+ * must have.
+ * <li>A boolean that is used to tell the processor if the factory code must be
+ * generated for this object.
+ * </ul>
+ * </p>
+ * 
  * <p>
  * This annotation is NOT available during runtime and is only useful for
  * documentation purposes.
@@ -56,8 +61,21 @@ import java.lang.annotation.Target;
  * @author Adrien Jakubiak
  */
 @Retention(SOURCE)
-@Target({ FIELD, METHOD, PARAMETER, LOCAL_VARIABLE })
+@Target(TYPE)
 @Documented
-public @interface NotEmpty {
+public @interface FactoryObject {
 
+	/**
+	 * Returns an array of classes that at least one constructor have as arguments.
+	 *
+	 * @return the array of classes that a constructor must have
+	 */
+	public Class<?>[] types() default {};
+
+	/**
+	 * Returns true if the object needs to be generated (WIP)
+	 *
+	 * @return true if the object needs to be generated
+	 */
+	public boolean generate() default false;
 }

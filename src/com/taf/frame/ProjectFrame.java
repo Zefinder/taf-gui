@@ -34,8 +34,8 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.ProjectClosedEvent;
 import com.taf.event.ProjectRunOpenedEvent;
 import com.taf.event.ProjectRunClosedEvent;

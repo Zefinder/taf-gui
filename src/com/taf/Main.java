@@ -43,7 +43,7 @@ import com.taf.manager.Manager;
 public class Main {
 	
 	public static void main(String[] args) {
-		Manager.initAllManagers();
+		Manager.initManagers();
 		
 		// TODO Verify all annotations
 		

@@ -59,8 +59,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.ProjectRunAbortedEvent;
 import com.taf.event.ProjectRunStartedEvent;
 import com.taf.event.ProjectRunStoppedEvent;

@@ -30,34 +30,14 @@
  */
 package com.taf.annotation;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
 /**
- * <p>
- * The NotEmpty annotation tells the coder that the attribute, parameter,
- * variable or method return value cannot have an empty value. This implies that
- * the value cannot be null either. This has a meaning for strings, lists,
- * arrays, ...
- * </p>
- *
- * <p>
- * This annotation is NOT available during runtime and is only useful for
- * documentation purposes.
- * </p>
+ * This enumeration represents a priority. It is used in {@link ManagerImpl} to
+ * determine the initialization order.
+ * 
+ * @see ManagerImpl
  * 
  * @author Adrien Jakubiak
  */
-@Retention(SOURCE)
-@Target({ FIELD, METHOD, PARAMETER, LOCAL_VARIABLE })
-@Documented
-public @interface NotEmpty {
-
+public enum Priority {
+	LOW, MEDIUM, HIGH;
 }

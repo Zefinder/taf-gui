@@ -32,6 +32,7 @@ package com.taf.logic.type.parameter;
 
 import java.text.DecimalFormat;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.logic.type.NumericalType;
 import com.taf.util.Consts;
@@ -46,6 +47,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public abstract class MinParameter extends TypeParameter {
 
 	/** The parameter name. */

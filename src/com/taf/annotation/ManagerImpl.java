@@ -30,11 +30,8 @@
  */
 package com.taf.annotation;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -42,22 +39,29 @@ import java.lang.annotation.Target;
 
 /**
  * <p>
- * The NotEmpty annotation tells the coder that the attribute, parameter,
- * variable or method return value cannot have an empty value. This implies that
- * the value cannot be null either. This has a meaning for strings, lists,
- * arrays, ...
+ * The ManagerImpl annotation tells the coder that the annotated type is a
+ * Manager and must be treated as is. A class implementing this annotation must
+ * have no public constructor, a static method <code>getInstance</code> that
+ * returns the singleton, and two public void methods <code>init()</code> and
+ * <code>clear()</code>. Note that a manager must be in com.taf.manager in order
+ * to be detected.
  * </p>
- *
+ * 
  * <p>
- * This annotation is NOT available during runtime and is only useful for
- * documentation purposes.
+ * Managers are organized in priority: LOW, MEDIUM, HIGH. The higher the
+ * priority, the faster they need to be initialized.
+ * </p>
+ * 
+ * <p>
+ * This annotation is available during runtime. It is useful for documentation
+ * purposes and to perform a check at launch.
  * </p>
  * 
  * @author Adrien Jakubiak
  */
-@Retention(SOURCE)
-@Target({ FIELD, METHOD, PARAMETER, LOCAL_VARIABLE })
+@Retention(RUNTIME)
+@Target(TYPE)
 @Documented
-public @interface NotEmpty {
-
+public @interface ManagerImpl {
+	public Priority priority();
 }

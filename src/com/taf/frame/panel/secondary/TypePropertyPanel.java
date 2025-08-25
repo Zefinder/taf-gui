@@ -33,10 +33,12 @@ package com.taf.frame.panel.secondary;
 import java.awt.GridBagConstraints;
 import java.lang.reflect.Parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.frame.panel.secondary.type.TypeAddEntityPanel;
 import com.taf.logic.constraint.Constraint;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Type;
+import com.taf.logic.type.FieldType;
 import com.taf.util.Consts;
 
 /**
@@ -48,6 +50,7 @@ import com.taf.util.Consts;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = FieldType.class, generate = true)
 public class TypePropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = 3296878396678633310L;

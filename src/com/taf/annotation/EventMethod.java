@@ -30,34 +30,53 @@
  */
 package com.taf.annotation;
 
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.LOCAL_VARIABLE;
 import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.PARAMETER;
-import static java.lang.annotation.RetentionPolicy.SOURCE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import com.taf.event.Event;
+import com.taf.event.EventListener;
+import com.taf.manager.EventManager;
+
 /**
  * <p>
- * The NotEmpty annotation tells the coder that the attribute, parameter,
- * variable or method return value cannot have an empty value. This implies that
- * the value cannot be null either. This has a meaning for strings, lists,
- * arrays, ...
+ * The EventMethod annotation provides information on a method, telling the user
+ * and the compiler (TODO) that this method is used as an event handler.
  * </p>
- *
+ * 
  * <p>
- * This annotation is NOT available during runtime and is only useful for
- * documentation purposes.
+ * This annotation is processed by the {@link EventManager} in the
+ * {@link EventManager#registerEventListener(EventListener)} method. To be
+ * recognized as an event method, there are three rules:
+ * <ul>
+ * <li>The method must be public
+ * <li>The method must have one argument
+ * <li>The argument must be an {@link Event}
+ * </ul>
+ * 
+ * If one of them is not met, the {@link EventManager} will discard the method.
+ * The processor will display a warning if it detects an error in the event
+ * method declaration (WIP). Note that if the method has a return type, it will
+ * never be used.
  * </p>
+ * 
+ * <p>
+ * This annotation is available during runtime, it is useful for documentation
+ * and will be used to register {@link EventListener}s in the
+ * {@link EventManager}.
+ * </p>
+ * 
+ * @see EventListener
+ * @see EventManager
  * 
  * @author Adrien Jakubiak
  */
-@Retention(SOURCE)
-@Target({ FIELD, METHOD, PARAMETER, LOCAL_VARIABLE })
+@Retention(RUNTIME)
+@Target(METHOD)
 @Documented
-public @interface NotEmpty {
-
+public @interface EventMethod {
+	// TODO Add async parameter
 }

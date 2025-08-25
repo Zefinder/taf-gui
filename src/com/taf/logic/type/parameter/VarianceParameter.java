@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type.parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.exception.ParseException;
 import com.taf.logic.type.NumericalType;
@@ -46,6 +47,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class VarianceParameter extends TypeParameter {
 
 	private static final String ERROR_MESSAGE = "Variance value must be an integer or a real!";

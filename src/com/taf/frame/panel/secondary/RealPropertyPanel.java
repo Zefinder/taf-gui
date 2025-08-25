@@ -42,6 +42,8 @@ import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 
+import com.taf.annotation.FactoryObject;
+import com.taf.logic.type.FieldType;
 import com.taf.logic.type.RealType;
 import com.taf.logic.type.parameter.DistributionType;
 import com.taf.util.Consts;
@@ -56,6 +58,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = FieldType.class, generate = true)
 public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -9035183700723112945L;

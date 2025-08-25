@@ -33,6 +33,7 @@ package com.taf.logic.type.parameter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.exception.ParseException;
 import com.taf.logic.type.NumericalType;
@@ -51,6 +52,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class WeightsParameter extends TypeParameter {
 
 	private static final String NULL_ERROR_MESSAGE = "Weights must not be null!";

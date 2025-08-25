@@ -35,6 +35,8 @@ import java.awt.Insets;
 
 import javax.swing.JLabel;
 
+import com.taf.annotation.FactoryObject;
+import com.taf.logic.Entity;
 import com.taf.logic.field.Type;
 import com.taf.util.Consts;
 
@@ -46,6 +48,7 @@ import com.taf.util.Consts;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = Entity.class, generate = true)
 public class TypePropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8423915116760040223L;

@@ -38,6 +38,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Properties;
 
+import com.taf.annotation.ManagerImpl;
+import com.taf.annotation.Priority;
 import com.taf.util.Consts;
 
 /**
@@ -47,7 +49,8 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
-public class SettingsManager extends Manager {
+@ManagerImpl(priority = Priority.LOW)
+public class SettingsManager implements Manager {
 
 	private static final String SETTINGS_FILE_CREATION_ERROR = "Something happened when trying to create the settings file: ";
 
@@ -86,7 +89,7 @@ public class SettingsManager extends Manager {
 	}
 
 	@Override
-	public void clearManager() {
+	public void clear() {
 		// Nothing to do here
 	}
 
@@ -100,7 +103,7 @@ public class SettingsManager extends Manager {
 	}
 
 	@Override
-	public void initManager() {
+	public void init() {
 		// Create the settings file if it does not exist
 		settingsFile = new File(SaveManager.getInstance().getMainDirectoryPath() + File.separator + SETTINGS_FILE_NAME);
 		if (!settingsFile.exists()) {

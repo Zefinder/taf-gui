@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type.parameter;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.annotation.NotNull;
 import com.taf.exception.ParseException;
 import com.taf.logic.type.NumericalType;
@@ -50,6 +51,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = false)
 public class DistributionParameter extends TypeParameter {
 
 	/** The parameter name. */

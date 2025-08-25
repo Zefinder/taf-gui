@@ -37,8 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
+import com.taf.annotation.EventMethod;
 import com.taf.event.EventListener;
-import com.taf.event.EventMethod;
 import com.taf.event.ProcessReadyEvent;
 import com.taf.frame.panel.RunPanel;
 import com.taf.manager.EventManager;
