@@ -33,6 +33,7 @@ package com.taf.manager;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -87,6 +88,15 @@ public class TypeManager implements Manager, EventListener {
 		return instance;
 	}
 
+	/**
+	 * Provide a type id
+	 *
+	 * @return a type id
+	 */
+	public static int provideTypeId() {
+		return nextTypeId++;
+	}
+
 	/** The parameter type set. */
 	// TODO Change to String to simplify everything and use a factory to create a
 	// new FieldType
@@ -99,10 +109,10 @@ public class TypeManager implements Manager, EventListener {
 	private final Set<String> parameterTypeNameSet;
 
 	/** The custom node type set. */
-	private final Set<String> customNodeTypeSet;
-
+	private final Map<String, Type> customNodeTypeMap;
+	
 	/** The custom node reference set. */
-	private final Set<String> customNodeRefSet;
+	private final Map<String, Node> customNodeRefMap;
 
 	/** The type to node map. */
 	private final Map<String, Set<Node>> typeToNodeMap;
@@ -115,8 +125,8 @@ public class TypeManager implements Manager, EventListener {
 		for (var basicType : parameterTypeSet) {
 			parameterTypeNameSet.add(basicType.getSimpleName());
 		}
-		customNodeTypeSet = new LinkedHashSet<String>();
-		customNodeRefSet = new LinkedHashSet<String>();
+		customNodeTypeMap = new LinkedHashMap<String, Type>();
+		customNodeRefMap = new LinkedHashMap<String, Node>();
 		typeToNodeMap = new HashMap<String, Set<Node>>();
 		refToNodeMap = new HashMap<String, Set<Node>>();
 	}
@@ -127,21 +137,12 @@ public class TypeManager implements Manager, EventListener {
 	}
 
 	/**
-	 * Provide a type id
-	 *
-	 * @return a type id
-	 */
-	public static int provideTypeId() {
-		return nextTypeId++;
-	}
-
-	/**
 	 * Returns the custom node reference set.
 	 *
 	 * @return the custom node reference set
 	 */
 	public Set<String> getCustomNodeRefSet() {
-		return customNodeRefSet;
+		return customNodeRefMap.keySet();
 	}
 
 	/**
@@ -150,9 +151,39 @@ public class TypeManager implements Manager, EventListener {
 	 * @return the custom node type set
 	 */
 	public Set<String> getCustomNodeTypeSet() {
-		return customNodeTypeSet;
+		return customNodeTypeMap.keySet();
 	}
 
+	/**
+	 * Returns the node from name.
+	 *
+	 * @param nodeName the node name
+	 * @return the node from name
+	 */
+	public Node getNodeFromName(String nodeName) {
+		return customNodeRefMap.get(nodeName);
+	}
+	
+	/**
+	 * Returns the nodes implementing this type.
+	 *
+	 * @param typeName the type name
+	 * @return the nodes implementing this type
+	 */
+	public Set<Node> getNodesImplementingType(String typeName) {
+		return typeToNodeMap.get(typeName);
+	}
+	
+	/**
+	 * Returns the nodes referring to this node.
+	 *
+	 * @param nodeName the node name
+	 * @return the nodes referring to this node
+	 */
+	public Set<Node> getNodesReferringNode(String nodeName) {
+		return refToNodeMap.get(nodeName);
+	}
+	
 	/**
 	 * Returns the parameter type names.
 	 *
@@ -161,6 +192,16 @@ public class TypeManager implements Manager, EventListener {
 	@Deprecated(forRemoval = true)
 	public Set<String> getParameterTypeNames() {
 		return parameterTypeNameSet;
+	}
+	
+	/**
+	 * Returns the type from name.
+	 *
+	 * @param typeName the type name
+	 * @return the type from name
+	 */
+	public Type getTypeFromName(String typeName) {
+		return customNodeTypeMap.get(typeName);
 	}
 
 	@Override
@@ -289,11 +330,11 @@ public class TypeManager implements Manager, EventListener {
 	public void resetCustomNodeTypes() {
 		// Remove types
 		typeToNodeMap.clear();
-		customNodeTypeSet.clear();
+		customNodeTypeMap.clear();
 
 		// Remove refs
 		refToNodeMap.clear();
-		customNodeRefSet.clear();
+		customNodeRefMap.clear();
 	}
 
 	@Override
@@ -307,8 +348,8 @@ public class TypeManager implements Manager, EventListener {
 	 * @param type the type to add
 	 */
 	void addCustomNodeType(Type type) {
-		customNodeTypeSet.add(type.getName());
-		typeToNodeMap.put(type.getName(), new HashSet<Node>());
+		customNodeTypeMap.put(type.getName(), type);
+		typeToNodeMap.put(type.getName(), new LinkedHashSet<Node>());
 	}
 
 	/**
@@ -317,8 +358,8 @@ public class TypeManager implements Manager, EventListener {
 	 * @param node the reference node to add
 	 */
 	void addCustomReference(Node node) {
-		customNodeRefSet.add(node.getName());
-		refToNodeMap.put(node.getName(), new HashSet<Node>());
+		customNodeRefMap.put(node.getName(), node);
+		refToNodeMap.put(node.getName(), new LinkedHashSet<Node>());
 	}
 
 	/**
@@ -342,7 +383,7 @@ public class TypeManager implements Manager, EventListener {
 	 */
 	void setNodeType(String typeName, Node node) {
 		// Must appear after type creation!
-		if (customNodeTypeSet.contains(typeName)) {
+		if (customNodeTypeMap.containsKey(typeName)) {
 			typeToNodeMap.get(typeName).add(node);
 		}
 	}
@@ -362,7 +403,7 @@ public class TypeManager implements Manager, EventListener {
 		typeToNodeMap.remove(typeName);
 
 		// Remove from type set
-		customNodeTypeSet.remove(typeName);
+		customNodeTypeMap.remove(typeName);
 	}
 
 	/**
@@ -379,7 +420,7 @@ public class TypeManager implements Manager, EventListener {
 		refToNodeMap.remove(refName);
 
 		// Remove from ref set
-		customNodeRefSet.remove(refName);
+		customNodeRefMap.remove(refName);
 	}
 
 }

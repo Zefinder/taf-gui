@@ -68,7 +68,7 @@ public class RunFrame extends TafFrame {
 	 */
 	public RunFrame() {
 		super(FRAME_NAME);
-		this.setSize(1000, 600);
+		this.setSize(1000, 800);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		this.setLocationRelativeTo(null);
 		this.setResizable(true);
