@@ -28,40 +28,60 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf.frame.panel.run;
+package com.taf.util;
 
-import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
+import javax.swing.Icon;
+import javax.swing.JTree;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeCellRenderer;
 
-import com.taf.frame.panel.RunPanel;
+import com.taf.logic.field.Type;
 
 /**
- * The TafRunComponentPanel is used in the {@link RunPanel} and contains the
- * {@link SettingsPanel} and the {@link ActiveTreePanel} (WIP).
+ * This class defines a tree cell renderer for {@link TafTree}s. The icon of the
+ * tree node depends on the entity: if the entity is an instance of
+ * {@link Type}, then the icon will be a little folder. Else it will be a white
+ * page.
  * 
- * @see JPanel
- * @see RunPanel
- * @see SettingsPanel
- * @see ActiveTreePanel
+ * @see DefaultTreeCellRenderer
+ * @see TafTree
  *
  * @author Adrien Jakubiak
  */
-public class TafRunComponentPanel extends JPanel {
+public class TafTreeCellRenderer extends DefaultTreeCellRenderer {
 
-	private static final long serialVersionUID = -8474576169732949803L;
+	private static final long serialVersionUID = 3600625563246633955L;
 
-	/**
-	 * Instantiates a new taf run component panel.
-	 */
-	public TafRunComponentPanel() {
-		this.setLayout(new BorderLayout());
-		SettingsPanel settingsPanel = new SettingsPanel();
-		ActiveTreePanel treePanel = new ActiveTreePanel();
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, settingsPanel, treePanel);
+	@Override
+	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf,
+			int row, boolean hasFocus) {
+		super.getTreeCellRendererComponent(tree, value, selected, expanded, leaf, row, hasFocus);
+		DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+		EntityNode nodeObject = (EntityNode) node.getUserObject();
+		Icon icon;
+		if (nodeObject.isType()) {
+			if (expanded) {
+				icon = getDefaultOpenIcon();
+			} else {
+				icon = getDefaultClosedIcon();
+			}
+		} else {
+			icon = getDefaultLeafIcon();
+		}
 
-		this.add(splitPane);
+		Color backgroundColor;
+		if (hasFocus) {
+			backgroundColor = getBackgroundSelectionColor();
+		} else {
+			backgroundColor = getBackgroundNonSelectionColor();
+		}
+
+		setIcon(icon);
+		setBackground(backgroundColor);
+		return this;
 	}
 
 }

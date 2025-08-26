@@ -83,7 +83,7 @@ public class SettingsPanel extends JPanel implements EventListener {
 	private static final long serialVersionUID = 2148563875281479934L;
 
 	/** The delete experiment folder checkbox text. */
-	private static final String DELETE_EXPERIMENT_FOLDER_CHECKBOX_TEXT = "Delete experiment folder name before running TAF";
+	private static final String DELETE_EXPERIMENT_FOLDER_CHECKBOX_TEXT = "Delete experiment folder before running TAF";
 
 	/** The run button text. */
 	private static final String RUN_BUTTON_TEXT = "Run";

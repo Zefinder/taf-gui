@@ -30,8 +30,16 @@
  */
 package com.taf.frame.panel.run;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
 import javax.swing.JPanel;
-import javax.swing.JTree;
+import javax.swing.JScrollPane;
+
+import com.taf.logic.field.Root;
+import com.taf.manager.SaveManager;
+import com.taf.util.Consts;
+import com.taf.util.TafTree;
 
 /**
  * The ActiveTreePanel is used in the {@link TafRunComponentPanel} to display
@@ -43,15 +51,25 @@ import javax.swing.JTree;
  *
  * @author Adrien Jakubiak
  */
-// TODO Change to JPanel
-public class ActiveTreePanel extends JTree {
+public class ActiveTreePanel extends JPanel {
 
 	private static final long serialVersionUID = 5350785957881515443L;
+
+	private TafTree tree;
 
 	/**
 	 * Instantiates a new active tree panel.
 	 */
 	public ActiveTreePanel() {
+		this.setLayout(new GridBagLayout());
+		GridBagConstraints c = Consts.getDefaultConstraint();
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		Root root = SaveManager.getInstance().getProjectRoot();
+		tree = new TafTree(root, true);
+		tree.instantiateNodes();
+		
+		JScrollPane treeView = new JScrollPane(tree);
+		this.add(treeView, c);
 	}
 
 }

@@ -13,9 +13,9 @@ import com.taf.logic.type.parameter.MaxIntegerParameter;
 import com.taf.logic.type.parameter.MeanParameter;
 import com.taf.logic.type.parameter.MinIntegerParameter;
 import com.taf.logic.type.parameter.RangesParameter;
+import com.taf.logic.type.parameter.RangesParameter.Range;
 import com.taf.logic.type.parameter.VarianceParameter;
 import com.taf.logic.type.parameter.WeightsParameter;
-import com.taf.logic.type.parameter.RangesParameter.Range;
 import com.taf.util.Consts;
 import com.taf.util.HashSetBuilder;
 

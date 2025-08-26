@@ -423,6 +423,15 @@ public class SaveManager implements Manager {
 	}
 
 	/**
+	 * Returns the project root.
+	 *
+	 * @return the project root
+	 */
+	public Root getProjectRoot() {
+		return projectRoot;
+	}
+	
+	/**
 	 * Import a new project in the XML format. If the file already exist, then
 	 * returns null.
 	 *
