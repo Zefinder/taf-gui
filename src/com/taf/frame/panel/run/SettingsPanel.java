@@ -270,6 +270,20 @@ public class SettingsPanel extends JPanel implements EventListener {
 	@EventMethod
 	public void onRunStartedEvent(ProjectRunStartedEvent event) {
 		runButton.setEnabled(false);
+		templatePathField.setEnabled(false);
+		templateFileNameField.setEnabled(false);
+		experimentPathField.setEnabled(false);
+		experimentFolderNameField.setEnabled(false);
+		nbTestCasesField.setEnabled(false);
+		testCaseFolderNameField.setEnabled(false);
+		nbTestArtifactsField.setEnabled(false);
+		testArtifactFolderNameField.setEnabled(false);
+		parameterMaxNbInstancesField.setEnabled(false);
+		stringParameterMaxSizeField.setEnabled(false);
+		nodeMaxNbInstancesField.setEnabled(false);
+		maxBacktrackingField.setEnabled(false);
+		maxDiversityField.setEnabled(false);
+		z3TimeoutField.setEnabled(false);
 		stopButton.setEnabled(true);
 	}
 
@@ -281,6 +295,20 @@ public class SettingsPanel extends JPanel implements EventListener {
 	@EventMethod
 	public void onRunStoppedEvent(ProjectRunStoppedEvent event) {
 		runButton.setEnabled(true);
+		templatePathField.setEnabled(true);
+		templateFileNameField.setEnabled(true);
+		experimentPathField.setEnabled(true);
+		experimentFolderNameField.setEnabled(true);
+		nbTestCasesField.setEnabled(true);
+		testCaseFolderNameField.setEnabled(true);
+		nbTestArtifactsField.setEnabled(true);
+		testArtifactFolderNameField.setEnabled(true);
+		parameterMaxNbInstancesField.setEnabled(true);
+		stringParameterMaxSizeField.setEnabled(true);
+		nodeMaxNbInstancesField.setEnabled(true);
+		maxBacktrackingField.setEnabled(true);
+		maxDiversityField.setEnabled(true);
+		z3TimeoutField.setEnabled(true);
 		stopButton.setEnabled(false);
 	}
 

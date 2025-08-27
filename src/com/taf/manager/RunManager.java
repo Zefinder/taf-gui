@@ -305,7 +305,7 @@ public class RunManager implements Manager, EventListener {
 
 	@Override
 	public void clear() {
-		// Nothing to do here
+		EventManager.getInstance().unregisterEventListener(instance);
 	}
 
 	/**
@@ -436,7 +436,7 @@ public class RunManager implements Manager, EventListener {
 
 	@Override
 	public void init() {
-		EventManager.getInstance().registerEventListener(this);
+		EventManager.getInstance().registerEventListener(instance);
 	}
 
 	/**

@@ -44,7 +44,7 @@ import com.taf.annotation.Nullable;
 import com.taf.event.EventListener;
 import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.EntitySelectedEvent;
-import com.taf.event.entity.FieldTypeChangedEvent;
+import com.taf.event.entity.ParameterTypeChangedEvent;
 import com.taf.frame.panel.primary.EntityPrimaryPanelFactory;
 import com.taf.frame.panel.primary.EntityPrimaryPropertyPanel;
 import com.taf.frame.panel.secondary.EntitySecondaryPanelFactory;
@@ -158,12 +158,12 @@ public class PropertyPanel extends JPanel implements EventListener {
 	}
 
 	/**
-	 * Handler for {@link FieldTypeChangedEvent}.
+	 * Handler for {@link ParameterTypeChangedEvent}.
 	 *
 	 * @param event the event
 	 */
 	@EventMethod
-	public void onFieldTypeChanged(FieldTypeChangedEvent event) {
+	public void onFieldTypeChanged(ParameterTypeChangedEvent event) {
 		// The field type changed so the type property panel will also change
 		if (typePropertyPanel != null) {
 			EventManager.getInstance().unregisterEventListener(typePropertyPanel);

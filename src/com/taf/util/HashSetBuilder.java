@@ -34,7 +34,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 /**
- * This utility class allows {@link HashSet} builds.
+ * This utility class allows easy {@link LinkedHashSet} builds.
  *
  * @author Adrien Jakubiak
  * @param <T> the set value type

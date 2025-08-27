@@ -133,7 +133,11 @@ public class TypeManager implements Manager, EventListener {
 
 	@Override
 	public void clear() {
-		// Nothing to do here
+		customNodeTypeMap.clear();
+		customNodeRefMap.clear();
+		typeToNodeMap.clear();
+		refToNodeMap.clear();
+		EventManager.getInstance().unregisterEventListener(instance);
 	}
 
 	/**

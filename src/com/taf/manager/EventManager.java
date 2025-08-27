@@ -54,28 +54,14 @@ import com.taf.event.EventListener;
  * <p>
  * To register an event listener, use
  * {@link #registerEventListener(EventListener)} and to fire an event use
- * {@link #fireEvent(Event)}. For example:
+ * {@link #fireEvent(Event)}.
+ * </p>
  * 
- * <pre>
- * public class ListenerTest implements EventListener {
- * 	public ListenerTest() {
- * 		EventListener.getInstance().registerEventListener(this);
- * 	}
- * 
- * 	&#64;EventMethod
- * 	public void onDummyEvent(DummyEvent event) {
- * 		System.out.println("Hello World!");
- * 	}
- * 
- * 	public void unregisterComponents() {
- * 	}
- * 
- * 	public void sayHi() {
- * 		EventManager.getInstance().fireEvent(new DummyEvent());
- * 	}
- * 
- * }
- * </pre>
+ * <p>
+ * Note that firing events is a synchronous process. The calling object must
+ * wait until all listeners finished. Also, the same instance of the fired event
+ * is given to all listeners, meaning that modifying an event value will have an
+ * unknown behavior.
  * </p>
  * 
  * @see Manager
@@ -246,7 +232,7 @@ public class EventManager implements Manager {
 		public boolean equals(Object obj) {
 			if (!(obj instanceof ListenerObject)) {
 				return false;
-			} 
+			}
 
 			ListenerObject other = (ListenerObject) obj;
 			return listener.equals(other.listener) && event.equals(other.event) && method.equals(other.method);
