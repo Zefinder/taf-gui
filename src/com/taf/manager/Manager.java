@@ -130,8 +130,5 @@ public interface Manager {
 		// Reset the manager set
 		MANAGERS.clear();
 	}
-
-	public static void main(String[] args) {
-		Manager.initManagers();
-	}
+	
 }

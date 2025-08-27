@@ -49,7 +49,7 @@ import com.taf.event.EventListener;
 import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.EntityNameChangedEvent;
 import com.taf.event.entity.EntitySelectedEvent;
-import com.taf.event.entity.FieldTypeChangedEvent;
+import com.taf.event.entity.ParameterTypeChangedEvent;
 import com.taf.event.entity.NodeTypeChangedEvent;
 import com.taf.event.entity.creation.ConstraintCreatedEvent;
 import com.taf.event.entity.creation.NodeCreatedEvent;
@@ -233,13 +233,13 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	}
 
 	/**
-	 * Handler for {@link FieldTypeChangedEvent}.
+	 * Handler for {@link ParameterTypeChangedEvent}.
 	 *
 	 * @param event the event
 	 */
 	@EventMethod
-	public void onFieldTypeChanged(FieldTypeChangedEvent event) {
-		DefaultMutableTreeNode treeNode = tree.getNode(event.getField());
+	public void onFieldTypeChanged(ParameterTypeChangedEvent event) {
+		DefaultMutableTreeNode treeNode = tree.getNode(event.getParameter());
 		EntityNode nodeObject = (EntityNode) treeNode.getUserObject();
 		nodeObject.refresh();
 		treeModel.nodeChanged(treeNode);

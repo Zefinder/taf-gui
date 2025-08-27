@@ -32,7 +32,7 @@ package com.taf.util;
 
 /**
  * The ConsoleStyle enumeration gather all interesting console styles that are
- * present in a python style console.
+ * present in a Python style console.
  *
  * @author Adrien Jakubiak
  */

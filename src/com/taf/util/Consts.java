@@ -300,7 +300,10 @@ public class Consts {
 			">", "&gt;"
 		);
 
+	
+	/** The pattern used to sanitize XML files. */
 	private static final Pattern SANITIZE_PATTERN = getReplacePattern();
+	
 	/**
 	 * Format a parameter using the parameter format.
 	 *
@@ -371,6 +374,11 @@ public class Consts {
 		JOptionPane.showMessageDialog(null, errorMessage, ERROR_DIALOG_TITLE, JOptionPane.ERROR_MESSAGE);
 	}
 
+	/**
+	 * Combines all characters to replace in a single {@link Pattern} object.
+	 *
+	 * @return the replace pattern
+	 */
 	private static final Pattern getReplacePattern() {
 		String patternStringFormat = "(%s)";
 		String patterns = "";

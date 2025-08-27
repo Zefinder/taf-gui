@@ -28,22 +28,55 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf.event;
+package com.taf.event.entity;
+
+import com.taf.event.Event;
+import com.taf.logic.field.Parameter;
+import com.taf.logic.type.FieldType;
 
 /**
- * The ProjectRunStartedEvent is an event fired when the TAF process
- * starts.
+ * The ParameterTypeChangedEvent is an event fired when an {@link Parameter}
+ * changes type.
  *
  * @see Event
  *
  * @author Adrien Jakubiak
  */
-public class ProjectRunStartedEvent implements Event {
+public class ParameterTypeChangedEvent implements Event {
+
+	/** The parameter. */
+	private Parameter parameter;
+
+	/** The new type. */
+	private FieldType type;
 
 	/**
-	 * Instantiates a new project run started event.
+	 * Instantiates a new parameter type changed event.
+	 *
+	 * @param parameter the field
+	 * @param type  the type
 	 */
-	public ProjectRunStartedEvent() {
+	public ParameterTypeChangedEvent(Parameter parameter, FieldType type) {
+		this.parameter = parameter;
+		this.type = type;
+	}
+
+	/**
+	 * Returns the field.
+	 *
+	 * @return the field
+	 */
+	public Parameter getParameter() {
+		return parameter;
+	}
+
+	/**
+	 * Returns the type.
+	 *
+	 * @return the type
+	 */
+	public FieldType getType() {
+		return type;
 	}
 
 }

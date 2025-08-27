@@ -38,9 +38,8 @@ import javax.swing.JLabel;
 
 import com.taf.annotation.FactoryObject;
 import com.taf.event.Event;
-import com.taf.event.entity.FieldTypeChangedEvent;
+import com.taf.event.entity.ParameterTypeChangedEvent;
 import com.taf.logic.Entity;
-import com.taf.logic.field.Field;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.type.FieldType;
 import com.taf.manager.EventManager;
@@ -120,14 +119,14 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 	/**
 	 * Update parameter type.
 	 *
-	 * @param field the field
+	 * @param parameter the parameter
 	 */
-	private void updateFieldType(Field field) {
+	private void updateFieldType(Parameter parameter) {
 		String typeName = (String) typeNames.getSelectedItem();
 		FieldType type = TypeManager.getInstance().instantiateTypeFromClassName(typeName);
 
-		field.setType(type);
-		Event event = new FieldTypeChangedEvent(field, type);
+		parameter.setType(type);
+		Event event = new ParameterTypeChangedEvent(parameter, type);
 		EventManager.getInstance().fireEvent(event);
 	}
 

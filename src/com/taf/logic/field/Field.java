@@ -215,6 +215,4 @@ public abstract class Field implements Entity {
 		this.indentationLevel = indentationLevel;
 	}
 	
-
-
 }
