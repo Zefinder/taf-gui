@@ -33,6 +33,7 @@ package com.taf.logic.type;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.logic.type.parameter.TypeNameParameter;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.logic.type.parameter.ValuesParameter;
@@ -58,6 +59,7 @@ import com.taf.util.HashSetBuilder;
  * 
  * @author Adrien Jakubiak
  */
+@FactoryObject(types = {}, generate = true)
 public class BooleanType extends FieldType {
 
 	/** The parameter string format. */

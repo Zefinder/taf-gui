@@ -39,11 +39,12 @@ import javax.swing.JLabel;
 import com.taf.annotation.FactoryObject;
 import com.taf.event.Event;
 import com.taf.event.entity.ParameterTypeChangedEvent;
+import com.taf.exception.EntityCreationException;
 import com.taf.logic.Entity;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.type.FieldType;
+import com.taf.logic.type.ParameterTypeFactory;
 import com.taf.manager.EventManager;
-import com.taf.manager.TypeManager;
 import com.taf.util.Consts;
 
 /**
@@ -58,9 +59,6 @@ import com.taf.util.Consts;
 public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8925850604078710611L;
-
-	/** The type string format. */
-	private static final String TYPE_STRING_FORMAT = "%s%sType";
 
 	/** The type names. */
 	private final JComboBox<String> typeNames;
@@ -99,21 +97,11 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 		c.gridwidth = GridBagConstraints.REMAINDER;
 		c.gridheight = GridBagConstraints.REMAINDER;
 		c.gridx = 1;
-		typeNames = new JComboBox<String>(TypeManager.getInstance().getParameterTypeNames().toArray(String[]::new));
+		typeNames = new JComboBox<String>(FieldType.PARAMETER_TYPE_SET.toArray(String[]::new));
 		String typeName = parameter.getType().getName();
-		typeNames.setSelectedItem(typeNameToTypeString(typeName));
+		typeNames.setSelectedItem(typeName);
 		typeNames.addActionListener(e -> updateFieldType(parameter));
 		this.add(typeNames, c);
-	}
-
-	/**
-	 * Returns the string representation of a parameter type.
-	 *
-	 * @param typeName the type name
-	 * @return the string representation of a parameter type
-	 */
-	private String typeNameToTypeString(String typeName) {
-		return TYPE_STRING_FORMAT.formatted(typeName.substring(0, 1).toUpperCase(), typeName.substring(1));
 	}
 
 	/**
@@ -123,11 +111,14 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 	 */
 	private void updateFieldType(Parameter parameter) {
 		String typeName = (String) typeNames.getSelectedItem();
-		FieldType type = TypeManager.getInstance().instantiateTypeFromClassName(typeName);
-
-		parameter.setType(type);
-		Event event = new ParameterTypeChangedEvent(parameter, type);
-		EventManager.getInstance().fireEvent(event);
+		try {
+			FieldType type = ParameterTypeFactory.createFieldType(typeName);
+			parameter.setType(type);
+			Event event = new ParameterTypeChangedEvent(parameter, type);
+			EventManager.getInstance().fireEvent(event);
+		} catch (EntityCreationException e) {
+			// Ignore
+		}
 	}
 
 }
