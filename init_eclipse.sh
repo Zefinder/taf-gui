@@ -1,6 +1,8 @@
 #!/bin/bash
 
 # Constants
+CURRENT_DIR=`pwd`
+
 CLASSPATH_FILE='.classpath'
 SETTINGS_DIR='.settings'
 
@@ -12,6 +14,12 @@ ECLIPSE_JAUTODOC='.settings/net.sf.jautodoc.prefs'
 
 ECLIPSE_ENCODING='.settings/org.eclipse.core.resources.prefs'
 
+ARCHIVE_NAME="processor.jar"
+
+APT='.settings/org.eclipse.jdt.apt.core.prefs'
+
+FACTORY_PATH='.factorypath'
+
 CLASSPATH_CONTENT='<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
@@ -20,18 +28,42 @@ CLASSPATH_CONTENT='<?xml version="1.0" encoding="UTF-8"?>
 			<attribute name="test" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" output="processorbin" path="processor"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="src" path=".apt_generated">
+		<attributes>
+			<attribute name="optional" value="true"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="src" output="testbin" path=".apt_tests">
+		<attributes>
+			<attribute name="optional" value="true"/>
+			<attribute name="test" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
 '
 
 ENCODING_CONTENT='eclipse.preferences.version=1
 encoding/<project>=UTF-8
+'
+
+APT_CONTENT='eclipse.preferences.version=1
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=.apt_generated
+org.eclipse.jdt.apt.genTestSrcDir=.apt_tests
+org.eclipse.jdt.apt.reconcileEnabled=true
+'
+
+FACTORY_PATH_CONTENT='<factorypath>
+    <factorypathentry kind="EXTJAR" id="'$CURRENT_DIR'/'$ARCHIVE_NAME'" enabled="true" runInBatchMode="false"/>
+</factorypath>
 '
 
 # Check if classpath exists, if so modify it!
@@ -54,5 +86,17 @@ echo "Set JAutoDoc options (even if plugin is not installed)"
 
 # Set the project encoding set
 printf "%s" "$ENCODING_CONTENT" > "$ECLIPSE_ENCODING"
+
+# Compile and generate jar of processor annotation
+javac -d ./processorbin/ ./processor/com/*.java
+cd ./processorbin
+jar cvf ../$ARCHIVE_NAME *
+cd ..
+
+# Create apt file
+printf "%s" "$APT_CONTENT" > "$APT"
+
+# Create factory path file
+printf "%s" "$FACTORY_PATH_CONTENT" > "$FACTORY_PATH"
 
 echo "Init finished, you can now rebuild the project (or restart Eclipse) and install JUnit 5 (in whatever order)"
