@@ -33,6 +33,7 @@ package com.taf.logic.type;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.taf.annotation.FactoryObject;
 import com.taf.logic.type.parameter.DistributionParameter;
 import com.taf.logic.type.parameter.MaxRealParameter;
 import com.taf.logic.type.parameter.MeanParameter;
@@ -61,7 +62,7 @@ import com.taf.util.HashSetBuilder;
  *
  * @author Adrien Jakubiak
  */
-
+@FactoryObject(types = {}, generate = true)
 public class RealType extends NumericalType {
 
 	/** The parameter string format. */

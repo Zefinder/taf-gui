@@ -88,7 +88,7 @@ public class ActiveTreePanel extends JPanel {
 	 * @return the the path
 	 */
 	private static String printNodePathCommand(DefaultMutableTreeNode treeNode) {
-		String path = "";
+		String path;
 		if (treeNode.isRoot()) {
 			path = ROOT_NODE_NAME;
 		} else {

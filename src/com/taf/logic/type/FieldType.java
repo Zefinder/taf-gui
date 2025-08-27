@@ -30,6 +30,7 @@
  */
 package com.taf.logic.type;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.taf.logic.field.Field;
@@ -38,6 +39,7 @@ import com.taf.logic.field.Parameter;
 import com.taf.logic.field.Type;
 import com.taf.logic.type.parameter.TypeParameter;
 import com.taf.util.Consts;
+import com.taf.util.HashSetBuilder;
 
 /**
  * <p>
@@ -64,7 +66,7 @@ import com.taf.util.Consts;
  * </p>
  * 
  * <p>
- * Field types are created using the FieldTypeFactory (TODO) class. It requires
+ * Field types are created using the FieldTypeFactory class. It requires
  * at least one constructor with no argument.
  * </p>
  * 
@@ -74,6 +76,14 @@ import com.taf.util.Consts;
  * @author Adrien Jakubiak
  */
 public abstract class FieldType {
+
+	/** The parameter type name set. */
+	public static final HashSet<String> PARAMETER_TYPE_SET = new HashSetBuilder<String>()
+			.add(BooleanType.TYPE_NAME)
+			.add(IntegerType.TYPE_NAME)
+			.add(RealType.TYPE_NAME)
+			.add(StringType.TYPE_NAME)
+			.build();
 
 	/**
 	 * Instantiates a new field type.

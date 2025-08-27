@@ -41,7 +41,7 @@ import com.taf.annotation.Nullable;
 import com.taf.exception.EntityCreationException;
 import com.taf.logic.field.Parameter;
 import com.taf.logic.type.FieldType;
-import com.taf.manager.TypeManager;
+import com.taf.logic.type.ParameterTypeFactory;
 import com.taf.util.Consts;
 
 /**
@@ -104,7 +104,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		c.insets = new Insets(Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
 				Consts.LARGE_INSET_GAP);
 		c.gridx = 1;
-		typeNames = new JComboBox<String>(TypeManager.getInstance().getParameterTypeNames().toArray(String[]::new));
+		typeNames = new JComboBox<String>(FieldType.PARAMETER_TYPE_SET.toArray(String[]::new));
 		addComponent(typeNames, c);
 	}
 
@@ -129,8 +129,8 @@ public class ParameterCreationDialog extends InputInformationDialog {
 		String name = fieldName.getText();
 		if (!name.isBlank()) {
 			String typeName = (String) typeNames.getSelectedItem();
-			com.taf.logic.type.FieldType type = TypeManager.getInstance().instantiateTypeFromClassName(typeName);
 			try {
+				com.taf.logic.type.FieldType type = ParameterTypeFactory.createFieldType(typeName);
 				createdParameter = new Parameter(name, type);
 			} catch (EntityCreationException e) {
 				// This cannot happen, ignore

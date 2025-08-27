@@ -30,7 +30,6 @@
  */
 package com.taf.manager;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -49,12 +48,6 @@ import com.taf.event.entity.creation.TypeCreatedEvent;
 import com.taf.logic.Entity;
 import com.taf.logic.field.Node;
 import com.taf.logic.field.Type;
-import com.taf.logic.type.BooleanType;
-import com.taf.logic.type.FieldType;
-import com.taf.logic.type.IntegerType;
-import com.taf.logic.type.RealType;
-import com.taf.logic.type.StringType;
-import com.taf.util.HashSetBuilder;
 
 /**
  * <p>
@@ -97,17 +90,6 @@ public class TypeManager implements Manager, EventListener {
 		return nextTypeId++;
 	}
 
-	/** The parameter type set. */
-	// TODO Change to String to simplify everything and use a factory to create a
-	// new FieldType
-	@Deprecated(forRemoval = true)
-	private final HashSet<Class<? extends FieldType>> parameterTypeSet = new HashSetBuilder<Class<? extends FieldType>>()
-			.add(BooleanType.class).add(IntegerType.class).add(RealType.class).add(StringType.class).build();
-
-	/** The parameter type name set. */
-	@Deprecated(forRemoval = true)
-	private final Set<String> parameterTypeNameSet;
-
 	/** The custom node type set. */
 	private final Map<String, Type> customNodeTypeMap;
 	
@@ -121,10 +103,6 @@ public class TypeManager implements Manager, EventListener {
 	private final Map<String, Set<Node>> refToNodeMap;
 
 	private TypeManager() {
-		parameterTypeNameSet = new LinkedHashSet<String>();
-		for (var basicType : parameterTypeSet) {
-			parameterTypeNameSet.add(basicType.getSimpleName());
-		}
 		customNodeTypeMap = new LinkedHashMap<String, Type>();
 		customNodeRefMap = new LinkedHashMap<String, Node>();
 		typeToNodeMap = new HashMap<String, Set<Node>>();
@@ -189,16 +167,6 @@ public class TypeManager implements Manager, EventListener {
 	}
 	
 	/**
-	 * Returns the parameter type names.
-	 *
-	 * @return the parameter type names
-	 */
-	@Deprecated(forRemoval = true)
-	public Set<String> getParameterTypeNames() {
-		return parameterTypeNameSet;
-	}
-	
-	/**
 	 * Returns the type from name.
 	 *
 	 * @param typeName the type name
@@ -212,42 +180,6 @@ public class TypeManager implements Manager, EventListener {
 	public void init() {
 		nextTypeId = 0;
 		EventManager.getInstance().registerEventListener(instance);
-	}
-
-	/**
-	 * Instantiates a parameter type from its class name.
-	 *
-	 * @param typeClassName the type class name
-	 * @return the field type
-	 */
-	@Deprecated(forRemoval = true)
-	public FieldType instantiateTypeFromClassName(String typeClassName) {
-		for (Class<? extends FieldType> basicType : parameterTypeSet) {
-			if (basicType.getSimpleName().equals(typeClassName)) {
-				try {
-					FieldType type = (FieldType) basicType.getConstructors()[0].newInstance();
-					return type;
-				} catch (InstantiationException | IllegalAccessException | IllegalArgumentException
-						| InvocationTargetException | SecurityException e) {
-					e.printStackTrace();
-					break;
-				}
-			}
-		}
-
-		return null;
-	}
-
-	/**
-	 * Instantiates a parameter type from its name.
-	 *
-	 * @param typeName the type name
-	 * @return the field type
-	 */
-	@Deprecated(forRemoval = true)
-	public FieldType instantiateTypeFromTypeName(String typeName) {
-		String typeClassName = typeName.substring(0, 1).toUpperCase() + typeName.substring(1) + "Type";
-		return instantiateTypeFromClassName(typeClassName);
 	}
 
 	/**
