@@ -77,7 +77,7 @@ public class TypeManager implements Manager, EventListener {
 	 *
 	 * @return single instance of TypeManager
 	 */
-	public static TypeManager getInstance() {
+	public static final TypeManager getInstance() {
 		return instance;
 	}
 

@@ -234,7 +234,7 @@ public class RunManager implements Manager, EventListener {
 	 *
 	 * @return single instance of RunManager
 	 */
-	public static RunManager getInstance() {
+	public static final RunManager getInstance() {
 		return instance;
 	}
 

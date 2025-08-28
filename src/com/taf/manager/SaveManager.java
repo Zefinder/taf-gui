@@ -228,7 +228,7 @@ public class SaveManager implements Manager {
 	 *
 	 * @return single instance of SaveManager
 	 */
-	public static SaveManager getInstance() {
+	public static final SaveManager getInstance() {
 		return instance;
 	}
 

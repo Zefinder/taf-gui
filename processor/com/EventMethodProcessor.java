@@ -30,7 +30,7 @@ public class EventMethodProcessor extends AbstractProcessor {
 			annotatedElements.forEach(element -> {
 				if (element instanceof ExecutableElement executableElement) {
 					ExecutableType executableType = ((ExecutableType) element.asType());
-	
+
 					// Tell the user that the number of parameters must be one
 					int parameterNumber = executableType.getParameterTypes().size();
 					if (parameterNumber == 0 || parameterNumber > 1) {
@@ -41,7 +41,8 @@ public class EventMethodProcessor extends AbstractProcessor {
 					TypeMirror parameter = executableType.getParameterTypes().get(0);
 					if (parameter.getKind() != TypeKind.DECLARED) {
 						processingEnv.getMessager().printMessage(Kind.WARNING,
-								PARAMETERS_TYPE_WARNING_FORMAT.formatted(parameter.toString()), executableElement.getParameters().get(0));
+								PARAMETERS_TYPE_WARNING_FORMAT.formatted(parameter.toString()),
+								executableElement.getParameters().get(0));
 					} else {
 						if (parameter instanceof DeclaredType parameterType) {
 							TypeElement parameterElement = (TypeElement) parameterType.asElement();
@@ -55,24 +56,17 @@ public class EventMethodProcessor extends AbstractProcessor {
 
 							if (!found) {
 								processingEnv.getMessager().printMessage(Kind.WARNING,
-										PARAMETERS_TYPE_WARNING_FORMAT.formatted(parameterType.toString()), executableElement.getParameters().get(0));
+										PARAMETERS_TYPE_WARNING_FORMAT.formatted(parameterType.toString()),
+										executableElement.getParameters().get(0));
 							}
 						}
 					}
 
 					// Inform the user that the method must be public
-					boolean publicFound = false;
-					for (Modifier modifier : executableElement.getModifiers()) {
-						if (modifier == Modifier.PUBLIC) {
-							publicFound = true;
-							break;
-						}
-					}
-					
-					if (!publicFound) {
+					if (!executableElement.getModifiers().contains(Modifier.PUBLIC)) {
 						processingEnv.getMessager().printMessage(Kind.WARNING, PUBLIC_MODIFIER_WARNING, element);
 					}
-					
+
 					// Inform the user that the return type is never used
 					if (executableType.getReturnType().getKind() != TypeKind.VOID) {
 						processingEnv.getMessager().printMessage(Kind.OTHER, RETURN_TYPE_NOTE, element);
