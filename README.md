@@ -4,12 +4,12 @@ Welcome to the official graphical interface repository of the TAF software. Beca
 - Creating the model
 - Modifying a model and including all mandatory parameters for every entity
 - Creating all mandatory files to run TAF and simplifying the run settings
-- Displaying the python line of code to access a certain parameter of the model for the `Export.py` (WIP) 
+- Displaying the python line of code to access a certain parameter of the model for the `Export.py`
 
 This repository is made in **Java 21** and tries to respect all TAF specifications. It is better to use Eclipse to run this project since the installation is made for Eclipse (but if you want to use another IDE, feel free to do so)
 
 ## How to configure the workspace? 
-I made the choice to not use Maven to limit the needs of external libraries. There are two source folders: `src` containing the source code of the GUI, and `tests` containing all unit tests. The unit tests use **JUnit Jupiter** (JUnit 5). 
+I made the choice to not use Maven to limit the needs of external libraries. There are three source folders: `src` containing the source code of the GUI, `tests` containing all unit tests, and `processor` containing the code of the annotation processor. The unit tests use **JUnit Jupiter** (JUnit 5). 
 
 Custom annotations are used for **null static analysis**:
 - **Nullable** to specify that a value can be **null**
@@ -19,9 +19,8 @@ The annotation **NotEmpty** is here for documentation purpose and specifies that
 
 Custom annotations, coupled with java annotation processors, are used to verify the code structure (and sometimes generate code) (WIP):
 - **Manager** is used for managers and will verify that the manager class is a singleton
-- **EventMethod** is used for event listeners and will verify that a method is public, returns void and has a single argument that is an event
-- **Factory** is used to create a factory of that abstract class
-- **FactoryObject** is used to populate the factory of the specified class
+- **EventMethod** is used for event listeners and will verify that it is compliant with the event method description
+- **FactoryObject** is used to tell that objects are created with a factory and generate factories (WIP)
 
 ### How to configure with Eclipse?
 If you are on Linux, you can run the script `init_eclipse.sh` **after adding the project into Eclipse** and it will install everything for you. If you don't know how to import a project into Eclipse, here are the steps (after cloning the repo):
@@ -49,15 +48,23 @@ To add `tests` as a test source folder, add the following lines in `.classpath` 
 		<attribute name="test" value="true"/>
 	</attributes>
 </classpathentry>
+<classpathentry kind="src" output="processorbin" path="processor"/>
 ```
 
 For the warning and errors, create the `.settings` folder if it does not exist and create (or replace the content of) `.settings/org.eclipse.jdt.code.prefs` by the content of `errors_warnings`. Once you did this you can delete the `errors_warnings` file.
 
 Set the encoding set to UTF-8 (in the `Problems` tab, right click on the problem and `Quick Fix`.
 
-For the custom annotations (WIP)
+For the custom annotations, create a new file in `.settings` called `org.eclipse.jdt.core.perfs` and fill it with:
+```
+eclipse.preferences.version=1
+org.eclipse.jdt.apt.aptEnabled=true
+org.eclipse.jdt.apt.genSrcDir=.apt_generated
+org.eclipse.jdt.apt.genTestSrcDir=.apt_tests
+org.eclipse.jdt.apt.reconcileEnabled=true
+```
 
-After everything done, restart Eclipse.
+After everything done, restart Eclipse, click on the project, refresh (`F5` or right click and `refresh`), and rebuild (`Project -> Clean...`). 
 
 ### JAutoDoc
 
