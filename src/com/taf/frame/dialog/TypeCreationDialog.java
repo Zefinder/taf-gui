@@ -30,12 +30,6 @@
  */
 package com.taf.frame.dialog;
 
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
 import com.taf.annotation.Nullable;
 import com.taf.exception.EntityCreationException;
 import com.taf.util.Consts;
@@ -56,9 +50,6 @@ public class TypeCreationDialog extends InputInformationDialog {
 	/** The dialog title. */
 	private static final String DIALOG_TITLE = "Create a new type";
 
-	/** The field name. */
-	private final JTextField fieldName;
-
 	/** The created type. */
 	private com.taf.logic.field.Type createdType;
 
@@ -66,26 +57,8 @@ public class TypeCreationDialog extends InputInformationDialog {
 	 * Instantiates a new type creation dialog.
 	 */
 	public TypeCreationDialog() {
+		super(Consts.TYPE_NAME_LABEL_TEXT);
 		this.setTitle(DIALOG_TITLE);
-
-		// TODO Put in InputInformationDialog as they all use it?
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.LARGE_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.SMALL_INSET_GAP);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 0;
-		JLabel fieldLabel = new JLabel(Consts.TYPE_NAME_LABEL_TEXT);
-		addComponent(fieldLabel, c);
-
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.LARGE_INSET_GAP);
-		c.gridx = 1;
-		fieldName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
-		addComponent(fieldName, c);
 	}
 
 	/**
@@ -106,7 +79,7 @@ public class TypeCreationDialog extends InputInformationDialog {
 
 	@Override
 	protected void performAction() {
-		String name = fieldName.getText();
+		String name = getFieldNameText();
 		if (!name.isBlank()) {
 			try {
 				createdType = new com.taf.logic.field.Type(name);

@@ -41,12 +41,27 @@ import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import com.taf.util.Consts;
 
 /**
+ * <p>
  * The InputInformationDialog is the base class for TAF dialogs. It contains a
  * text field and a confirm button to usually input a name.
+ * </p>
+ *
+ * <p>
+ * This class gives methods to add other things than just a field and a button.
+ * The dialog layout is a {@link GridBagLayout} and the constraint
+ * <code>c</code> is accessible as a protected field. To access the field text,
+ * use {@link #getFieldNameText()}. To add a component, use
+ * {@link #addComponent(JComponent, GridBagConstraints)}. It will remember the
+ * position of the last <code>gridy</code> and will position the button at the
+ * right place. Note that <code>c</code> is already ready for the next row, you
+ * should not have to modify it.
+ * </p>
  *
  * @see JDialog
  *
@@ -55,6 +70,12 @@ import com.taf.util.Consts;
 public abstract class InputInformationDialog extends JDialog implements KeyListener, ActionListener {
 
 	private static final long serialVersionUID = -2718172025186345523L;
+
+	/** The default GridBagConstraints. */
+	protected GridBagConstraints c;
+
+	/** The field name. */
+	private JTextField fieldName;
 
 	/** The ok button text. */
 	private static final String OK_BUTTON_TEXT = "Add";
@@ -69,15 +90,34 @@ public abstract class InputInformationDialog extends JDialog implements KeyListe
 	private int lastColumn;
 
 	/**
-	 * Instantiates a new input information dialog.
+	 * Instantiates a new input information dialog.code
 	 */
-	public InputInformationDialog() {
+	public InputInformationDialog(String fieldLabelText) {
 		this.setModalityType(ModalityType.APPLICATION_MODAL);
 		this.setLayout(new GridBagLayout());
 		this.addKeyListener(this);
+		c = Consts.getDefaultConstraint();
+		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.LARGE_INSET_GAP, Consts.SMALL_INSET_GAP,
+				Consts.SMALL_INSET_GAP);
+		c.weightx = 0;
+		c.weighty = 0;
+		c.gridx = 0;
+		c.gridy = 0;
+		JLabel fieldLabel = new JLabel(fieldLabelText);
+		addComponent(fieldLabel, c);
+
+		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
+				Consts.LARGE_INSET_GAP);
+		c.gridx = 1;
+		fieldName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
+		addComponent(fieldName, c);
+		
+		c.gridx = 0;
+		c.gridy = 1;
+
 		okButton = new JButton(OK_BUTTON_TEXT);
 		okButton.addActionListener(this);
-		lastRow = 0;
+		lastRow = 1;
 		lastColumn = 0;
 	}
 
@@ -102,6 +142,15 @@ public abstract class InputInformationDialog extends JDialog implements KeyListe
 		this.pack();
 		this.setLocationRelativeTo(null);
 		this.setVisible(true);
+	}
+
+	/**
+	 * Returns the field name text.
+	 *
+	 * @return the field name text
+	 */
+	protected String getFieldNameText() {
+		return fieldName.getText();
 	}
 
 	@Override

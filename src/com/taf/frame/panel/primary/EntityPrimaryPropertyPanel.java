@@ -93,11 +93,12 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 		entityName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
 		entityName.setText(name);
 		entityName.addActionListener(e -> {
-			// TODO Add not empty check
-			// TODO Sanitize input
-			String text = entityName.getText();
-			updateFieldName(entity, name, text);
-			name = entityName.getText();
+			String entityName = this.entityName.getText();
+			if (!entityName.isBlank()) {
+				String text = entityName;
+				updateFieldName(entity, name, text);
+				name = entityName;				
+			}
 		});
 
 		// TODO Add the name field in the panel here and not in subclasses

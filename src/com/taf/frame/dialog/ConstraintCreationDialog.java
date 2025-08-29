@@ -30,12 +30,6 @@
  */
 package com.taf.frame.dialog;
 
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
 import com.taf.annotation.Nullable;
 import com.taf.exception.EntityCreationException;
 import com.taf.logic.constraint.Constraint;
@@ -57,9 +51,6 @@ public class ConstraintCreationDialog extends InputInformationDialog {
 	/** The dialog title. */
 	private static final String DIALOG_TITLE = "Create a new constraint";
 
-	/** The constraint name. */
-	private final JTextField constraintName;
-
 	/** The created constraint. */
 	private Constraint createdConstraint;
 
@@ -67,25 +58,8 @@ public class ConstraintCreationDialog extends InputInformationDialog {
 	 * Instantiates a new constraint creation dialog.
 	 */
 	public ConstraintCreationDialog() {
+		super(Consts.CONSTRAINT_NAME_LABEL_TEXT);
 		this.setTitle(DIALOG_TITLE);
-
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.LARGE_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.SMALL_INSET_GAP);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 0;
-		JLabel constraintLabel = new JLabel(Consts.CONSTRAINT_NAME_LABEL_TEXT);
-		addComponent(constraintLabel, c);
-
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.LARGE_INSET_GAP);
-		c.gridx = 1;
-		constraintName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
-		addComponent(constraintName, c);
 	}
 
 	/**
@@ -106,7 +80,7 @@ public class ConstraintCreationDialog extends InputInformationDialog {
 
 	@Override
 	protected void performAction() {
-		String name = constraintName.getText();
+		String name = getFieldNameText();
 		if (name != null && !name.isBlank()) {
 			try {
 				createdConstraint = new Constraint(name.strip());

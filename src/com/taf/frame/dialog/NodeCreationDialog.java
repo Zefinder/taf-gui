@@ -30,12 +30,6 @@
  */
 package com.taf.frame.dialog;
 
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
 import com.taf.annotation.Nullable;
 import com.taf.exception.EntityCreationException;
 import com.taf.logic.field.Node;
@@ -57,9 +51,6 @@ public class NodeCreationDialog extends InputInformationDialog {
 	/** The dialog title. */
 	private static final String DIALOG_TITLE = "Create a new node";
 
-	/** The field name. */
-	private final JTextField fieldName;
-
 	/** The created node. */
 	private Node createdNode;
 
@@ -67,26 +58,8 @@ public class NodeCreationDialog extends InputInformationDialog {
 	 * Instantiates a new node creation dialog.
 	 */
 	public NodeCreationDialog() {
+		super(Consts.NODE_NAME_LABEL_TEXT);
 		this.setTitle(DIALOG_TITLE);
-
-		// TODO Put in InputInformationDialog as they all use it?
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.LARGE_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.SMALL_INSET_GAP);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 0;
-		JLabel fieldLabel = new JLabel(Consts.NODE_NAME_LABEL_TEXT);
-		addComponent(fieldLabel, c);
-
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.LARGE_INSET_GAP);
-		c.gridx = 1;
-		fieldName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
-		addComponent(fieldName, c);
 	}
 
 	/**
@@ -107,7 +80,7 @@ public class NodeCreationDialog extends InputInformationDialog {
 
 	@Override
 	protected void performAction() {
-		String name = fieldName.getText();
+		String name = getFieldNameText();
 		if (!name.isBlank()) {
 			try {
 				createdNode = new Node(name);
