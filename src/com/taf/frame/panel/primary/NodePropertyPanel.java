@@ -75,23 +75,8 @@ public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 	 * @param node the node
 	 */
 	public NodePropertyPanel(Entity entity) {
-		super(entity);
-
+		super(entity, Consts.NODE_NAME_LABEL_TEXT);
 		Node node = (Node) entity;
-		
-		GridBagConstraints c = Consts.getDefaultConstraint();
-		c.anchor = GridBagConstraints.NORTH;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
-		c.weightx = 0;
-		c.weighty = 0;
-		JLabel nodeLabel = new JLabel(Consts.NODE_NAME_LABEL_TEXT);
-		this.add(nodeLabel, c);
-
-		c.insets = new Insets(0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0);
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridx = 1;
-		this.add(entityName, c);
 
 		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.weighty = 1;
@@ -162,9 +147,6 @@ public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 			EventManager.getInstance().fireEvent(event);
 			return;
 		}
-
-		// Send a warning to say that the type does not exist
-		// TODO
 	}
 
 }

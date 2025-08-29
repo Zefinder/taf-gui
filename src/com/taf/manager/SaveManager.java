@@ -430,7 +430,7 @@ public class SaveManager implements Manager {
 	public Root getProjectRoot() {
 		return projectRoot;
 	}
-	
+
 	/**
 	 * Import a new project in the XML format. If the file already exist, then
 	 * returns null.
@@ -439,11 +439,28 @@ public class SaveManager implements Manager {
 	 * @return the name of the file, or null if the file already existed.
 	 * @throws ImportException if the XML file contained errors
 	 */
-	// TODO Change return value to boolean
-	public String importProject(File xmlTafFile) throws ImportException {
-		// TODO Check if associated taf file exist
+	public boolean importProject(File xmlTafFile) throws ImportException {
+		return importProject(xmlTafFile, false);
+	}
+
+	/**
+	 * Import a new project in the XML format. If the file already exist, then
+	 * returns false if the forceReplace is set to false.
+	 *
+	 * @param xmlTafFile   the xml taf file
+	 * @param forceReplace true if a file check must be performed.
+	 * @return the name of the file, or null if the file already existed.
+	 * @throws ImportException if the XML file contained errors
+	 */
+	public boolean importProject(File xmlTafFile, boolean forceReplace) throws ImportException {
 		String newTafFileName = xmlTafFile.getName().replace(Consts.XML_FILE_EXTENSION, Consts.TAF_FILE_EXTENSION);
 		File newTafFile = getProjectFileFromName(newTafFileName);
+		
+		if (!forceReplace) {
+			if (newTafFile.exists()) {
+				return false;
+			}
+		}
 
 		XMLTafReader xmlReader = new XMLTafReader(xmlTafFile);
 		try {
@@ -466,7 +483,7 @@ public class SaveManager implements Manager {
 		}
 
 		// Return the new file name
-		return newTafFileName;
+		return true;
 	}
 
 	@Override
@@ -546,8 +563,6 @@ public class SaveManager implements Manager {
 					throw new ParseException(this.getClass(), PARENT_UNKNWON_FORMAT_ERROR_MESSAGE.formatted(parentId));
 				}
 
-				// TODO Check if multiple roots
-
 				// Search for the name
 				Optional<String> entityNameOp = getArgument(line, NAME_ARGUMENT);
 				if (entityNameOp.isEmpty()) {
@@ -559,9 +574,7 @@ public class SaveManager implements Manager {
 				case Consts.TYPE_ENTITY_NAME:
 					Type type = new Type(entityName);
 
-					// Parent id must be 0
-					// TODO send a warning
-
+					// Parent id is always 0 even if type in type
 					typeList.get(0).addEntity(type);
 					typeList.add(type);
 
@@ -573,6 +586,12 @@ public class SaveManager implements Manager {
 					Node node;
 
 					if (parentId == -1) {
+						if (root != null) {
+							JOptionPane.showMessageDialog(null,
+									"Another root has been detected, restarting from this new root", "Warning",
+									JOptionPane.WARNING_MESSAGE);
+						}
+
 						// This is the root node
 						root = new Root(entityName);
 						node = root;

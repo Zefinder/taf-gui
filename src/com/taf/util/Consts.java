@@ -140,6 +140,12 @@ public class Consts {
 
 	/** The error title for a {@link JOptionPane} dialog. */
 	public static final String ERROR_DIALOG_TITLE = "Error!";
+	
+	/** The save dialog text. */
+	public static final String SAVE_DIALOG_TEXT = "Do you want to save?";
+	
+	/** The save dialog title. */
+	public static final String SAVE_DIALOG_TITLE = "Save?";
 
 	/*
 	 * --------------------- --- ENTITY FORMAT --- ---------------------

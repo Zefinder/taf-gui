@@ -30,12 +30,10 @@
  */
 package com.taf.frame.dialog;
 
-import java.awt.GridBagConstraints;
 import java.awt.Insets;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JTextField;
 
 import com.taf.annotation.Nullable;
 import com.taf.exception.EntityCreationException;
@@ -61,9 +59,6 @@ public class ParameterCreationDialog extends InputInformationDialog {
 	/** The dialog title. */
 	private static final String DIALOG_TITLE = "Create a new parameter";
 
-	/** The field name. */
-	private final JTextField fieldName;
-
 	/** The type names combo box. */
 	private final JComboBox<String> typeNames;
 
@@ -74,30 +69,10 @@ public class ParameterCreationDialog extends InputInformationDialog {
 	 * Instantiates a new parameter creation dialog.
 	 */
 	public ParameterCreationDialog() {
+		super(Consts.PARAMETER_NAME_LABEL_TEXT);
 		this.setTitle(DIALOG_TITLE);
 
-		// TODO Replace with ConstantManager
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.LARGE_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.SMALL_INSET_GAP);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 0;
-		JLabel fieldLabel = new JLabel(Consts.PARAMETER_NAME_LABEL_TEXT);
-		addComponent(fieldLabel, c);
-
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.LARGE_INSET_GAP);
-		c.gridx = 1;
-		fieldName = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
-		addComponent(fieldName, c);
-
 		c.insets = new Insets(5, Consts.LARGE_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
-		c.gridx = 0;
-		c.gridy = 1;
 		JLabel typeNameLabel = new JLabel(Consts.PARAMETER_TYPE_LABEL_TEXT);
 		addComponent(typeNameLabel, c);
 
@@ -126,7 +101,7 @@ public class ParameterCreationDialog extends InputInformationDialog {
 
 	@Override
 	protected void performAction() {
-		String name = fieldName.getText();
+		String name = getFieldNameText();
 		if (!name.isBlank()) {
 			String typeName = (String) typeNames.getSelectedItem();
 			try {

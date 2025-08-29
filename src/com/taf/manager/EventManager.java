@@ -158,7 +158,6 @@ public class EventManager implements Manager {
 		for (Method method : listenerMethods) {
 			EventMethod eventAnnotation = method.getAnnotation(EventMethod.class);
 			if (eventAnnotation != null) {
-				// TODO Check async when implemented
 				// Check if only one parameter and if it is an Event
 				if (method.getParameterCount() == 1) {
 					Class<?> parameterType = method.getParameterTypes()[0];

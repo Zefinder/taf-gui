@@ -31,8 +31,12 @@
 package com.taf.frame;
 
 import java.awt.BorderLayout;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.taf.annotation.EventMethod;
 import com.taf.event.EventListener;
@@ -43,6 +47,8 @@ import com.taf.frame.menubar.TafProjectMenuBar;
 import com.taf.frame.panel.TafPanel;
 import com.taf.logic.field.Root;
 import com.taf.manager.EventManager;
+import com.taf.manager.SaveManager;
+import com.taf.util.Consts;
 
 /**
  * The ProjectFrame is the frame shown when opening a project from the
@@ -61,10 +67,9 @@ public class ProjectFrame extends TafFrame implements EventListener {
 
 	/** The frame name. */
 	private static final String FRAME_NAME = "TAF GUI";
-
+	
 	/** The TAF panel. */
 	private final TafPanel tafPanel;
-	// TODO Add verification to check if saved before quit !
 
 	/**
 	 * Instantiates a new project frame.
@@ -79,6 +84,25 @@ public class ProjectFrame extends TafFrame implements EventListener {
 		this.setResizable(true);
 		this.setJMenuBar(new TafProjectMenuBar());
 
+		// Ask to save when closing
+		this.addWindowListener(new WindowAdapter() {
+			private static final String SAVE_ERROR = "An error occured when saving, quit anyways...";
+			
+			@Override
+			public void windowClosing(WindowEvent e) {
+				int answer = JOptionPane.showConfirmDialog(null, Consts.SAVE_DIALOG_TEXT, Consts.SAVE_DIALOG_TITLE, JOptionPane.YES_NO_OPTION,
+						JOptionPane.INFORMATION_MESSAGE);
+				
+				if (answer == JOptionPane.YES_OPTION) {
+					try {
+						SaveManager.getInstance().saveProject();
+					} catch (IOException e1) {
+						Consts.showError(SAVE_ERROR + e1.getMessage());
+					}
+				}
+			}
+		});
+		
 		tafPanel = new TafPanel(root);
 		this.setLayout(new BorderLayout());
 		this.add(tafPanel);

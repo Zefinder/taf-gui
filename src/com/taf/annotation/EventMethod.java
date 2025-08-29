@@ -44,7 +44,7 @@ import com.taf.manager.EventManager;
 /**
  * <p>
  * The EventMethod annotation provides information on a method, telling the user
- * and the compiler (TODO) that this method is used as an event handler.
+ * and the compiler that this method is used as an event handler.
  * </p>
  * 
  * <p>
@@ -78,5 +78,4 @@ import com.taf.manager.EventManager;
 @Target(METHOD)
 @Documented
 public @interface EventMethod {
-	// TODO Add async parameter
 }

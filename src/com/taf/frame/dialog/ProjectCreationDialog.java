@@ -30,12 +30,6 @@
  */
 package com.taf.frame.dialog;
 
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JTextField;
-
 import com.taf.util.Consts;
 
 /**
@@ -56,9 +50,6 @@ public class ProjectCreationDialog extends InputInformationDialog {
 	/** The project label text. */
 	private static final String PROJECT_LABEL_TEXT = "Project name";
 
-	/** The project field. */
-	private final JTextField projectField;
-
 	/** The project name. */
 	private String projectName;
 
@@ -66,26 +57,8 @@ public class ProjectCreationDialog extends InputInformationDialog {
 	 * Instantiates a new project creation dialog.
 	 */
 	public ProjectCreationDialog() {
+		super(PROJECT_LABEL_TEXT);
 		this.setTitle(DIALOG_TITLE);
-
-		// TODO Replace with ConstantManager
-		GridBagConstraints c = new GridBagConstraints();
-		c.anchor = GridBagConstraints.CENTER;
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.LARGE_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.SMALL_INSET_GAP);
-		c.fill = GridBagConstraints.BOTH;
-		c.gridheight = 1;
-		c.gridwidth = 1;
-		c.gridx = 0;
-		c.gridy = 0;
-		JLabel projectLabel = new JLabel(PROJECT_LABEL_TEXT);
-		addComponent(projectLabel, c);
-
-		c.insets = new Insets(Consts.HUGE_INSET_GAP, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP,
-				Consts.LARGE_INSET_GAP);
-		c.gridx = 1;
-		projectField = new JTextField(Consts.JTEXT_FIELD_DEFAULT_COLUMN);
-		addComponent(projectField, c);
 	}
 
 	/**
@@ -105,7 +78,7 @@ public class ProjectCreationDialog extends InputInformationDialog {
 
 	@Override
 	protected void performAction() {
-		String name = projectField.getText();
+		String name = getFieldNameText();
 		if (!name.isBlank()) {
 			// Check if ends with .taf, adds it otherwise
 			if (!name.endsWith(Consts.TAF_FILE_EXTENSION)) {

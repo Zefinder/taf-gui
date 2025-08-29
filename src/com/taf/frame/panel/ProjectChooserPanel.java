@@ -41,6 +41,7 @@ import java.io.IOException;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -87,6 +88,9 @@ import com.taf.util.Consts;
 public class ProjectChooserPanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = 6815040547237393654L;
+	
+	private static final String PROJECT_NAME_ERROR_MESSAGE = "The project name already exist!";
+	private static final String OPEN_PROJECT_ERROR_MESSAGE = "An error occured when opening the project: ";
 
 	/** The project column name. */
 	private static final String PROJECT_COLUMN_NAME = "Projects";
@@ -106,14 +110,14 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 	/** The import file chooser button. */
 	private static final String IMPORT_FILE_CHOOSER_BUTTON = "Import";
 
-	/** The open project error message. */
-	private static final String OPEN_PROJECT_ERROR_MESSAGE = "An error occured when opening the project: ";
-
 	/** The table model. */
 	private DefaultTableModel tableModel;
 
 	/** The project table with the names. */
 	private JTable projectTable;
+
+	/** The open button. */
+	private JButton openButton;
 
 	/**
 	 * Instantiates a new project chooser panel.
@@ -169,10 +173,10 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 			}
 
 			private int selectRow(MouseEvent e) {
-				if (SwingUtilities.isRightMouseButton(e)) {
-					int row = projectTable.rowAtPoint(e.getPoint());
-
-					if (row != -1) {
+				int row = projectTable.rowAtPoint(e.getPoint());
+				if (row != -1) {
+					openButton.setEnabled(true);
+					if (SwingUtilities.isRightMouseButton(e)) {
 						projectTable.setRowSelectionInterval(row, row);
 						return row;
 					}
@@ -206,13 +210,17 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		createButton.addActionListener(e -> {
 			ProjectCreationDialog dialog = new ProjectCreationDialog();
 			dialog.initDialog();
-			String projectName = dialog.getProjectName();
+			String projectName = dialog.getProjectName();			
 
 			if (projectName != null) {
+				// All special characters by empty (except _ and .)
+				projectName = projectName.replaceAll("[^a-zA-Z0-9 _.]", "");
+				
 				try {
-					// TODO Sanitize input
 					if (SaveManager.getInstance().createProject(projectName)) {
 						tableModel.addRow(new String[] { projectName });
+					} else {
+						Consts.showError(PROJECT_NAME_ERROR_MESSAGE);
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();
@@ -223,9 +231,9 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 		c.insets = new Insets(Consts.MEDIUM_INSET_GAP, Consts.SMALL_INSET_GAP, 0, 0);
 		c.gridx = 1;
-		// TODO Disable button when nothing is selected
-		JButton openButton = new JButton(OPEN_PROJECT_BUTTON_TEXT);
+		openButton = new JButton(OPEN_PROJECT_BUTTON_TEXT);
 		openButton.addActionListener(e -> openProject());
+		openButton.setEnabled(false);
 		this.add(openButton, c);
 
 		EventManager.getInstance().registerEventListener(this);
@@ -239,6 +247,7 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 	@EventMethod
 	public void onProjectToDelete(ProjectToDeleteEvent event) {
 		deleteProject();
+		openButton.setEnabled(false);
 	}
 
 	/**
@@ -265,8 +274,24 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 		if (answer == JFileChooser.APPROVE_OPTION) {
 			try {
-				String fileName = SaveManager.getInstance().importProject(chooser.getSelectedFile());
-				tableModel.addRow(new String[] { fileName });
+				File selectedFile = chooser.getSelectedFile();
+				String fileName = selectedFile.getName().replace(Consts.XML_FILE_EXTENSION, Consts.TAF_FILE_EXTENSION);
+				boolean imported = SaveManager.getInstance().importProject(chooser.getSelectedFile());
+
+				if (!imported) {
+					// The file already exist...
+					answer = JOptionPane.showConfirmDialog(null,
+							"A file with the same name already exist, do you want to replace it?", "File already exist",
+							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE);
+					
+					if (answer == JOptionPane.YES_OPTION) {
+						imported = SaveManager.getInstance().importProject(chooser.getSelectedFile(), true);
+					}
+				}
+
+				if (imported) {
+					tableModel.addRow(new String[] { fileName });
+				}
 			} catch (ImportException e) {
 				Consts.showError(e.getShortMessage());
 				e.printStackTrace();

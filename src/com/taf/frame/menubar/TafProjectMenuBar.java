@@ -65,7 +65,7 @@ public class TafProjectMenuBar extends JMenuBar {
 
 	/** The project menu text. */
 	private static final String PROJECT_MENU_TEXT = "Project";
-
+	
 	/** The save item text. */
 	private static final String SAVE_ITEM_TEXT = "Save project";
 
@@ -83,12 +83,6 @@ public class TafProjectMenuBar extends JMenuBar {
 
 	/** The path item text. */
 	private static final String PATH_ITEM_TEXT = "Path settings";
-
-	/** The save dialog text. */
-	private static final String SAVE_DIALOG_TEXT = "Do you want to save?";
-
-	/** The save dialog title. */
-	private static final String SAVE_DIALOG_TITLE = "Save?";
 
 	private static final String ERROR_SAVE_DIALOG_TEXT = "An error occured when trying to save...\n";
 
@@ -131,7 +125,7 @@ public class TafProjectMenuBar extends JMenuBar {
 	 * @return the {@link JOptionPane} answer
 	 */
 	private int askSave() {
-		int answer = JOptionPane.showConfirmDialog(null, SAVE_DIALOG_TEXT, SAVE_DIALOG_TITLE, JOptionPane.YES_NO_OPTION,
+		int answer = JOptionPane.showConfirmDialog(null, Consts.SAVE_DIALOG_TEXT, Consts.SAVE_DIALOG_TITLE, JOptionPane.YES_NO_OPTION,
 				JOptionPane.INFORMATION_MESSAGE);
 		return answer;
 	}
