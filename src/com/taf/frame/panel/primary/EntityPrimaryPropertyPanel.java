@@ -137,7 +137,5 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 			EventManager.getInstance().fireEvent(event);
 		}
 	}
-	
-	// TODO Add a method to add a component
 
 }

@@ -88,6 +88,9 @@ import com.taf.util.Consts;
 public class ProjectChooserPanel extends JPanel implements EventListener {
 
 	private static final long serialVersionUID = 6815040547237393654L;
+	
+	private static final String PROJECT_NAME_ERROR_MESSAGE = "The project name already exist!";
+	private static final String OPEN_PROJECT_ERROR_MESSAGE = "An error occured when opening the project: ";
 
 	/** The project column name. */
 	private static final String PROJECT_COLUMN_NAME = "Projects";
@@ -106,9 +109,6 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 
 	/** The import file chooser button. */
 	private static final String IMPORT_FILE_CHOOSER_BUTTON = "Import";
-
-	/** The open project error message. */
-	private static final String OPEN_PROJECT_ERROR_MESSAGE = "An error occured when opening the project: ";
 
 	/** The table model. */
 	private DefaultTableModel tableModel;
@@ -210,13 +210,17 @@ public class ProjectChooserPanel extends JPanel implements EventListener {
 		createButton.addActionListener(e -> {
 			ProjectCreationDialog dialog = new ProjectCreationDialog();
 			dialog.initDialog();
-			String projectName = dialog.getProjectName();
+			String projectName = dialog.getProjectName();			
 
 			if (projectName != null) {
+				// All special characters by empty (except _ and .)
+				projectName = projectName.replaceAll("[^a-zA-Z0-9 _.]", "");
+				
 				try {
-					// TODO Sanitize input
 					if (SaveManager.getInstance().createProject(projectName)) {
 						tableModel.addRow(new String[] { projectName });
+					} else {
+						Consts.showError(PROJECT_NAME_ERROR_MESSAGE);
 					}
 				} catch (IOException e1) {
 					e1.printStackTrace();

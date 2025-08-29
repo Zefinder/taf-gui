@@ -324,7 +324,6 @@ public class SettingsPanel extends JPanel implements EventListener {
 	 * @param field the field
 	 * @param c     the c
 	 */
-	// TODO Add to constant manager and use on a lot of panels
 	private void addLabeledField(String text, JTextField field, GridBagConstraints c) {
 		// Add label
 		c.anchor = GridBagConstraints.LINE_END;
