@@ -60,7 +60,7 @@ import com.taf.util.IntegerEditor;
  *
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = FieldType.class, generate = true)
+@FactoryObject(types = "com.taf.logic.type.FieldType", generate = true)
 public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = -6799435160247338364L;
@@ -108,7 +108,9 @@ public class StringPropertyPanel extends EntitySecondaryPropertyPanel {
 	 *
 	 * @param type the type
 	 */
-	public StringPropertyPanel(StringType type) {
+	public StringPropertyPanel(FieldType fieldType) {
+		StringType type = (StringType) fieldType;
+		
 		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.CENTER;
 		c.fill = GridBagConstraints.BOTH;

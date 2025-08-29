@@ -37,7 +37,6 @@ import javax.swing.JLabel;
 
 import com.taf.annotation.FactoryObject;
 import com.taf.logic.Entity;
-import com.taf.logic.field.Root;
 import com.taf.util.Consts;
 
 /**
@@ -48,7 +47,7 @@ import com.taf.util.Consts;
  * 
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = Entity.class, generate = true)
+@FactoryObject(types = "com.taf.logic.Entity", generate = true)
 public class RootPropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8423915116760040223L;
@@ -58,8 +57,8 @@ public class RootPropertyPanel extends EntityPrimaryPropertyPanel {
 	 *
 	 * @param node the node
 	 */
-	public RootPropertyPanel(Root node) {
-		super(node);
+	public RootPropertyPanel(Entity entity) {
+		super(entity);
 
 		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;

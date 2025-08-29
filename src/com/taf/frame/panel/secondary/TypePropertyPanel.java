@@ -50,7 +50,7 @@ import com.taf.util.Consts;
  * 
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = FieldType.class, generate = true)
+@FactoryObject(types = "com.taf.logic.type.FieldType", generate = true)
 public class TypePropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = 3296878396678633310L;
@@ -58,7 +58,7 @@ public class TypePropertyPanel extends EntitySecondaryPropertyPanel {
 	/**
 	 * Instantiates a new type property panel.
 	 */
-	public TypePropertyPanel() {
+	public TypePropertyPanel(FieldType type) {
 		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.NONE;

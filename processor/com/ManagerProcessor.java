@@ -33,19 +33,6 @@ public class ManagerProcessor extends AbstractProcessor {
 			Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(annotation);
 			annotatedElements.forEach(element -> {
 				if (element instanceof TypeElement typeElement) {
-////					processingEnv.getMessager().printMessage(Kind.WARNING, element.getKind().toString(), element);
-//					for (Element e : typeElement.getEnclosedElements()) {
-//						if (e instanceof ExecutableElement executableElement) {
-//							if (executableElement.getModifiers().containsAll(MANAGER_GET_INSTANCE_MODIFIERS)) {
-//								if (executableElement.getParameters().size() == 0) {
-//									if (executableElement.getReturnType().toString().equals(element.toString())) {
-//										processingEnv.getMessager().printMessage(Kind.WARNING, element.toString(), e);
-//									}
-//								}
-//							}
-//						}
-//					}
-
 					List<ExecutableElement> getInstances = typeElement.getEnclosedElements().stream()
 							.filter(ExecutableElement.class::isInstance).map(ExecutableElement.class::cast)
 							.filter(executableElement -> executableElement.getModifiers()
@@ -80,34 +67,6 @@ public class ManagerProcessor extends AbstractProcessor {
 					} else if (count > 1) {
 						processingEnv.getMessager().printMessage(Kind.OTHER, MULTIPLE_INSTANCE_FIELD_WARNING, element);
 					}
-
-//					long count = typeElement.getEnclosedElements().stream().filter(ExecutableElement.class::isInstance)
-//							.map(ExecutableElement.class::cast)
-//							.filter(executableElement -> executableElement.getSimpleName().toString()
-//									.equals("getInstance"))
-//							.filter(executableElement -> MANAGER_GET_INSTANCE_MODIFIERS
-//									.containsAll(executableElement.getModifiers()))
-//							.filter(executableElement -> executableElement.getParameters().size() == 0)
-//							.filter(executableElement -> executableElement.getReturnType().toString()
-//									.equals(element.toString()))
-//							.count();
-//
-//					// There cannot be more than one method that correspond to that name and number
-//					// of parameters
-//					if (count == 0) {
-//						processingEnv.getMessager().printError(GET_INSTANCE_METHOD_ERROR, element);
-//					}
-//
-//					count = typeElement.getEnclosedElements().stream().filter(VariableElement.class::isInstance)
-//							.map(VariableElement.class::cast)
-//							.filter(variableElement -> MANAGER_INSTANCE_MODIFIERS.containsAll(variableElement.getModifiers()))
-//							.filter(variableElement -> variableElement.getConstantValue().getClass().getName().equals(element.toString()))
-//							.count();
-//					
-//					// There must be only one instance of the manager
-//					if (count != 1) {
-//						processingEnv.getMessager().printMessage(Kind.WARNING, INSTANCE_FIELD_WARNING, element);
-//					}
 				}
 			});
 		}

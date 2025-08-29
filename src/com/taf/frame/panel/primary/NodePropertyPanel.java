@@ -55,7 +55,7 @@ import com.taf.util.Consts;
  * 
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = Entity.class, generate = true)
+@FactoryObject(types = "com.taf.logic.Entity", generate = true)
 public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 
 	private static final long serialVersionUID = 8423915116760040223L;
@@ -74,9 +74,11 @@ public class NodePropertyPanel extends EntityPrimaryPropertyPanel {
 	 *
 	 * @param node the node
 	 */
-	public NodePropertyPanel(Node node) {
-		super(node);
+	public NodePropertyPanel(Entity entity) {
+		super(entity);
 
+		Node node = (Node) entity;
+		
 		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.NORTH;
 		c.fill = GridBagConstraints.HORIZONTAL;

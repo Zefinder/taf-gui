@@ -88,7 +88,7 @@ echo "Set JAutoDoc options (even if plugin is not installed)"
 printf "%s" "$ENCODING_CONTENT" > "$ECLIPSE_ENCODING"
 
 # Compile and generate jar of processor annotation
-javac -d ./processorbin/ ./processor/com/*.java
+javac -d ./processorbin/ ./processor/com/*.java ./src/com/taf/annotation/FactoryObject.java
 cd ./processorbin
 jar cvf ../$ARCHIVE_NAME *
 cd ..

@@ -58,7 +58,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = FieldType.class, generate = true)
+@FactoryObject(types = "com.taf.logic.type.FieldType", generate = true)
 public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -9035183700723112945L;
@@ -104,8 +104,8 @@ public class RealPropertyPanel extends EntitySecondaryPropertyPanel implements P
 	 *
 	 * @param type the type
 	 */
-	public RealPropertyPanel(RealType type) {
-		this.type = type;
+	public RealPropertyPanel(FieldType fieldType) {
+		this.type = (RealType) fieldType;
 		format = DecimalFormat.getInstance(Locale.US);
 		minValue = type.getMin();
 		maxValue = type.getMax();
