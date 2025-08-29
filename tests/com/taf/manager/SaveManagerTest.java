@@ -51,7 +51,6 @@ class SaveManagerTest {
 	protected String mainDirectory;
 
 	// TODO Add test create projects with same name
-	// TODO Add test import already existing project
 
 	@BeforeEach
 	void initManager() {

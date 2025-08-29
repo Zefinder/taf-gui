@@ -30,8 +30,11 @@
  */
 package com.taf.frame.panel.primary;
 
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -75,6 +78,9 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 
 	/** The entity name field. */
 	protected final JTextField entityName;
+	
+	/** The default GridBagConstraints. */
+	protected final GridBagConstraints c;
 
 	/** The cached entity name. */
 	@NotEmpty
@@ -85,7 +91,7 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 	 *
 	 * @param entity the entity
 	 */
-	public EntityPrimaryPropertyPanel(Entity entity) {
+	public EntityPrimaryPropertyPanel(Entity entity, String entityNameLabel) {
 		this.setLayout(new GridBagLayout());
 
 		this.name = entity.getName();
@@ -101,7 +107,19 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 			}
 		});
 
-		// TODO Add the name field in the panel here and not in subclasses
+		c = Consts.getDefaultConstraint();
+		c.anchor = GridBagConstraints.NORTH;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
+		c.weightx = 0;
+		c.weighty = 0;
+		JLabel constraintLabel = new JLabel(entityNameLabel);
+		this.add(constraintLabel, c);
+
+		c.insets = new Insets(0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0);
+		c.gridwidth = GridBagConstraints.REMAINDER;
+		c.gridx = 1;
+		this.add(entityName, c);
 	}
 
 	/**

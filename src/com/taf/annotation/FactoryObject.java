@@ -40,7 +40,7 @@ import java.lang.annotation.Target;
 /**
  * <p>
  * The FactoryObject annotation provides information on a type, telling the user
- * and the compiler (TODO) that this object is used in a factory.
+ * and the compiler that this object is used in a factory.
  * </p>
  * 
  * <p>
@@ -49,7 +49,7 @@ import java.lang.annotation.Target;
  * <li>An array of classes representing the types that at least one constructor
  * must have.
  * <li>A boolean that is used to tell the processor if the factory code must be
- * generated for this object.
+ * generated for this object. (WIP)
  * </ul>
  * </p>
  * 

@@ -139,7 +139,6 @@ public class DoubleEditor extends DefaultCellEditor {
 	 */
 	private boolean checkFormatedField() {
 		if (!doubleField.isEditValid()) {
-			// TODO JOptionPane message to say invalid input
 			doubleField.setValue(doubleField.getValue());
 
 		} else {

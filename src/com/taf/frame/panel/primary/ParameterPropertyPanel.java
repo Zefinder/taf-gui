@@ -69,23 +69,8 @@ public class ParameterPropertyPanel extends EntityPrimaryPropertyPanel {
 	 * @param parameter the parameter
 	 */
 	public ParameterPropertyPanel(Entity entity) {
-		super(entity);
-		
+		super(entity, Consts.PARAMETER_NAME_LABEL_TEXT);
 		Parameter parameter = (Parameter) entity;
-
-		GridBagConstraints c = Consts.getDefaultConstraint();
-		c.anchor = GridBagConstraints.NORTH;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(0, 0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP);
-		c.weightx = 0;
-		c.weighty = 0;
-		JLabel parameterLabel = new JLabel(Consts.PARAMETER_NAME_LABEL_TEXT);
-		this.add(parameterLabel, c);
-
-		c.insets = new Insets(0, Consts.SMALL_INSET_GAP, Consts.SMALL_INSET_GAP, 0);
-		c.gridwidth = GridBagConstraints.REMAINDER;
-		c.gridx = 1;
-		this.add(entityName, c);
 
 		c.insets = new Insets(Consts.SMALL_INSET_GAP, 0, 0, Consts.SMALL_INSET_GAP);
 		c.weighty = 1;

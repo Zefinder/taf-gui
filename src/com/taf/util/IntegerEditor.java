@@ -137,7 +137,6 @@ public class IntegerEditor extends DefaultCellEditor {
 	 */
 	private boolean checkFormatedField() {
 		if (!integerField.isEditValid()) {
-			// TODO JOptionPane message to say invalid input
 			integerField.setValue(integerField.getValue());
 
 		} else {
