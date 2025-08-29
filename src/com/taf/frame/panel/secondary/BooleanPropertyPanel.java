@@ -51,7 +51,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = FieldType.class, generate = true)
+@FactoryObject(types = "com.taf.logic.type.FieldType", generate = true)
 public class BooleanPropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = -9212722796480771296L;
@@ -79,7 +79,9 @@ public class BooleanPropertyPanel extends EntitySecondaryPropertyPanel {
 	 *
 	 * @param type the type
 	 */
-	public BooleanPropertyPanel(BooleanType type) {
+	public BooleanPropertyPanel(FieldType fieldType) {
+		BooleanType type = (BooleanType) fieldType;
+		
 		GridBagConstraints c = Consts.getDefaultConstraint();
 		c.anchor = GridBagConstraints.LINE_END;
 		c.fill = GridBagConstraints.NONE;

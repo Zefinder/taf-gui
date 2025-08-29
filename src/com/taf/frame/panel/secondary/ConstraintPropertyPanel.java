@@ -58,7 +58,7 @@ import com.taf.util.EnumEditor;
  *
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = Constraint.class, generate = false)
+@FactoryObject(types = "com.taf.logic.constraint.Constraint", generate = false)
 public class ConstraintPropertyPanel extends EntitySecondaryPropertyPanel {
 
 	private static final long serialVersionUID = 7936903848228324275L;

@@ -3,5 +3,9 @@
 .project
 /.settings/
 /testbin/
-errors_warnings
-jautodoc
+/processorbin/
+/.apt/
+/.apt_tests/
+/.apt_generated/
+processor.jar
+.factorypath

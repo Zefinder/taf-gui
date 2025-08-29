@@ -82,7 +82,7 @@ public class EventManager implements Manager {
 	 *
 	 * @return single instance of EventManager
 	 */
-	public static EventManager getInstance() {
+	public static final EventManager getInstance() {
 		return instance;
 	}
 

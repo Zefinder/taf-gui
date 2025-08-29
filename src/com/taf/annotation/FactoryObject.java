@@ -70,7 +70,7 @@ public @interface FactoryObject {
 	 *
 	 * @return the array of classes that a constructor must have
 	 */
-	public Class<?>[] types() default {};
+	public String[] types() default {};
 
 	/**
 	 * Returns true if the object needs to be generated (WIP)

@@ -72,7 +72,7 @@ public class EntitySecondaryPanelFactory {
 	 */
 	public static EntitySecondaryPropertyPanel createFieldPropertyPanel(FieldType type) {
 		if (type instanceof DefaultFieldType) {
-			return new TypePropertyPanel();
+			return new TypePropertyPanel(type);
 		}
 
 		if (type instanceof NodeType) {

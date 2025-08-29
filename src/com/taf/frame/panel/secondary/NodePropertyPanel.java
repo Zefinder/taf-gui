@@ -63,7 +63,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = FieldType.class, generate = true)
+@FactoryObject(types = "com.taf.logic.type.FieldType", generate = true)
 public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = 293578359212546065L;
@@ -151,8 +151,8 @@ public class NodePropertyPanel extends EntitySecondaryPropertyPanel implements P
 	 *
 	 * @param type the type
 	 */
-	public NodePropertyPanel(NodeType type) {
-		this.type = type;
+	public NodePropertyPanel(FieldType fieldType) {
+		this.type = (NodeType) fieldType;
 
 		boolean hasMinMaxInstance = type.hasMinMaxInstance();
 		instanceNumber = type.getInstanceNumber();

@@ -75,7 +75,7 @@ public class SettingsManager implements Manager {
 	 *
 	 * @return single instance of SettingsManager
 	 */
-	public static SettingsManager getInstance() {
+	public static final SettingsManager getInstance() {
 		return instance;
 	}
 

@@ -55,7 +55,7 @@ import com.taf.util.Consts;
  *
  * @author Adrien Jakubiak
  */
-@FactoryObject(types = FieldType.class, generate = true)
+@FactoryObject(types = "com.taf.logic.type.FieldType", generate = true)
 public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implements PropertyChangeListener {
 
 	private static final long serialVersionUID = -9035183700723112945L;
@@ -98,8 +98,8 @@ public class IntegerPropertyPanel extends EntitySecondaryPropertyPanel implement
 	 *
 	 * @param type the type
 	 */
-	public IntegerPropertyPanel(IntegerType type) {
-		this.type = type;
+	public IntegerPropertyPanel(FieldType fieldType) {
+		this.type = (IntegerType) fieldType;
 		minValue = type.getMin();
 		maxValue = type.getMax();
 
