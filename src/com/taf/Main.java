@@ -30,6 +30,8 @@
  */
 package com.taf;
 
+import java.io.IOException;
+
 import javax.swing.SwingUtilities;
 
 import com.taf.frame.MainMenuFrame;
@@ -41,10 +43,10 @@ import com.taf.manager.Manager;
  * @author Adrien Jakubiak
  */
 public class Main {
-	
-	public static void main(String[] args) {
+
+	public static void main(String[] args) throws IOException {
 		Manager.initManagers();
-		
+
 		SwingUtilities.invokeLater(new Runnable() {
 
 			@Override
