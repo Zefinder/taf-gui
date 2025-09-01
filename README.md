@@ -8,6 +8,8 @@ Welcome to the official graphical interface repository of the TAF software. Beca
 
 This repository is made in **Java 21** and tries to respect all TAF specifications. It is better to use Eclipse to run this project since the installation is made for Eclipse (but if you want to use another IDE, feel free to do so)
 
+You can download the jar file in the `release` section. To launch it, type `java -jar <name of jar file>`. 
+
 ## How to configure the workspace? 
 I made the choice to not use Maven to limit the needs of external libraries. There are three source folders: `src` containing the source code of the GUI, `tests` containing all unit tests, and `processor` containing the code of the annotation processor. The unit tests use **JUnit Jupiter** (JUnit 5). 
 
