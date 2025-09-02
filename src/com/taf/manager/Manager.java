@@ -135,7 +135,6 @@ public interface Manager {
 				}).filter(Optional::isPresent).map(Optional::get).forEach(manager -> { // Init manager and add to the
 																						// manager set
 					manager.init();
-					System.out.println(manager);
 					MANAGERS.add(manager);
 				});
 	}
