@@ -188,7 +188,11 @@ public class TafTree extends JTree {
 		defaultModel.nodeChanged(parent);
 	}
 
-	public void removeNode(Entity entity) {
+	public void addNodeToMap(Entity entity, DefaultMutableTreeNode node) {
+		entityToTreeNodeMap.put(entity, node);
+	}
+	
+	public void removeNodeFromMap(Entity entity) {
 		entityToTreeNodeMap.remove(entity);
 	}
 

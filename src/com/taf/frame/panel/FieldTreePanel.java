@@ -226,9 +226,25 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	 */
 	@EventMethod
 	public void onEntityNameChanged(EntityNameChangedEvent event) {
-		DefaultMutableTreeNode treeNode = tree.getNode(event.getEntity());
+		Entity entity = event.getEntity();
+		
+		// Get tree node
+		DefaultMutableTreeNode treeNode = tree.getNode(entity);
+		
+		// Remove the node from the tree
+		tree.removeNodeFromMap(entity);
+		
+		// Update entity name
+		entity.setName(event.getNewName());
+		
+		// Update node
 		EntityNode nodeObject = (EntityNode) treeNode.getUserObject();
 		nodeObject.refresh();
+		
+		// Put back the node
+		tree.addNodeToMap(entity, treeNode);
+		
+		// Update model
 		treeModel.nodeChanged(cachedNode);
 	}
 
@@ -339,6 +355,6 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		}
 
 		// Remove from map
-		tree.removeNode(entity);
+		tree.removeNodeFromMap(entity);
 	}
 }

@@ -131,8 +131,6 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 	 */
 	protected void updateFieldName(Entity entity, String oldName, String newName) {
 		if (!newName.isBlank()) {
-			entity.setName(newName);
-
 			Event event = new EntityNameChangedEvent(entity, oldName, newName);
 			EventManager.getInstance().fireEvent(event);
 		}
