@@ -239,11 +239,13 @@ public class TypeManager implements Manager, EventListener {
 	@EventMethod
 	public void onEntityNameChanged(EntityNameChangedEvent event) {
 		final Entity entity = event.getEntity();
-
+		final String oldName = event.getOldName();
+		final String newName = event.getNewName();
+		
 		if (entity instanceof Node node) {
 			// Change custom node ref map
-			customNodeRefMap.remove(event.getOldName());
-			customNodeRefMap.put(event.getNewName(), node);
+			customNodeRefMap.remove(oldName);
+			customNodeRefMap.put(newName, node);
 			
 			// Change custom node type map
 			if (node.hasType()) {
@@ -252,18 +254,17 @@ public class TypeManager implements Manager, EventListener {
 				refToNodeMap.get(node.getTypeName()).add(node);
 			}
 			
-			Set<Node> typedNodes = refToNodeMap.get(event.getOldName());
-			typeToNodeMap.remove(event.getOldName());
-			typeToNodeMap.put(event.getNewName(), typedNodes);
+			Set<Node> refNodes = refToNodeMap.get(oldName);
+			typeToNodeMap.remove(oldName);
+			typeToNodeMap.put(newName, refNodes);
+			refNodes.forEach(refNode -> refNode.setReference(newName));
 			
 		} else if (entity instanceof Type type) {
 			// Change custom node type map
-			customNodeTypeMap.remove(event.getOldName());
-			customNodeTypeMap.put(event.getNewName(), type);
+			customNodeTypeMap.remove(oldName);
+			customNodeTypeMap.put(newName, type);
 
 			// Change custom node type map
-			final String oldName = event.getOldName();
-			final String newName = event.getNewName();
 			Set<Node> typedNodes = typeToNodeMap.get(oldName);
 			typeToNodeMap.remove(oldName);
 			typeToNodeMap.put(newName, typedNodes);
