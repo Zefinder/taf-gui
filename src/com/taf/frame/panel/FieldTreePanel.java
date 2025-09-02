@@ -138,10 +138,6 @@ public class FieldTreePanel extends JPanel implements EventListener {
 			}
 
 			EntityNode nodeInfo = (EntityNode) cachedNode.getUserObject();
-			if (nodeInfo.isRoot()) {
-				System.out.println(nodeInfo.getEntity().toString());
-			}
-
 			Event event = new EntitySelectedEvent(nodeInfo.getEntity());
 			EventManager.getInstance().fireEvent(event);
 		});
