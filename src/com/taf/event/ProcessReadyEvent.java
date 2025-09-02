@@ -45,4 +45,9 @@ public class ProcessReadyEvent implements Event {
 	public ProcessReadyEvent() {
 	}
 
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
+	
 }

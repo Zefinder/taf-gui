@@ -61,6 +61,10 @@ import com.taf.manager.EventManager;
  * 		return value;
  * 	}
  * 
+ * 	public boolean needsGuiRefresh() {
+ * 		return false;
+ * 	}
+ * 
  * }
  * </pre>
  * 
@@ -77,5 +81,14 @@ import com.taf.manager.EventManager;
  * @author Adrien Jakubiak
  */
 public interface Event {
+
+	/**
+	 * Returns true if the GUI needs a refresh. If true, the {@link EventManager}
+	 * will send a {@link GuiUpdateRequestedEvent} when all listeners will be
+	 * processed.
+	 *
+	 * @return true if the GUI needs a refresh.
+	 */
+	boolean needsGuiRefresh();
 
 }

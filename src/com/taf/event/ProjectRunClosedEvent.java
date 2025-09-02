@@ -48,4 +48,8 @@ public class ProjectRunClosedEvent implements Event {
 	public ProjectRunClosedEvent() {
 	}
 
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 }

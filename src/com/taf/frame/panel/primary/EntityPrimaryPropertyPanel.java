@@ -41,6 +41,7 @@ import javax.swing.JTextField;
 import com.taf.annotation.NotEmpty;
 import com.taf.event.Event;
 import com.taf.event.entity.EntityNameChangedEvent;
+import com.taf.event.entity.EntityNameChangingEvent;
 import com.taf.frame.panel.PropertyPanel;
 import com.taf.frame.panel.secondary.EntitySecondaryPropertyPanel;
 import com.taf.logic.Entity;
@@ -131,7 +132,12 @@ public abstract class EntityPrimaryPropertyPanel extends JPanel {
 	 */
 	protected void updateFieldName(Entity entity, String oldName, String newName) {
 		if (!newName.isBlank()) {
-			Event event = new EntityNameChangedEvent(entity, oldName, newName);
+			Event event = new EntityNameChangingEvent(entity, oldName, newName);
+			EventManager.getInstance().fireEvent(event);
+			
+			entity.setName(newName);
+			
+			event = new EntityNameChangedEvent(entity, oldName, newName);
 			EventManager.getInstance().fireEvent(event);
 		}
 	}

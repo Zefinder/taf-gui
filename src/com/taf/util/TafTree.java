@@ -114,6 +114,10 @@ public class TafTree extends JTree {
 		setCellRenderer(new TafTreeCellRenderer());
 	}
 
+	public void addNodeToMap(Entity entity, DefaultMutableTreeNode node) {
+		entityToTreeNodeMap.put(entity, node);
+	}
+
 	/**
 	 * Returns the node from the entity.
 	 *
@@ -156,7 +160,8 @@ public class TafTree extends JTree {
 		// For refs, do the same thing but without removing the node
 		// Get all nodes with a reference
 		Set<Node> nodesWithRef = typeInstance.getCustomNodeRefSet().stream()
-				.map(nodeName -> typeInstance.getNodeFromName(nodeName)).filter(node -> node.hasRef()).collect(Collectors.toSet());
+				.map(nodeName -> typeInstance.getNodeFromName(nodeName)).filter(node -> node.hasRef())
+				.collect(Collectors.toSet());
 		for (Node node : nodesWithRef) {
 			Node refNode = typeInstance.getNodeFromName(node.getTypeName());
 			DefaultMutableTreeNode nodeNode = entityToTreeNodeMap.get(node);
@@ -167,7 +172,7 @@ public class TafTree extends JTree {
 				nodeNode.add(cloneNode(child));
 			}
 		}
-		
+
 		defaultModel.reload();
 	}
 
@@ -185,13 +190,15 @@ public class TafTree extends JTree {
 		// Update tree
 		defaultModel.insertNodeInto(newNode, parent, parent.getChildCount());
 		expandRow(getNodeRow(parent));
-		defaultModel.nodeChanged(parent);
 	}
 
-	public void addNodeToMap(Entity entity, DefaultMutableTreeNode node) {
-		entityToTreeNodeMap.put(entity, node);
+	/**
+	 * Refreshes all nodes present on tree.
+	 */
+	public void refreshNodes() {
+		entityToTreeNodeMap.values().forEach(node -> ((EntityNode) node.getUserObject()).refresh());
 	}
-	
+
 	public void removeNodeFromMap(Entity entity) {
 		entityToTreeNodeMap.remove(entity);
 	}

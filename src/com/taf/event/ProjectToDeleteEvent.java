@@ -45,5 +45,10 @@ public class ProjectToDeleteEvent implements Event {
 	 */
 	public ProjectToDeleteEvent() {
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 
 }

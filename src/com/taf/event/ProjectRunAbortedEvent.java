@@ -46,4 +46,8 @@ public class ProjectRunAbortedEvent implements Event {
 	public ProjectRunAbortedEvent() {
 	}
 
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 }

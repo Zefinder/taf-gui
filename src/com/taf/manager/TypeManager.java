@@ -42,6 +42,8 @@ import com.taf.annotation.ManagerImpl;
 import com.taf.annotation.Priority;
 import com.taf.event.EventListener;
 import com.taf.event.entity.EntityDeletedEvent;
+import com.taf.event.entity.EntityNameChangedEvent;
+import com.taf.event.entity.EntityNameChangingEvent;
 import com.taf.event.entity.NodeTypeChangedEvent;
 import com.taf.event.entity.creation.NodeCreatedEvent;
 import com.taf.event.entity.creation.TypeCreatedEvent;
@@ -92,7 +94,7 @@ public class TypeManager implements Manager, EventListener {
 
 	/** The custom node type set. */
 	private final Map<String, Type> customNodeTypeMap;
-	
+
 	/** The custom node reference set. */
 	private final Map<String, Node> customNodeRefMap;
 
@@ -145,7 +147,7 @@ public class TypeManager implements Manager, EventListener {
 	public Node getNodeFromName(String nodeName) {
 		return customNodeRefMap.get(nodeName);
 	}
-	
+
 	/**
 	 * Returns the nodes implementing this type.
 	 *
@@ -155,7 +157,7 @@ public class TypeManager implements Manager, EventListener {
 	public Set<Node> getNodesImplementingType(String typeName) {
 		return typeToNodeMap.get(typeName);
 	}
-	
+
 	/**
 	 * Returns the nodes referring to this node.
 	 *
@@ -165,7 +167,7 @@ public class TypeManager implements Manager, EventListener {
 	public Set<Node> getNodesReferringNode(String nodeName) {
 		return refToNodeMap.get(nodeName);
 	}
-	
+
 	/**
 	 * Returns the type from name.
 	 *
@@ -207,6 +209,65 @@ public class TypeManager implements Manager, EventListener {
 
 		} else if (entity instanceof Type) {
 			removeCustomNodeType(entity.getName());
+		}
+	}
+
+	/**
+	 * Handler for {@link EntityNameChangingEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onEntityNameChanging(EntityNameChangingEvent event) {
+		Entity entity = event.getEntity();
+
+		if (entity instanceof Node node) {
+			// Change custom node type map
+			if (node.hasType()) {
+				typeToNodeMap.get(node.getTypeName()).remove(node);
+			} else if (node.hasRef()) {
+				refToNodeMap.get(node.getTypeName()).remove(node);
+			}
+		}
+	}
+
+	/**
+	 * Handler for {@link EntityNameChangedEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onEntityNameChanged(EntityNameChangedEvent event) {
+		final Entity entity = event.getEntity();
+
+		if (entity instanceof Node node) {
+			// Change custom node ref map
+			customNodeRefMap.remove(event.getOldName());
+			customNodeRefMap.put(event.getNewName(), node);
+			
+			// Change custom node type map
+			if (node.hasType()) {
+				typeToNodeMap.get(node.getTypeName()).add(node);
+			} else if (node.hasRef()) {
+				refToNodeMap.get(node.getTypeName()).add(node);
+			}
+			
+			Set<Node> typedNodes = refToNodeMap.get(event.getOldName());
+			typeToNodeMap.remove(event.getOldName());
+			typeToNodeMap.put(event.getNewName(), typedNodes);
+			
+		} else if (entity instanceof Type type) {
+			// Change custom node type map
+			customNodeTypeMap.remove(event.getOldName());
+			customNodeTypeMap.put(event.getNewName(), type);
+
+			// Change custom node type map
+			final String oldName = event.getOldName();
+			final String newName = event.getNewName();
+			Set<Node> typedNodes = typeToNodeMap.get(oldName);
+			typeToNodeMap.remove(oldName);
+			typeToNodeMap.put(newName, typedNodes);
+			typedNodes.forEach(node -> node.setType(newName));
 		}
 	}
 

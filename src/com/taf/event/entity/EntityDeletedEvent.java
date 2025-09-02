@@ -62,5 +62,10 @@ public class EntityDeletedEvent implements Event {
 	public Entity getEntity() {
 		return entity;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return true;
+	}
 
 }

@@ -62,5 +62,10 @@ public class TypeCreatedEvent implements Event {
 	public Type getType() {
 		return type;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return true;
+	}
 
 }

@@ -28,44 +28,72 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf.event.entity.creation;
+package com.taf.event.entity;
 
 import com.taf.event.Event;
-import com.taf.logic.field.Parameter;
+import com.taf.logic.Entity;
 
 /**
- * The ParameterCreatedEvent is an event fired when a {@link Parameter} is created.
+ * The EntityNameChangingEvent is an event fired just before an {@link Entity} changes name.
  *
  * @see Event
  *
  * @author Adrien Jakubiak
  */
-public class ParameterCreatedEvent implements Event {
+public class EntityNameChangingEvent implements Event {
 
-	/** The created parameter. */
-	private Parameter parameter;
-
+	/** The entity. */
+	private Entity entity;
+	
+	/** The old name. */
+	private String oldName;
+	
+	/** The new name. */
+	private String newName;
+	
 	/**
-	 * Instantiates a new parameter created event.
+	 * Instantiates a new entity name changed event.
 	 *
-	 * @param parameter the parameter
+	 * @param entity the entity
+	 * @param oldName the old name
+	 * @param newName the new name
 	 */
-	public ParameterCreatedEvent(Parameter parameter) {
-		this.parameter = parameter;
+	public EntityNameChangingEvent(Entity entity, String oldName, String newName) {
+		this.entity = entity;
+		this.oldName = oldName;
+		this.newName = newName;
 	}
-
+	
 	/**
-	 * Returns the parameter.
+	 * Returns the entity.
 	 *
-	 * @return the parameter
+	 * @return the entity
 	 */
-	public Parameter getParameter() {
-		return parameter;
+	public Entity getEntity() {
+		return entity;
+	}
+	
+	/**
+	 * Returns the new name.
+	 *
+	 * @return the new name
+	 */
+	public String getNewName() {
+		return newName;
+	}
+	
+	/**
+	 * Returns the old name.
+	 *
+	 * @return the old name
+	 */
+	public String getOldName() {
+		return oldName;
 	}
 	
 	@Override
 	public boolean needsGuiRefresh() {
-		return true;
+		return false;
 	}
-	
+
 }

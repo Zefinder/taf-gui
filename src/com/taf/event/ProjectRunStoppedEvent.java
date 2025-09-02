@@ -46,4 +46,8 @@ public class ProjectRunStoppedEvent implements Event {
 	public ProjectRunStoppedEvent() {
 	}
 
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 }

@@ -90,5 +90,10 @@ public class EntityNameChangedEvent implements Event {
 	public String getOldName() {
 		return oldName;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return true;
+	}
 
 }

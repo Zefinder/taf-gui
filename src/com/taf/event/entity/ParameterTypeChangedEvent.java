@@ -78,5 +78,10 @@ public class ParameterTypeChangedEvent implements Event {
 	public FieldType getType() {
 		return type;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return true;
+	}
 
 }

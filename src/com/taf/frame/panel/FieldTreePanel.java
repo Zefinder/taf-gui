@@ -44,13 +44,16 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import com.taf.annotation.EventMethod;
+import com.taf.annotation.Nullable;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
+import com.taf.event.GuiUpdateRequestedEvent;
 import com.taf.event.entity.EntityDeletedEvent;
 import com.taf.event.entity.EntityNameChangedEvent;
+import com.taf.event.entity.EntityNameChangingEvent;
 import com.taf.event.entity.EntitySelectedEvent;
-import com.taf.event.entity.ParameterTypeChangedEvent;
 import com.taf.event.entity.NodeTypeChangedEvent;
+import com.taf.event.entity.ParameterTypeChangedEvent;
 import com.taf.event.entity.creation.ConstraintCreatedEvent;
 import com.taf.event.entity.creation.NodeCreatedEvent;
 import com.taf.event.entity.creation.ParameterCreatedEvent;
@@ -98,8 +101,12 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	/** The tree model. */
 	private DefaultTreeModel treeModel;
 
-	/** The cached node. */
+	/** The cached selected node. */
 	private DefaultMutableTreeNode cachedNode;
+
+	/** The node being renamed (usually null). */
+	@Nullable
+	private DefaultMutableTreeNode renamedNode;
 
 	/**
 	 * Instantiates a new field tree panel.
@@ -121,7 +128,7 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		c.gridy = 0;
 		c.weightx = 1;
 		c.weighty = 1;
-		
+
 		tree = new TafTree(root, false);
 		treeModel = (DefaultTreeModel) tree.getModel();
 		tree.addTreeSelectionListener(e -> {
@@ -220,6 +227,22 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	}
 
 	/**
+	 * Handler for {@link EntityNameChangingEvent}.
+	 *
+	 * @param event the event
+	 */
+	@EventMethod
+	public void onEntityNameChanging(EntityNameChangingEvent event) {
+		Entity entity = event.getEntity();
+
+		// Save tree node
+		renamedNode = tree.getNode(entity);
+
+		// Remove entity from map
+		tree.removeNodeFromMap(entity);
+	}
+
+	/**
 	 * Handler for {@link EntityNameChangedEvent}.
 	 *
 	 * @param event the event
@@ -227,25 +250,15 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	@EventMethod
 	public void onEntityNameChanged(EntityNameChangedEvent event) {
 		Entity entity = event.getEntity();
-		
-		// Get tree node
-		DefaultMutableTreeNode treeNode = tree.getNode(entity);
-		
-		// Remove the node from the tree
-		tree.removeNodeFromMap(entity);
-		
-		// Update entity name
-		entity.setName(event.getNewName());
-		
-		// Update node
-		EntityNode nodeObject = (EntityNode) treeNode.getUserObject();
-		nodeObject.refresh();
-		
-		// Put back the node
-		tree.addNodeToMap(entity, treeNode);
-		
-		// Update model
-		treeModel.nodeChanged(cachedNode);
+		if (renamedNode != null) {
+			// Update node
+			EntityNode nodeObject = (EntityNode) renamedNode.getUserObject();
+			nodeObject.refresh();
+
+			// Put back the node
+			tree.addNodeToMap(entity, renamedNode);
+			renamedNode = null;
+		}
 	}
 
 	/**
@@ -258,7 +271,12 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		DefaultMutableTreeNode treeNode = tree.getNode(event.getParameter());
 		EntityNode nodeObject = (EntityNode) treeNode.getUserObject();
 		nodeObject.refresh();
-		treeModel.nodeChanged(treeNode);
+	}
+	
+	@EventMethod
+	public void onGuiUpdateRequested(GuiUpdateRequestedEvent event) {
+		tree.refreshNodes();
+		treeModel.reload();
 	}
 
 	/**
@@ -281,7 +299,6 @@ public class FieldTreePanel extends JPanel implements EventListener {
 		DefaultMutableTreeNode treeNode = tree.getNode(event.getNode());
 		EntityNode nodeObject = (EntityNode) treeNode.getUserObject();
 		nodeObject.refresh();
-		treeModel.nodeChanged(treeNode);
 	}
 
 	/**
@@ -347,7 +364,6 @@ public class FieldTreePanel extends JPanel implements EventListener {
 	private void removeEntity(Entity entity) {
 		DefaultMutableTreeNode treeNodeToRemove = tree.getNode(entity);
 		treeModel.removeNodeFromParent(treeNodeToRemove);
-		treeModel.nodeChanged(treeNodeToRemove.getParent());
 
 		// If the cached node is the node to remove, then reset the cached node
 		if (treeNodeToRemove.equals(cachedNode)) {

@@ -109,6 +109,11 @@ class EventManagerTest {
 	
 	private class DummyEvent implements Event {
 
+		@Override
+		public boolean needsGuiRefresh() {
+			return false;
+		}
+
 	}
 
 	private class DummyListener implements EventListener {
