@@ -102,4 +102,9 @@ public class NodeTypeChangedEvent implements Event {
 	public boolean hadType() {
 		return hadType;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return true;
+	}
 }

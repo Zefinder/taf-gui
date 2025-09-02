@@ -62,5 +62,10 @@ public class ConstraintCreatedEvent implements Event {
 	public Constraint getConstraint() {
 		return constraint;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return true;
+	}
 
 }

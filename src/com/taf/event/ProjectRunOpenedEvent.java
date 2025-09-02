@@ -46,4 +46,8 @@ public class ProjectRunOpenedEvent implements Event {
 	public ProjectRunOpenedEvent() {
 	}
 
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 }

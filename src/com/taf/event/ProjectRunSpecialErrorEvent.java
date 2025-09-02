@@ -60,6 +60,11 @@ public class ProjectRunSpecialErrorEvent implements Event {
 	public ErrorType getErrorType() {
 		return errorType;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 
 	/**
 	 * The ErrorType represents the error the TAF process sent.

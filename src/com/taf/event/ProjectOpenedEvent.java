@@ -45,5 +45,9 @@ public class ProjectOpenedEvent implements Event {
 	 */
 	public ProjectOpenedEvent() {
 	}
-
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 }

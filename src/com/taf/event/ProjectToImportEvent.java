@@ -46,4 +46,8 @@ public class ProjectToImportEvent implements Event {
 	public ProjectToImportEvent() {
 	}
 
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 }

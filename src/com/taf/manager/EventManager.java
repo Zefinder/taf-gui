@@ -42,6 +42,7 @@ import com.taf.annotation.ManagerImpl;
 import com.taf.annotation.Priority;
 import com.taf.event.Event;
 import com.taf.event.EventListener;
+import com.taf.event.GuiUpdateRequestedEvent;
 
 /**
  * <p>
@@ -126,6 +127,10 @@ public class EventManager implements Manager {
 					// It should never go here
 					e.printStackTrace();
 				}
+			}
+			
+			if (event.needsGuiRefresh()) {
+				fireEvent(new GuiUpdateRequestedEvent());
 			}
 		}
 	}

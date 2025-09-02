@@ -62,5 +62,10 @@ public class NodeCreatedEvent implements Event {
 	public Node getNode() {
 		return node;
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return true;
+	}
 
 }

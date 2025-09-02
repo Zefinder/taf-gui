@@ -45,5 +45,10 @@ public class RunLocationChangedEvent implements Event {
 	 */
 	public RunLocationChangedEvent() {
 	}
+	
+	@Override
+	public boolean needsGuiRefresh() {
+		return false;
+	}
 
 }

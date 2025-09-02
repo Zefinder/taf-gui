@@ -28,44 +28,27 @@
  * The fact that you are presently reading this means that you have had
  * knowledge of the CeCILL-B license and that you accept its terms.
  */
-package com.taf.event.entity.creation;
-
-import com.taf.event.Event;
-import com.taf.logic.field.Parameter;
+package com.taf.event;
 
 /**
- * The ParameterCreatedEvent is an event fired when a {@link Parameter} is created.
- *
+ * The GuiUpdateRequestedEvent is an event fired when another event modified the
+ * graphical interface.
+ * 
  * @see Event
- *
+ * 
  * @author Adrien Jakubiak
  */
-public class ParameterCreatedEvent implements Event {
-
-	/** The created parameter. */
-	private Parameter parameter;
+public class GuiUpdateRequestedEvent implements Event {
 
 	/**
-	 * Instantiates a new parameter created event.
-	 *
-	 * @param parameter the parameter
+	 * Instantiates a new gui update requested event.
 	 */
-	public ParameterCreatedEvent(Parameter parameter) {
-		this.parameter = parameter;
+	public GuiUpdateRequestedEvent() {
 	}
 
-	/**
-	 * Returns the parameter.
-	 *
-	 * @return the parameter
-	 */
-	public Parameter getParameter() {
-		return parameter;
-	}
-	
 	@Override
 	public boolean needsGuiRefresh() {
-		return true;
+		return false;
 	}
-	
+
 }
